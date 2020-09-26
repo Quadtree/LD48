@@ -1,0 +1,80 @@
+version: "3.3"
+
+services:
+  serve:
+    image: node
+    volumes: &default-volumes
+      - ./src:/src/src:ro
+      - ./node_modules:/src/node_modules
+      - ./dist:/src/dist
+      - ./index.html:/src/index.html:ro
+      - ./package.json:/src/package.json:ro
+      - ./tsconfig.json:/src/tsconfig.json:ro
+      - ./webpack:/src/webpack:ro
+      - ./yarn.lock:/src/yarn.lock
+      - ./assets:/src/assets:ro
+    ports:
+      - 8080:8080
+    command:
+    - sh
+    - -c
+    - cd /src &&
+      yarn &&
+      yarn run start
+  test:
+    image: node
+    volumes:
+    - ./node_modules:/src/node_modules
+    - ./src:/src/src:ro
+    - ./tsconfig.json:/src/tsconfig.json:ro
+    - ./package.json:/src/package.json:ro
+    - ./yarn.lock:/src/yarn.lock
+    command:
+    - sh
+    - -c
+    - cd /src &&
+      yarn &&
+      yarn run test
+  build:
+    image: node
+    volumes: *default-volumes
+    command:
+    - sh
+    - -c
+    - cd /src &&
+      yarn &&
+      yarn run build
+  gameserver:
+    image: node
+    volumes: *default-volumes
+    ports:
+      - 8081:80
+    command:
+    - sh
+    - -c
+    - cd /src &&
+      node_modules/.bin/ts-node src/server.ts
+  texture-packer:
+    image: openjdk
+    volumes:
+      - ./raw_assets:/src:ro
+      - ./assets:/trg
+      - texture_packer_tmp:/app
+    command:
+    - /bin/bash
+    - -c
+    - echo 'Starting texture packer';
+      if [ ! -f /app/runnable-texturepacker.jar ]; then curl -L 'https://libgdx.badlogicgames.com/nightlies/runnables/runnable-texturepacker.jar' > /app/runnable-texturepacker.jar; fi;
+      while true; do
+        CURRENT_HASH=`ls /src | xargs "-I{}" md5sum "/src/{}" | md5sum`;
+        if [ "$${CURRENT_HASH}" != "$${PREV_HASH}" ]; then
+          java -jar /app/runnable-texturepacker.jar /src /trg;
+          PREV_HASH="$${CURRENT_HASH}";
+        fi;
+        sleep 1;
+      done;
+
+
+
+volumes:
+  texture_packer_tmp:

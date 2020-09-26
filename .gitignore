@@ -1,0 +1,6 @@
+node_modules
+game.d.ts
+dist
+yarn-error.log
+declarations
+*.blend1
