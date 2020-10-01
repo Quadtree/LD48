@@ -140,11 +140,11 @@ export class TerrainDemo {
 
         this.createBox(new Vector3(-8,10,24), 1)
 
-        const camera = new UniversalCamera('', new Vector3(0,10,0), this._scene);
-        camera.attachControl(this._canvas, false);
-        this._scene.activeCamera = camera;
+        //const camera = new UniversalCamera('', new Vector3(0,10,0), this._scene);
+        //camera.attachControl(this._canvas, false);
+        //this._scene.activeCamera = camera;
 
-        this.setupPhysicsViewer();
+        //this.setupPhysicsViewer();
     }
 
     createBoxTerrain(){
@@ -158,7 +158,9 @@ export class TerrainDemo {
     }
 
     async createMeshTerrain() {
-        const ground2 = (await SceneLoader.ImportMeshAsync(null, './assets/more_ground.glb', '', this._scene)).meshes[1]
+        const ground2 = (await SceneLoader.ImportMeshAsync(null, './assets/flat2.glb', '', this._scene)).meshes[0];
+        ground2.position.y -= 50;
+        ground2.position.z += 20;
         console.log(`loaded ground2=${ground2.name}`)
 
         const grassTexture = new Texture("assets/grass1.png", this._scene);
