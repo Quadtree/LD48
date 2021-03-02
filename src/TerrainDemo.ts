@@ -122,7 +122,7 @@ export class TerrainDemo {
         //this.actorManager.add(this.character)
         //this.character.position = new Vector3(0, 20, 3)
 
-        let chr = new Character(this._scene, this._canvas);
+        let chr = new Character(this._scene, this._canvas, new Vector3(0,0,0));
         this.actorManager.add(chr);
     }
 
@@ -159,8 +159,8 @@ export class TerrainDemo {
 
     async createMeshTerrain() {
         const ground2 = (await SceneLoader.ImportMeshAsync(null, './assets/flat2.glb', '', this._scene)).meshes[0];
-        ground2.position.y -= 50;
-        ground2.position.z += 20;
+        //ground2.position.y -= 50;
+        //ground2.position.z += 20;
         console.log(`loaded ground2=${ground2.name}`)
 
         const grassTexture = new Texture("assets/grass1.png", this._scene);
@@ -218,7 +218,7 @@ export class TerrainDemo {
                     ground2.freezeWorldMatrix()
                     this.shadowGenerator.addShadowCaster(ground2)
                     console.log('we dun')
-                    res();
+                    res("");
                 }
             }, this._scene);
         });
