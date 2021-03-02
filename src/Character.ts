@@ -84,6 +84,10 @@ export class Character extends Actor {
         this.camera.keysUp = [];
         this.camera.keysRight = [];
 
+        if (!this.scene){
+            throw new Error('this.scene cannot be null');
+        }
+
         let ajsp = this.scene.getPhysicsEngine()!.getPhysicsPlugin() as AmmoJSPlugin
 
         let startTransform = new Ammo.btTransform();
@@ -114,7 +118,7 @@ export class Character extends Actor {
             this.scene.onKeyboardObservable.add((ed: KeyboardInfo, es: EventState) => {
                 if (this.acceptingInput) {
                     if (ed.type == KeyboardEventTypes.KEYDOWN || ed.type == KeyboardEventTypes.KEYUP) {
-                        const evt = ed.event as KeyboardEvent;
+                        const evt = ed.event as unknown as KeyboardEvent;
                         const down = ed.type == KeyboardEventTypes.KEYDOWN;
                         if (evt.key == 'w' || evt.key == 'ArrowUp') this.moveForward = down;
                         if (evt.key == 's' || evt.key == 'ArrowDown') this.moveBackward = down;

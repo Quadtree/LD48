@@ -2,7 +2,7 @@ version: "3.3"
 
 services:
   serve:
-    image: node
+    image: node:14
     volumes: &default-volumes
       - ./src:/src/src:ro
       - ./node_modules:/src/node_modules
@@ -22,7 +22,7 @@ services:
       yarn &&
       yarn run start
   test:
-    image: node
+    image: node:14
     volumes:
     - ./node_modules:/src/node_modules
     - ./src:/src/src:ro
@@ -36,7 +36,7 @@ services:
       yarn &&
       yarn run test
   build:
-    image: node
+    image: node:14
     volumes: *default-volumes
     command:
     - sh
@@ -45,7 +45,7 @@ services:
       yarn &&
       yarn run build
   gameserver:
-    image: node
+    image: node:14
     volumes: *default-volumes
     ports:
       - 8081:80
@@ -55,7 +55,7 @@ services:
     - cd /src &&
       node_modules/.bin/ts-node src/server.ts
   texture-packer:
-    image: openjdk
+    image: openjdk:11
     volumes:
       - ./raw_assets:/src:ro
       - ./assets:/trg

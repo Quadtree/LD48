@@ -22,7 +22,7 @@ import { Keys } from './Keys';
 import { ActorManager } from './am/ActorManager';
 import { Character } from './Character';
 
-
+declare function Ammo():Promise<void>;
 
 
 
@@ -48,9 +48,7 @@ export class TerrainDemo {
         // Create a basic BJS Scene object.
         this._scene = new Scene(this._engine);
         this._scene.collisionsEnabled = true
-        this._scene.gravity = new Vector3(0, -0.1, 0)
-
-        this._scene.enablePhysics(new Vector3(0, -9.8, 0), new AmmoJSPlugin())
+        this._scene.gravity = new Vector3(0, -0.1, 0);
 
         //this._scene.enablePhysics(new Vector3(0, -9.81, 0), new CannonJSPlugin(undefined, undefined, CANNON));
 
@@ -121,14 +119,17 @@ export class TerrainDemo {
         //this.character = new Character(this._scene, this._canvas)
         //this.actorManager.add(this.character)
         //this.character.position = new Vector3(0, 20, 3)
-
-        let chr = new Character(this._scene, this._canvas);
-        this.actorManager.add(chr);
     }
 
     private sphere:any;
 
     async init(){
+        await Ammo();
+        this._scene.enablePhysics(new Vector3(0, -9.8, 0), new AmmoJSPlugin());
+
+        let chr = new Character(this._scene, this._canvas, new Vector3(0,2,0));
+        this.actorManager.add(chr);
+
         //await this.createHeightmapTerrain();
         await this.createMeshTerrain();
 
@@ -159,8 +160,10 @@ export class TerrainDemo {
 
     async createMeshTerrain() {
         const ground2 = (await SceneLoader.ImportMeshAsync(null, './assets/flat2.glb', '', this._scene)).meshes[0];
-        ground2.position.y -= 50;
-        ground2.position.z += 20;
+        //ground2.position.y -= 50;
+        //ground2.position.z += 20;
+        ground2.position.z += 7;
+        ground2.freezeWorldMatrix();
         console.log(`loaded ground2=${ground2.name}`)
 
         const grassTexture = new Texture("assets/grass1.png", this._scene);
@@ -178,21 +181,13 @@ export class TerrainDemo {
         groundMat1.normalTexture = grassNormalTexture;
 
         const tmp = ground2.parent;
-        //ground2.freezeWorldMatrix();
-        //console.log(`BEFORE ${ground2.getAbsolutePosition()} ${ground2.absoluteRotationQuaternion}`);
-        //ground2.parent = null;
-        //console.log(`AFTER ${ground2.getAbsolutePosition()} ${ground2.absoluteRotationQuaternion}`);
-        //ground2.rotation.y = Math.PI;
+
         ground2.physicsImpostor = new PhysicsImpostor(ground2, PhysicsImpostor.MeshImpostor, {mass: 0}, this._scene);
 
-        //console.log((ground2.physicsImpostor as any)._parent);
-        //console.log(ground2.physicsImpostor.isBodyInitRequired());
-        //ground2.physicsImpostor.forceUpdate();
         ground2.physicsImpostor.executeNativeFunction((world:any, physicsBody:any) => {
             console.log(world);
             console.log(physicsBody);
         });
-
     }
 
     createHeightmapTerrain():Promise<string> {
@@ -218,7 +213,7 @@ export class TerrainDemo {
                     ground2.freezeWorldMatrix()
                     this.shadowGenerator.addShadowCaster(ground2)
                     console.log('we dun')
-                    res();
+                    res("");
                 }
             }, this._scene);
         });
@@ -252,6 +247,8 @@ export class TerrainDemo {
     }
 
     async doRender() {
+        await this.init();
+
         // Run the render loop.
         this._engine.runRenderLoop(() => {
             //this.sphere.position.y = 4 + Math.random();
@@ -266,7 +263,5 @@ export class TerrainDemo {
         window.addEventListener('resize', () => {
             this._engine.resize();
         });
-
-        await this.init()
     }
 }
