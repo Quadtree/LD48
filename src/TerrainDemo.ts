@@ -81,48 +81,8 @@ export class TerrainDemo {
         this.shadowGenerator.useContactHardeningShadow = true
         this.shadowGenerator.usePercentageCloserFiltering = true
 
-        // Create a built-in "sphere" shape; with 16 segments and diameter of 2.
-        //this.sphere = MeshBuilder.CreateSphere('sphere',
-        //                            {segments: 16, diameter: 2}, this._scene);
-
-        // Move the sphere upward 1/2 of its height.
-        //this.sphere.position.y = 15;
-        //this.sphere.position.x = -5
-
-
-
-        // Create a built-in "ground" shape.
-        //let ground = MeshBuilder.CreateGround('ground',
-        //                            {width: 50, height: 50, subdivisions: 2}, this._scene);
-        //ground.checkCollisions = true
-
-        //this.sphere.physicsImpostor = new PhysicsImpostor(this.sphere, PhysicsImpostor.SphereImpostor, {mass: 1}, this._scene);
-        //ground.physicsImpostor = new PhysicsImpostor(ground, PhysicsImpostor.BoxImpostor, {mass: 0}, this._scene);
-
-        /*let ground2 = MeshBuilder.CreateGroundFromHeightMap("noise", "assets/some_noise.png", {
-            width: 512,
-            height: 512,
-            subdivisions: 256,
-            maxHeight: 10,
-
-            onReady: () => {
-                console.log('reeeedddaaaaahhh')
-                //ground2.physicsImpostor = new PhysicsImpostor(ground2, PhysicsImpostor.HeightmapImpostor, {mass: 0}, this._scene)
-                ground2.checkCollisions = true
-                ground2.isPickable = true
-                ground2.receiveShadows = true
-                ground2.freezeWorldMatrix()
-                this.shadowGenerator.addShadowCaster(ground2)
-                console.log('we dun')
-            }
-        }, this._scene);*/
-
         this.actorManager.scene = this._scene
         this._scene.useRightHandedSystem = true;
-
-        //this.character = new Character(this._scene, this._canvas)
-        //this.actorManager.add(this.character)
-        //this.character.position = new Vector3(0, 20, 3)
 
         let chr = new Character(this._scene, this._canvas, new Vector3(0,5,0));
         this.actorManager.add(chr);
@@ -141,12 +101,6 @@ export class TerrainDemo {
         this.createBox(new Vector3(20,10,0), 1)
 
         this.createBox(new Vector3(-8,10,28), 1)
-
-        //const camera = new UniversalCamera('', new Vector3(0,10,0), this._scene);
-        //camera.attachControl(this._canvas, false);
-        //this._scene.activeCamera = camera;
-
-        //this.setupPhysicsViewer();
     }
 
     createBoxTerrain(){
@@ -179,34 +133,9 @@ export class TerrainDemo {
         groundMat1.baseTexture = grassTexture;
         groundMat1.normalTexture = grassNormalTexture;
 
-        //const tmp = ground2.parent;
-        //ground2.freezeWorldMatrix();
-        //console.log(`BEFORE ${ground2.getAbsolutePosition()} ${ground2.absoluteRotationQuaternion}`);
-        //ground2.parent = null;
-        //console.log(`AFTER ${ground2.getAbsolutePosition()} ${ground2.absoluteRotationQuaternion}`);
-        //ground2.rotation.y = Math.PI;
-        //ground2.rotation = new Vector3(0, 0, 0);
-
-        //ground2.rotationQuaternion = new Quaternion();
-
         ground2.physicsImpostor = new PhysicsImpostor(ground2, PhysicsImpostor.MeshImpostor, {mass: 0}, this._scene);
 
-        //this._scene.getPhysicsEngine()!.getPhysicsPlugin().setPhysicsBodyTransformation(ground2.physicsImpostor, new Vector3(0,0,35), new Quaternion());
-
-        //ground2.physicsImpostor.setDeltaPosition(new Vector3(0,0, 15));
-
-        //ground2.rotationQuaternion = new Quaternion();
-        //ground2.rotation = new Vector3(0, 0, 0);
         ground2.position = new Vector3(0,0,15);
-
-        //console.log((ground2.physicsImpostor as any)._parent);
-        //console.log(ground2.physicsImpostor.isBodyInitRequired());
-        //ground2.physicsImpostor.forceUpdate();
-        ground2.physicsImpostor.executeNativeFunction((world:any, physicsBody:any) => {
-            console.log(world);
-            console.log(physicsBody);
-        });
-
     }
 
     createHeightmapTerrain():Promise<string> {
