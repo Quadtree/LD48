@@ -71,7 +71,7 @@ export class Util {
         return new Vector3(
             v3.x(),
             v3.y(),
-            -v3.z()
+            v3.z()
         );
     }
 

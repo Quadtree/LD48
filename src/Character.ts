@@ -171,8 +171,8 @@ export class Character extends Actor {
 
         let angle = this.camera.rotation.y;
 
-        let forwardVector = new Vector3(Math.sin(angle), 0, Math.cos(angle));
-        let rightVector = new Vector3(Math.sin(angle + (Math.PI / 2)), 0, Math.cos(angle + (Math.PI / 2)));
+        let forwardVector = new Vector3(Math.sin(angle), 0, -Math.cos(angle));
+        let rightVector = new Vector3(-Math.sin(angle + (Math.PI / 2)), 0, Math.cos(angle + (Math.PI / 2)));
 
         let walkDirection = new Vector3(0, 0, 0);
 
@@ -249,7 +249,7 @@ export class Character extends Actor {
         return new Vector3(
             v3.x(),
             v3.y(),
-            -v3.z()
+            v3.z()
         );
     }
 }

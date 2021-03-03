@@ -15,12 +15,13 @@ import { SceneLoader } from "@babylonjs/core/Loading/sceneLoader";
 import { ShadowGenerator } from "@babylonjs/core/Lights/Shadows/shadowGenerator";
 import { Texture } from "@babylonjs/core/Materials/Textures/texture";
 import { UniversalCamera } from "@babylonjs/core/Cameras/universalCamera";
-import { Vector3 } from "@babylonjs/core/Maths/math.vector";
+import { Quaternion, Vector3 } from "@babylonjs/core/Maths/math.vector";
 import "@babylonjs/core/Physics/physicsEngineComponent";
 import "@babylonjs/core/Lights/Shadows/shadowGeneratorSceneComponent";
 import { Keys } from './Keys';
 import { ActorManager } from './am/ActorManager';
 import { Character } from './Character';
+import { Vector } from "matter-js";
 
 
 
@@ -117,12 +118,13 @@ export class TerrainDemo {
         }, this._scene);*/
 
         this.actorManager.scene = this._scene
+        this._scene.useRightHandedSystem = true;
 
         //this.character = new Character(this._scene, this._canvas)
         //this.actorManager.add(this.character)
         //this.character.position = new Vector3(0, 20, 3)
 
-        let chr = new Character(this._scene, this._canvas, new Vector3(0,0,0));
+        let chr = new Character(this._scene, this._canvas, new Vector3(0,5,0));
         this.actorManager.add(chr);
     }
 
@@ -138,7 +140,7 @@ export class TerrainDemo {
         this.createBox(new Vector3(-20,10,0), 1)
         this.createBox(new Vector3(20,10,0), 1)
 
-        this.createBox(new Vector3(-8,10,24), 1)
+        this.createBox(new Vector3(-8,10,28), 1)
 
         //const camera = new UniversalCamera('', new Vector3(0,10,0), this._scene);
         //camera.attachControl(this._canvas, false);
@@ -158,9 +160,9 @@ export class TerrainDemo {
     }
 
     async createMeshTerrain() {
-        const ground2 = (await SceneLoader.ImportMeshAsync(null, './assets/flat2.glb', '', this._scene)).meshes[0];
-        //ground2.position.y -= 50;
-        //ground2.position.z += 20;
+        const root = (await SceneLoader.ImportMeshAsync(null, './assets/flat2.glb', '', this._scene));
+        const ground2 = root.meshes[0];
+
         console.log(`loaded ground2=${ground2.name}`)
 
         const grassTexture = new Texture("assets/grass1.png", this._scene);
@@ -177,13 +179,25 @@ export class TerrainDemo {
         groundMat1.baseTexture = grassTexture;
         groundMat1.normalTexture = grassNormalTexture;
 
-        const tmp = ground2.parent;
+        //const tmp = ground2.parent;
         //ground2.freezeWorldMatrix();
         //console.log(`BEFORE ${ground2.getAbsolutePosition()} ${ground2.absoluteRotationQuaternion}`);
         //ground2.parent = null;
         //console.log(`AFTER ${ground2.getAbsolutePosition()} ${ground2.absoluteRotationQuaternion}`);
         //ground2.rotation.y = Math.PI;
+        //ground2.rotation = new Vector3(0, 0, 0);
+
+        //ground2.rotationQuaternion = new Quaternion();
+
         ground2.physicsImpostor = new PhysicsImpostor(ground2, PhysicsImpostor.MeshImpostor, {mass: 0}, this._scene);
+
+        //this._scene.getPhysicsEngine()!.getPhysicsPlugin().setPhysicsBodyTransformation(ground2.physicsImpostor, new Vector3(0,0,35), new Quaternion());
+
+        //ground2.physicsImpostor.setDeltaPosition(new Vector3(0,0, 15));
+
+        //ground2.rotationQuaternion = new Quaternion();
+        //ground2.rotation = new Vector3(0, 0, 0);
+        ground2.position = new Vector3(0,0,15);
 
         //console.log((ground2.physicsImpostor as any)._parent);
         //console.log(ground2.physicsImpostor.isBodyInitRequired());
