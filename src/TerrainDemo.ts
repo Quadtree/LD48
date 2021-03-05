@@ -23,56 +23,33 @@ import { ActorManager } from './am/ActorManager';
 import { Character } from './Character';
 import { Vector } from "matter-js";
 import { patchedAmmoJSPlugin } from "./PatchedAmmoJSPlugin";
+import { Game } from "./Game";
+import { GameManager } from "./GameManager";
 
 
 
 
 
-// TODO:
-// - Figure out why some imported meshes don't work
 
-// new PhysicsEngineSceneComponent();
-
-export class TerrainDemo {
-    private _canvas: HTMLCanvasElement;
-    private _engine: Engine;
-    private _scene: Scene;
+export class TerrainDemo implements Game {
     //private _camera: FreeCamera;
-    private shadowGenerator:ShadowGenerator;
+    private shadowGenerator:ShadowGenerator | null = null;
     private actorManager = new ActorManager()
     private character:Character|null = null
 
-    constructor(canvasElement : string) {
-        // Create canvas and engine.
-        this._canvas = document.getElementById(canvasElement) as HTMLCanvasElement;
-        this._engine = new Engine(this._canvas, true);
+    private gameManager:GameManager|null = null
 
-        // Create a basic BJS Scene object.
-        this._scene = new Scene(this._engine);
-        this._scene.collisionsEnabled = true
-        this._scene.gravity = new Vector3(0, -0.1, 0)
+    private sphere:any;
 
-        this._scene.enablePhysics(new Vector3(0, -9.8, 0), patchedAmmoJSPlugin());
+    private get _scene(){ return this.gameManager!.scene; }
+    private get _canvas(){ return this.gameManager!.canvas; }
 
-        //this._scene.enablePhysics(new Vector3(0, -9.81, 0), new CannonJSPlugin(undefined, undefined, CANNON));
+    async init(gameManager:GameManager){
+        this.gameManager = gameManager;
+        this.gameManager.enablePhysics();
 
-        // Create a FreeCamera, and set its position to (x:0, y:5, z:-10).
-        //this._camera = new FreeCamera('camera1', new Vector3(0, 5,-10), this._scene);
-
-
-
-        // Target the camera to scene origin.
-        //this._camera.setTarget(Vector3.Zero());
-
-        //this._camera = new FreeCamera("cam1", new Vector3(0, 20, 0), this._scene)
-
-        // Attach the camera to the canvas.
-        //this._camera.attachControl(this._canvas, false);
-
-        // Create a basic light, aiming 0,1,0 - meaning, to the sky.
         const skyLight = new HemisphericLight('light1', new Vector3(0,1,0), this._scene);
         skyLight.intensity = 0.1
-
 
         const directionalLight = new DirectionalLight("light2", new Vector3(1,-0.25,1), this._scene)
         directionalLight.shadowEnabled = true
@@ -85,13 +62,9 @@ export class TerrainDemo {
         this.actorManager.scene = this._scene
         this._scene.useRightHandedSystem = false;
 
-        let chr = new Character(this._scene, this._canvas, new Vector3(0,5,0));
+        let chr = new Character(this._scene, this._canvas, new Vector3(0,15,0));
         this.actorManager.add(chr);
-    }
 
-    private sphere:any;
-
-    async init(){
         //await this.createHeightmapTerrain();
         await this.createMeshTerrain();
 
@@ -161,7 +134,7 @@ export class TerrainDemo {
                     ground2.isPickable = true
                     ground2.receiveShadows = true
                     ground2.freezeWorldMatrix()
-                    this.shadowGenerator.addShadowCaster(ground2)
+                    this.shadowGenerator!.addShadowCaster(ground2)
                     console.log('we dun')
                     res("");
                 }
@@ -176,42 +149,7 @@ export class TerrainDemo {
         playerMesh.position = vec3
     }
 
-    setupPhysicsViewer(){
-        var physicsViewer = new PhysicsViewer(this._scene);
-
-        const showImposters = (mesh:AbstractMesh) =>{
-            for(let cm of mesh.getChildMeshes()){
-                showImposters(cm);
-            }
-
-            if (mesh.physicsImpostor) {
-                console.log(`showing imposters for ${mesh.name}`);
-                physicsViewer.showImpostor(mesh.physicsImpostor, mesh as any);
-                //mesh.visibility = 0;
-            } else {
-                console.log(`NOT showing imposters for ${mesh.name}`);
-            }
-        }
-
-        this._scene.meshes.forEach(showImposters);
-    }
-
-    async doRender() {
-        // Run the render loop.
-        this._engine.runRenderLoop(() => {
-            //this.sphere.position.y = 4 + Math.random();
-            this._scene.render();
-
-            this.actorManager.update(0.016)
-
-            //console.log(`mesh count ${this._scene.meshes.length}`);
-        });
-
-        // The canvas/window resize event handler.
-        window.addEventListener('resize', () => {
-            this._engine.resize();
-        });
-
-        await this.init()
+    update(delta:number){
+        this.actorManager.update(delta);
     }
 }

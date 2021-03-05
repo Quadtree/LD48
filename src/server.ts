@@ -1,7 +1,5 @@
 import { ServerGame } from "./multiplayer/ServerGame";
 
-//global.XMLHttpRequest = require('xhr2').XMLHttpRequest;
-
 const fs = require('fs')
 
 global.XMLHttpRequest = function(){
