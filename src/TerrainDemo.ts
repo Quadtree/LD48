@@ -22,6 +22,7 @@ import { Keys } from './Keys';
 import { ActorManager } from './am/ActorManager';
 import { Character } from './Character';
 import { Vector } from "matter-js";
+import { patchedAmmoJSPlugin } from "./PatchedAmmoJSPlugin";
 
 
 
@@ -51,7 +52,7 @@ export class TerrainDemo {
         this._scene.collisionsEnabled = true
         this._scene.gravity = new Vector3(0, -0.1, 0)
 
-        this._scene.enablePhysics(new Vector3(0, -9.8, 0), new AmmoJSPlugin())
+        this._scene.enablePhysics(new Vector3(0, -9.8, 0), patchedAmmoJSPlugin());
 
         //this._scene.enablePhysics(new Vector3(0, -9.81, 0), new CannonJSPlugin(undefined, undefined, CANNON));
 
@@ -82,7 +83,7 @@ export class TerrainDemo {
         this.shadowGenerator.usePercentageCloserFiltering = true
 
         this.actorManager.scene = this._scene
-        this._scene.useRightHandedSystem = true;
+        this._scene.useRightHandedSystem = false;
 
         let chr = new Character(this._scene, this._canvas, new Vector3(0,5,0));
         this.actorManager.add(chr);
@@ -136,6 +137,7 @@ export class TerrainDemo {
         ground2.physicsImpostor = new PhysicsImpostor(ground2, PhysicsImpostor.MeshImpostor, {mass: 0}, this._scene);
 
         ground2.position = new Vector3(0,0,15);
+        ground2.rotationQuaternion?.addInPlace(Quaternion.FromEulerAngles(0, 1, 0));
     }
 
     createHeightmapTerrain():Promise<string> {
