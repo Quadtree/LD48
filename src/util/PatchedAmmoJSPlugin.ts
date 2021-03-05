@@ -4,6 +4,8 @@ import { IPhysicsEnabledObject } from "@babylonjs/core/Physics/physicsImpostor";
 import { AmmoJSPlugin } from "@babylonjs/core/Physics/Plugins/ammoJSPlugin";
 
 export function patchedAmmoJSPlugin(){
+    // This is a patched version of the _addMeshVerts function in BabylonJS
+    // As such it is under the original license, Apache 2.0
     function _addMeshVerts(this:any, btTriangleMesh: any, topLevelObject: IPhysicsEnabledObject, object: IPhysicsEnabledObject) {
         var triangleCount = 0;
         if (object && object.getIndices && object.getWorldMatrix && object.getChildMeshes) {
