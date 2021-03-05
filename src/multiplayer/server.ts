@@ -1,4 +1,4 @@
-import { ServerGame } from "./multiplayer/ServerGame";
+import { ServerGame } from "./ServerGame";
 
 const fs = require('fs')
 

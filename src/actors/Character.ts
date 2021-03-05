@@ -7,8 +7,8 @@ import { PointerEventTypes, PointerInfo } from "@babylonjs/core/Events/pointerEv
 import { Scene } from "@babylonjs/core/scene";
 import { TextBlock } from "@babylonjs/gui/2D/controls/textBlock";
 import { Vector3 } from "@babylonjs/core/Maths/math.vector";
-import { Actor } from "./am/Actor";
-import { Util } from "./Util";
+import { Actor } from "../am/Actor";
+import { Util } from "../util/Util";
 
 declare var Ammo: any;
 
