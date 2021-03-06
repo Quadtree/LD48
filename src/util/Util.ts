@@ -118,5 +118,11 @@ export class Util {
         });
     }
 
+    static async delay(ms: number): Promise<void> {
+        return new Promise<void>((res, rej) => {
+            setTimeout(res, ms);
+        });
+    }
+
     static CHEATS_ENABLED = false;
 }
