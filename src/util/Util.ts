@@ -27,7 +27,7 @@ export class btHolder<T> {
         Ammo.destroy(itm);
     });
 
-    constructor(public v:T){
+    constructor(public readonly v:T){
         btHolder.bulletFinalizationRegistry.register(this, v);
     }
 }
