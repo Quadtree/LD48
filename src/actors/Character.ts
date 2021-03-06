@@ -8,7 +8,7 @@ import { Scene } from "@babylonjs/core/scene";
 import { TextBlock } from "@babylonjs/gui/2D/controls/textBlock";
 import { Vector3 } from "@babylonjs/core/Maths/math.vector";
 import { Actor } from "../am/Actor";
-import { Util } from "../util/Util";
+import { btHolder, Util } from "../util/Util";
 
 declare var Ammo: any;
 
@@ -63,7 +63,7 @@ export class Character extends Actor {
     }
 
     public set pos(v: Vector3) {
-        this.character.getGhostObject().getWorldTransform().setOrigin(this.toBLVector3(v));
+        this.character.getGhostObject().getWorldTransform().setOrigin(this.toBLVector3(v).v);
     }
 
     public constructor(protected scene: Scene, private canvas: HTMLCanvasElement | null, position: Vector3) {
@@ -88,7 +88,7 @@ export class Character extends Actor {
 
         let startTransform = new Ammo.btTransform();
         startTransform.setIdentity();
-        startTransform.setOrigin(this.toBLVector3(position));
+        startTransform.setOrigin(this.toBLVector3(position).v);
 
         let m_ghostObject = new Ammo.btPairCachingGhostObject();
         this.ghostObject = m_ghostObject;
@@ -181,18 +181,17 @@ export class Character extends Actor {
         if (this.moveRight) walkDirection.addInPlace(rightVector.scale(walkSpeed));
         if (this.moveLeft) walkDirection.addInPlace(rightVector.scale(-walkSpeed));
 
-        let blWalkDirection: btVector3 = this.toBLVector3(walkDirection);
+        let blWalkDirection: btHolder<btVector3> = this.toBLVector3(walkDirection);
 
-        this.character.setWalkDirection(blWalkDirection);
+        this.character.setWalkDirection(blWalkDirection.v);
 
         if (this.jump) {
             const v3 = this.toBLVector3(new Vector3(0, 20, 0));
-            this.character.jump(v3);
-            Util.destroyVector(v3);
+            this.character.jump(v3.v);
             this.jump = false;
         }
 
-        const shouldBeAdded = blWalkDirection.length() > 0.01 || !this.character.onGround();
+        const shouldBeAdded = blWalkDirection.v.length() > 0.01 || !this.character.onGround();
 
         if (!shouldBeAdded) {
             this.addCharge -= delta * 5;
@@ -211,9 +210,7 @@ export class Character extends Actor {
         }
 
         if (this.canvas)
-            debugUiText.text = `angle=${this.camera.rotation.y}\npos=${this.formatBJVector(this.toBJVector3(v3))}\nwalkDirection=${this.formatVector(blWalkDirection, 4)}\nonGround=${this.character.onGround()}\nisAdded=${this.isAdded} addCharge=${this.addCharge.toFixed(1)} shouldBeAdded=${shouldBeAdded}\n${this.getExtraText()}`
-
-        Util.destroyVector(blWalkDirection);
+            debugUiText.text = `angle=${this.camera.rotation.y}\npos=${this.formatBJVector(this.toBJVector3(v3))}\nwalkDirection=${this.formatVector(blWalkDirection.v, 4)}\nonGround=${this.character.onGround()}\nisAdded=${this.isAdded} addCharge=${this.addCharge.toFixed(1)} shouldBeAdded=${shouldBeAdded}\n${this.getExtraText()}`
     }
 
     protected getExtraText(): string {
@@ -241,7 +238,7 @@ export class Character extends Actor {
         return `${v3.x.toFixed(fixedPlaces)},${v3.y.toFixed(fixedPlaces)},${v3.z.toFixed(fixedPlaces)}`;
     }
 
-    private toBLVector3(v3: Vector3): btVector3 {
+    private toBLVector3(v3: Vector3): btHolder<btVector3> {
         return Util.toBLVector3(v3);
     }
 
