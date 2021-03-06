@@ -39,8 +39,6 @@ let debugUi: AdvancedDynamicTexture
 let debugUiText: TextBlock
 
 export class Character extends Actor {
-    private readonly character: any;
-
     private readonly camera: FreeCamera;
 
     private moveForward = false;
@@ -52,9 +50,15 @@ export class Character extends Actor {
     private isAdded = true;
     private addCharge = 1;
 
-    private readonly ghostObject: any;
-
     private acceptingInput = true;
+
+    private readonly ghostObjectHolder: btHolder<any>;
+    private readonly transformHolder:btHolder<any>;
+    private readonly capsuleShapeHolder:btHolder<any>;
+    private static ghostPairCallbackHolder:btHolder<any>;
+    private readonly characterControllerHolder:btHolder<any>;
+
+    private get character(){ return this.characterControllerHolder.v; }
 
     public get pos() {
         let v3 = this.character.getGhostObject().getWorldTransform().getOrigin();
@@ -86,24 +90,33 @@ export class Character extends Actor {
 
         let ajsp = this.scene.getPhysicsEngine()!.getPhysicsPlugin() as AmmoJSPlugin
 
-        let startTransform = new Ammo.btTransform();
+        this.transformHolder = new btHolder<any>(new Ammo.btTransform());
+
+        let startTransform = this.transformHolder.v;
         startTransform.setIdentity();
         startTransform.setOrigin(this.toBLVector3(position).v);
 
-        let m_ghostObject = new Ammo.btPairCachingGhostObject();
-        this.ghostObject = m_ghostObject;
+
+        this.ghostObjectHolder = new btHolder<any>(new Ammo.btPairCachingGhostObject());
+        let m_ghostObject = this.ghostObjectHolder.v;
+
         m_ghostObject.setWorldTransform(startTransform);
-        ajsp.world.getBroadphase().getOverlappingPairCache().setInternalGhostPairCallback(new Ammo.btGhostPairCallback());
+
+        if (Character.ghostPairCallbackHolder == null){
+            Character.ghostPairCallbackHolder = new btHolder<any>(new Ammo.btGhostPairCallback());
+            ajsp.world.getBroadphase().getOverlappingPairCache().setInternalGhostPairCallback(Character.ghostPairCallbackHolder.v);
+        }
+
         const characterHeight = 1.75;
         const characterWidth = 1.00;
-        let capsule = new Ammo.btCapsuleShape(characterWidth, characterHeight);
+        this.capsuleShapeHolder = new btHolder<any>(new Ammo.btCapsuleShape(characterWidth, characterHeight));
+        let capsule = this.capsuleShapeHolder.v;
         m_ghostObject.setCollisionShape(capsule);
         m_ghostObject.setCollisionFlags(CF_CHARACTER_OBJECT);
 
         const stepHeight = 0.35;
-        let m_character = new Ammo.btKinematicCharacterController(m_ghostObject, capsule, stepHeight);
-
-        this.character = m_character;
+        this.characterControllerHolder = new btHolder<any>(new Ammo.btKinematicCharacterController(m_ghostObject, capsule, stepHeight));
+        let m_character = this.characterControllerHolder.v;
 
         console.log(`cc=${m_character}`)
 
@@ -227,7 +240,7 @@ export class Character extends Actor {
         }
 
         const ajsp = this.scene.getPhysicsEngine()!.getPhysicsPlugin() as AmmoJSPlugin
-        ajsp.world.removeCollisionObject(this.ghostObject);
+        ajsp.world.removeCollisionObject(this.ghostObjectHolder.v);
     }
 
     private formatVector(v3: btVector3, fixedPlaces: number = 1) {
