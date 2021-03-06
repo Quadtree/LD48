@@ -39,9 +39,9 @@ let debugUi: AdvancedDynamicTexture
 let debugUiText: TextBlock
 
 export class Character extends Actor {
-    private character: any;
+    private readonly character: any;
 
-    private camera: FreeCamera;
+    private readonly camera: FreeCamera;
 
     private moveForward = false;
     private moveBackward = false;
@@ -52,7 +52,7 @@ export class Character extends Actor {
     private isAdded = true;
     private addCharge = 1;
 
-    private ghostObject: any;
+    private readonly ghostObject: any;
 
     private acceptingInput = true;
 

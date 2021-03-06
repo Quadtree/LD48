@@ -70,8 +70,6 @@ export class Util {
         return ret;
     }
 
-    private static totalVectors = 0;
-
     public static toBJVector3(v3: btVector3): Vector3 {
         return new Vector3(
             v3.x(),
