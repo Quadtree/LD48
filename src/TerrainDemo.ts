@@ -30,7 +30,7 @@ export class TerrainDemo implements Game {
 
     async init(gameManager:GameManager){
         this.gameManager = gameManager;
-        this.gameManager.enablePhysics();
+        await this.gameManager.enablePhysics();
 
         const skyLight = new HemisphericLight('light1', new Vector3(0,1,0), this._scene);
         skyLight.intensity = 0.1

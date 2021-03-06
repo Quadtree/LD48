@@ -8,6 +8,8 @@ import "@babylonjs/core/Lights/Shadows/shadowGeneratorSceneComponent";
 import { patchedAmmoJSPlugin } from "./PatchedAmmoJSPlugin";
 import { Game } from "./Game";
 
+declare const Ammo:any;
+
 export class GameManager {
     public readonly canvas: HTMLCanvasElement;
     public readonly engine: Engine;
@@ -21,7 +23,8 @@ export class GameManager {
         this.scene = new Scene(this.engine);
     }
 
-    enablePhysics(){
+    async enablePhysics(){
+        await Ammo();
         this.scene.enablePhysics(new Vector3(0, -9.8, 0), patchedAmmoJSPlugin());
     }
 
