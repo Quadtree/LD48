@@ -55,7 +55,7 @@ export class Character extends Actor {
     private readonly ghostObjectHolder: btHolder<any>;
     private readonly transformHolder:btHolder<any>;
     private readonly capsuleShapeHolder:btHolder<any>;
-    private static ghostPairCallbackHolder:btHolder<any>;
+    private static readonly ghostPairCallbackHolder:WeakMap<any, btHolder<any>> = new WeakMap<any, btHolder<any>>();
     private readonly characterControllerHolder:btHolder<any>;
 
     private get character(){ return this.characterControllerHolder.v; }
@@ -102,9 +102,9 @@ export class Character extends Actor {
 
         m_ghostObject.setWorldTransform(startTransform);
 
-        if (Character.ghostPairCallbackHolder == null){
-            Character.ghostPairCallbackHolder = new btHolder<any>(new Ammo.btGhostPairCallback());
-            ajsp.world.getBroadphase().getOverlappingPairCache().setInternalGhostPairCallback(Character.ghostPairCallbackHolder.v);
+        if (!Character.ghostPairCallbackHolder.has(ajsp.world)){
+            Character.ghostPairCallbackHolder.set(ajsp.world, new btHolder<any>(new Ammo.btGhostPairCallback()));
+            ajsp.world.getBroadphase().getOverlappingPairCache().setInternalGhostPairCallback(Character.ghostPairCallbackHolder.get(ajsp.world)!.v);
         }
 
         const characterHeight = 1.75;
