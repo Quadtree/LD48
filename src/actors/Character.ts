@@ -70,7 +70,7 @@ export class Character extends Actor {
         this.character.getGhostObject().getWorldTransform().setOrigin(this.toBLVector3(v).v);
     }
 
-    public constructor(protected scene: Scene, private canvas: HTMLCanvasElement | null, position: Vector3) {
+    public constructor(protected readonly scene: Scene, private readonly canvas: HTMLCanvasElement | null, position: Vector3, private readonly debugMode:boolean = false) {
         super()
 
         this.camera = new FreeCamera('', new Vector3(), this.scene);
@@ -78,7 +78,7 @@ export class Character extends Actor {
         this.camera.maxZ = 800;
         this.camera.inertia = 0;
         this.camera.angularSensibility = 400;
-        console.log(`fov=${this.camera.fov}`);
+        if (this.debugMode) console.log(`fov=${this.camera.fov}`);
         if (this.canvas) {
             this.camera.attachControl(this.canvas, false);
         }
@@ -118,7 +118,7 @@ export class Character extends Actor {
         this.characterControllerHolder = new btHolder<any>(new Ammo.btKinematicCharacterController(m_ghostObject, capsule, stepHeight));
         let m_character = this.characterControllerHolder.v;
 
-        console.log(`cc=${m_character}`)
+        if (this.debugMode) console.log(`cc=${m_character}`)
 
         ajsp.world.addCollisionObject(m_ghostObject, CharacterFilter, StaticFilter | DefaultFilter);
         ajsp.world.addAction(m_character);
@@ -138,12 +138,14 @@ export class Character extends Actor {
                 }
             });
 
-            //debugUi = AdvancedDynamicTexture.CreateFullscreenUI('', true, this.scene);
-            debugUiText = new TextBlock('', 'test')
-            //debugUi.addControl(debugUiText)
-            debugUiText.left = -600
-            debugUiText.top = -600
-            debugUiText.color = '#ffffff'
+            if (this.debugMode){
+                debugUi = AdvancedDynamicTexture.CreateFullscreenUI('', true, this.scene);
+                debugUiText = new TextBlock('', 'test')
+                debugUi.addControl(debugUiText)
+                debugUiText.left = -600
+                debugUiText.top = -600
+                debugUiText.color = '#ffffff'
+            }
 
             this.scene.onPointerObservable.add((ed: PointerInfo, es: EventState) => {
                 if (this.acceptingInput) {
@@ -222,7 +224,7 @@ export class Character extends Actor {
             this.isAdded = true;
         }
 
-        if (this.canvas)
+        if (this.canvas && this.debugMode)
             debugUiText.text = `angle=${this.camera.rotation.y}\npos=${this.formatBJVector(this.toBJVector3(v3))}\nwalkDirection=${this.formatVector(blWalkDirection.v, 4)}\nonGround=${this.character.onGround()}\nisAdded=${this.isAdded} addCharge=${this.addCharge.toFixed(1)} shouldBeAdded=${shouldBeAdded}\n${this.getExtraText()}`
     }
 
