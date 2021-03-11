@@ -5,8 +5,8 @@ import { Scene } from "@babylonjs/core/scene";
 import { Quaternion, Vector3 } from "@babylonjs/core/Maths/math.vector";
 import "@babylonjs/core/Physics/physicsEngineComponent";
 import "@babylonjs/core/Lights/Shadows/shadowGeneratorSceneComponent";
-import { patchedAmmoJSPlugin } from "./PatchedAmmoJSPlugin";
 import { Game } from "./Game";
+import { AmmoJSPlugin } from "@babylonjs/core";
 
 declare const Ammo:any;
 
@@ -27,7 +27,7 @@ export class GameManager {
 
     async enablePhysics(){
         await Ammo();
-        this.scene.enablePhysics(new Vector3(0, -9.8, 0), patchedAmmoJSPlugin());
+        this.scene.enablePhysics(new Vector3(0, -9.8, 0), new AmmoJSPlugin());
     }
 
     async init(){
