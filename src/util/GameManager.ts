@@ -15,6 +15,8 @@ export class GameManager {
     public readonly engine: Engine;
     public readonly scene: Scene;
 
+    private lastRender:DOMHighResTimeStamp = performance.now();
+
     constructor(canvasElement : string, private game:Game) {
         // Create canvas and engine.
         this.canvas = document.getElementById(canvasElement) as HTMLCanvasElement;
@@ -54,11 +56,16 @@ export class GameManager {
     async start() {
         await this.init();
 
+        this.lastRender = performance.now();
+
         // Run the render loop.
         this.engine.runRenderLoop(() => {
             this.scene.render();
 
-            this.game.update(0.016);
+            const delta = performance.now() - this.lastRender;
+            this.lastRender = performance.now();
+
+            this.game.update(delta / 1_000);
         });
 
         // The canvas/window resize event handler.

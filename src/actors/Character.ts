@@ -186,7 +186,7 @@ export class Character extends Actor {
 
         this.camera.position = this.toBJVector3(v3).add(new Vector3(0, 0.75, 0)).add(this.getCameraOffset());
 
-        const walkSpeed = 0.25;
+        const walkSpeed = 0.25 / 0.016 * delta;
 
         let angle = this.camera.rotation.y;
 
