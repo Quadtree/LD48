@@ -53,7 +53,7 @@ services:
     - sh
     - -c
     - cd /src &&
-      node_modules/.bin/ts-node src/server.ts
+      node_modules/.bin/ts-node src/multiplayer/server.ts
   texture-packer:
     image: openjdk:11
     volumes:

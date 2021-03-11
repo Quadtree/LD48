@@ -7,8 +7,8 @@ import { PointerEventTypes, PointerInfo } from "@babylonjs/core/Events/pointerEv
 import { Scene } from "@babylonjs/core/scene";
 import { TextBlock } from "@babylonjs/gui/2D/controls/textBlock";
 import { Vector3 } from "@babylonjs/core/Maths/math.vector";
-import { Actor } from "./am/Actor";
-import { Util } from "./Util";
+import { Actor } from "../am/Actor";
+import { btHolder, Util } from "../util/Util";
 
 declare var Ammo: any;
 
@@ -39,9 +39,7 @@ let debugUi: AdvancedDynamicTexture
 let debugUiText: TextBlock
 
 export class Character extends Actor {
-    private character: any;
-
-    private camera: FreeCamera;
+    private readonly camera: FreeCamera;
 
     private moveForward = false;
     private moveBackward = false;
@@ -52,9 +50,15 @@ export class Character extends Actor {
     private isAdded = true;
     private addCharge = 1;
 
-    private ghostObject: any;
-
     private acceptingInput = true;
+
+    private readonly ghostObjectHolder: btHolder<any>;
+    private readonly transformHolder:btHolder<any>;
+    private readonly capsuleShapeHolder:btHolder<any>;
+    private static readonly ghostPairCallbackHolder:WeakMap<any, btHolder<any>> = new WeakMap<any, btHolder<any>>();
+    private readonly characterControllerHolder:btHolder<any>;
+
+    private get character(){ return this.characterControllerHolder.v; }
 
     public get pos() {
         let v3 = this.character.getGhostObject().getWorldTransform().getOrigin();
@@ -63,10 +67,10 @@ export class Character extends Actor {
     }
 
     public set pos(v: Vector3) {
-        this.character.getGhostObject().getWorldTransform().setOrigin(this.toBLVector3(v));
+        this.character.getGhostObject().getWorldTransform().setOrigin(this.toBLVector3(v).v);
     }
 
-    public constructor(protected scene: Scene, private canvas: HTMLCanvasElement | null, position: Vector3) {
+    public constructor(protected readonly scene: Scene, private readonly canvas: HTMLCanvasElement | null, position: Vector3, private readonly debugMode:boolean = false) {
         super()
 
         this.camera = new FreeCamera('', new Vector3(), this.scene);
@@ -74,7 +78,7 @@ export class Character extends Actor {
         this.camera.maxZ = 800;
         this.camera.inertia = 0;
         this.camera.angularSensibility = 400;
-        console.log(`fov=${this.camera.fov}`);
+        if (this.debugMode) console.log(`fov=${this.camera.fov}`);
         if (this.canvas) {
             this.camera.attachControl(this.canvas, false);
         }
@@ -90,26 +94,35 @@ export class Character extends Actor {
 
         let ajsp = this.scene.getPhysicsEngine()!.getPhysicsPlugin() as AmmoJSPlugin
 
-        let startTransform = new Ammo.btTransform();
-        startTransform.setIdentity();
-        startTransform.setOrigin(this.toBLVector3(position));
+        this.transformHolder = new btHolder<any>(new Ammo.btTransform());
 
-        let m_ghostObject = new Ammo.btPairCachingGhostObject();
-        this.ghostObject = m_ghostObject;
+        let startTransform = this.transformHolder.v;
+        startTransform.setIdentity();
+        startTransform.setOrigin(this.toBLVector3(position).v);
+
+
+        this.ghostObjectHolder = new btHolder<any>(new Ammo.btPairCachingGhostObject());
+        let m_ghostObject = this.ghostObjectHolder.v;
+
         m_ghostObject.setWorldTransform(startTransform);
-        ajsp.world.getBroadphase().getOverlappingPairCache().setInternalGhostPairCallback(new Ammo.btGhostPairCallback());
+
+        if (!Character.ghostPairCallbackHolder.has(ajsp.world)){
+            Character.ghostPairCallbackHolder.set(ajsp.world, new btHolder<any>(new Ammo.btGhostPairCallback()));
+            ajsp.world.getBroadphase().getOverlappingPairCache().setInternalGhostPairCallback(Character.ghostPairCallbackHolder.get(ajsp.world)!.v);
+        }
+
         const characterHeight = 1.75;
         const characterWidth = 1.00;
-        let capsule = new Ammo.btCapsuleShape(characterWidth, characterHeight);
+        this.capsuleShapeHolder = new btHolder<any>(new Ammo.btCapsuleShape(characterWidth, characterHeight));
+        let capsule = this.capsuleShapeHolder.v;
         m_ghostObject.setCollisionShape(capsule);
         m_ghostObject.setCollisionFlags(CF_CHARACTER_OBJECT);
 
         const stepHeight = 0.35;
-        let m_character = new Ammo.btKinematicCharacterController(m_ghostObject, capsule, stepHeight);
+        this.characterControllerHolder = new btHolder<any>(new Ammo.btKinematicCharacterController(m_ghostObject, capsule, stepHeight));
+        let m_character = this.characterControllerHolder.v;
 
-        this.character = m_character;
-
-        console.log(`cc=${m_character}`)
+        if (this.debugMode) console.log(`cc=${m_character}`)
 
         ajsp.world.addCollisionObject(m_ghostObject, CharacterFilter, StaticFilter | DefaultFilter);
         ajsp.world.addAction(m_character);
@@ -129,12 +142,14 @@ export class Character extends Actor {
                 }
             });
 
-            //debugUi = AdvancedDynamicTexture.CreateFullscreenUI('', true, this.scene);
-            debugUiText = new TextBlock('', 'test')
-            //debugUi.addControl(debugUiText)
-            debugUiText.left = -600
-            debugUiText.top = -600
-            debugUiText.color = '#ffffff'
+            if (this.debugMode){
+                debugUi = AdvancedDynamicTexture.CreateFullscreenUI('', true, this.scene);
+                debugUiText = new TextBlock('', 'test')
+                debugUi.addControl(debugUiText)
+                debugUiText.left = -600
+                debugUiText.top = -600
+                debugUiText.color = '#ffffff'
+            }
 
             this.scene.onPointerObservable.add((ed: PointerInfo, es: EventState) => {
                 if (this.acceptingInput) {
@@ -175,8 +190,8 @@ export class Character extends Actor {
 
         let angle = this.camera.rotation.y;
 
-        let forwardVector = new Vector3(Math.sin(angle), 0, Math.cos(angle));
-        let rightVector = new Vector3(Math.sin(angle + (Math.PI / 2)), 0, Math.cos(angle + (Math.PI / 2)));
+        let forwardVector = new Vector3(Math.sin(angle), 0, -Math.cos(angle));
+        let rightVector = new Vector3(Math.sin(angle + (Math.PI / 2)), 0, -Math.cos(angle + (Math.PI / 2)));
 
         let walkDirection = new Vector3(0, 0, 0);
 
@@ -185,18 +200,17 @@ export class Character extends Actor {
         if (this.moveRight) walkDirection.addInPlace(rightVector.scale(walkSpeed));
         if (this.moveLeft) walkDirection.addInPlace(rightVector.scale(-walkSpeed));
 
-        let blWalkDirection: btVector3 = this.toBLVector3(walkDirection);
+        let blWalkDirection: btHolder<btVector3> = this.toBLVector3(walkDirection);
 
-        this.character.setWalkDirection(blWalkDirection);
+        this.character.setWalkDirection(blWalkDirection.v);
 
         if (this.jump) {
             const v3 = this.toBLVector3(new Vector3(0, 20, 0));
-            this.character.jump(v3);
-            Util.destroyVector(v3);
+            this.character.jump(v3.v);
             this.jump = false;
         }
 
-        const shouldBeAdded = blWalkDirection.length() > 0.01 || !this.character.onGround();
+        const shouldBeAdded = blWalkDirection.v.length() > 0.01 || !this.character.onGround();
 
         if (!shouldBeAdded) {
             this.addCharge -= delta * 5;
@@ -214,10 +228,8 @@ export class Character extends Actor {
             this.isAdded = true;
         }
 
-        if (this.canvas)
-            debugUiText.text = `angle=${this.camera.rotation.y}\npos=${this.formatBJVector(this.toBJVector3(v3))}\nwalkDirection=${this.formatVector(blWalkDirection, 4)}\nonGround=${this.character.onGround()}\nisAdded=${this.isAdded} addCharge=${this.addCharge.toFixed(1)} shouldBeAdded=${shouldBeAdded}\n${this.getExtraText()}`
-
-        Util.destroyVector(blWalkDirection);
+        if (this.canvas && this.debugMode)
+            debugUiText.text = `angle=${this.camera.rotation.y}\npos=${this.formatBJVector(this.toBJVector3(v3))}\nwalkDirection=${this.formatVector(blWalkDirection.v, 4)}\nonGround=${this.character.onGround()}\nisAdded=${this.isAdded} addCharge=${this.addCharge.toFixed(1)} shouldBeAdded=${shouldBeAdded}\n${this.getExtraText()}`
     }
 
     protected getExtraText(): string {
@@ -234,7 +246,7 @@ export class Character extends Actor {
         }
 
         const ajsp = this.scene.getPhysicsEngine()!.getPhysicsPlugin() as AmmoJSPlugin
-        ajsp.world.removeCollisionObject(this.ghostObject);
+        ajsp.world.removeCollisionObject(this.ghostObjectHolder.v);
     }
 
     private formatVector(v3: btVector3, fixedPlaces: number = 1) {
@@ -245,7 +257,7 @@ export class Character extends Actor {
         return `${v3.x.toFixed(fixedPlaces)},${v3.y.toFixed(fixedPlaces)},${v3.z.toFixed(fixedPlaces)}`;
     }
 
-    private toBLVector3(v3: Vector3): btVector3 {
+    private toBLVector3(v3: Vector3): btHolder<btVector3> {
         return Util.toBLVector3(v3);
     }
 
@@ -253,7 +265,7 @@ export class Character extends Actor {
         return new Vector3(
             v3.x(),
             v3.y(),
-            -v3.z()
+            v3.z()
         );
     }
 }

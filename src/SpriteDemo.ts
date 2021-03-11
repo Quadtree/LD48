@@ -1,13 +1,11 @@
 import { Camera } from "@babylonjs/core/Cameras/camera";
 import { Engine } from "@babylonjs/core/Engines/engine";
 import { FreeCamera } from "@babylonjs/core/Cameras/freeCamera";
-import { HemisphericLight } from "@babylonjs/core/Lights/hemisphericLight";
-import { MeshBuilder } from "@babylonjs/core/Meshes/meshBuilder";
 import { Scene } from "@babylonjs/core/scene";
 import { Sprite } from "@babylonjs/core/Sprites/sprite";
 import { SpriteManager } from "@babylonjs/core/Sprites/spriteManager";
 import { Vector3 } from "@babylonjs/core/Maths/math.vector";
-import { LibGDXSpriteManager } from './LibGDXSpriteManager';
+import { LibGDXSpriteManager } from './util/LibGDXSpriteManager';
 import * as matter from 'matter-js'
 
 class BoxActor {

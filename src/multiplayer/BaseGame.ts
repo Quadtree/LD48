@@ -6,7 +6,7 @@ import { Sprite } from "@babylonjs/core/Sprites/sprite";
 import { SpriteManager } from "@babylonjs/core/Sprites/spriteManager";
 import { Vector2 } from "@babylonjs/core/Maths/math.vector";
 import { Vector3 } from "@babylonjs/core/Maths/math.vector";
-import { LibGDXSpriteManager } from '../LibGDXSpriteManager';
+import { LibGDXSpriteManager } from '../util/LibGDXSpriteManager';
 import * as matter from 'matter-js'
 import { ActorManager } from '../am/ActorManager';
 import { Actor } from '../am/Actor';

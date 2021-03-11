@@ -12,9 +12,9 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "@babylonjs/core": "5.0.0-alpha.12",
-    "@babylonjs/loaders": "5.0.0-alpha.12",
-    "@babylonjs/gui": "5.0.0-alpha.12",
+    "@babylonjs/core": "5.0.0-alpha.14",
+    "@babylonjs/loaders": "5.0.0-alpha.14",
+    "@babylonjs/gui": "5.0.0-alpha.14",
     "ts-loader": "^7.0.2",
     "typescript": "^3.8.3",
     "webpack": "^4.43.0",

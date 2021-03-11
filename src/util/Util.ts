@@ -2,7 +2,8 @@ import { Scene, Sound } from "@babylonjs/core";
 import { AmmoJSPlugin } from "@babylonjs/core/Physics/Plugins/ammoJSPlugin";
 import { Vector3 } from "@babylonjs/core/Maths/math.vector";
 
-declare var Ammo: any;
+declare const Ammo: any;
+declare const FinalizationRegistry:any;
 
 interface btVector3 {
     length(): number;
@@ -20,6 +21,16 @@ interface btVector3 {
     op_add(v: btVector3): btVector3;
     op_sub(v: btVector3): btVector3;
 };
+
+export class btHolder<T> {
+    private static bulletFinalizationRegistry = new FinalizationRegistry((itm:any) => {
+        Ammo.destroy(itm);
+    });
+
+    constructor(public readonly v:T){
+        btHolder.bulletFinalizationRegistry.register(this, v);
+    }
+}
 
 export class Util {
     static deepEquals(val1: any, val2: any): boolean {
@@ -50,34 +61,21 @@ export class Util {
         return `${v3.x().toFixed(fixedPlaces)},${v3.y().toFixed(fixedPlaces)},${v3.z().toFixed(fixedPlaces)}`;
     }
 
-    public static toBLVector3(v3: Vector3): btVector3 {
-        const ret = new Ammo.btVector3();
-        ret.setX(v3.x);
-        ret.setY(v3.y);
-        ret.setZ(-v3.z);
-
-        Util.totalVectors++;
-
-        if (Util.totalVectors > 10000) {
-            console.log(`POSSIBLE MEMORY LEAK ${Util.totalVectors}`);
-        }
+    public static toBLVector3(v3: Vector3): btHolder<btVector3> {
+        const ret = new btHolder<btVector3>(new Ammo.btVector3());
+        ret.v.setX(v3.x);
+        ret.v.setY(v3.y);
+        ret.v.setZ(-v3.z);
 
         return ret;
     }
-
-    private static totalVectors = 0;
 
     public static toBJVector3(v3: btVector3): Vector3 {
         return new Vector3(
             v3.x(),
             v3.y(),
-            -v3.z()
+            v3.z()
         );
-    }
-
-    public static destroyVector(v3: btVector3) {
-        Util.totalVectors--;
-        Ammo.destroy(v3);
     }
 
     static rayTest(scene: Scene, from: Vector3, to: Vector3): boolean {
@@ -85,29 +83,13 @@ export class Util {
 
         const world = ajsp.world;
 
-        let fromBTV = null;
-        let toBTV = null;
-        let cb = null;
-        let ret = null;
+        const cb = new btHolder<any>(new Ammo.ClosestRayResultCallback());
+        const fromBTV = Util.toBLVector3(from);
+        const toBTV = Util.toBLVector3(to);
 
-        try {
-            cb = new Ammo.ClosestRayResultCallback();
-            fromBTV = Util.toBLVector3(from);
-            toBTV = Util.toBLVector3(to);
+        world.rayTest(fromBTV.v, toBTV.v, cb.v);
 
-            ret = false;
-
-            world.rayTest(fromBTV, toBTV, cb);
-
-            ret = cb.m_collisionObject.ptr != 0;
-
-        } finally {
-            if (cb) Ammo.destroy(cb);
-            if (fromBTV) this.destroyVector(fromBTV);
-            if (toBTV) this.destroyVector(toBTV);
-        }
-
-        return ret;
+        return cb.v.m_collisionObject.ptr != 0;
     }
 
     static loadSound(url: string, scene: Scene, loop: boolean = false): Promise<Sound> {
@@ -115,6 +97,12 @@ export class Util {
             const sound = new Sound("", url, scene, () => {
                 resolve(sound);
             }, { loop: loop, autoplay: false });
+        });
+    }
+
+    static async delay(ms: number): Promise<void> {
+        return new Promise<void>((res, rej) => {
+            setTimeout(res, ms);
         });
     }
 
