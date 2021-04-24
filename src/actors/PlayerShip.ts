@@ -12,7 +12,7 @@ export class PlayerShip extends Ship {
         this.cam = new Camera("playerShipCamera", new Vector3(0, 0,0 ), scene, true);
         scene.activeCamera = this.cam;
 
-        this.cam.position = this.location.add(new Vector3(0, 0, -5));
+        this.cam.position.copyFrom(this.location.add(new Vector3(0, 0, 0)));
 
         console.log(`camera position ${this.cam.position}`)
 
