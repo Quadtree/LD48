@@ -34,6 +34,10 @@ export class Asteroid extends Actor {
 
         this.mesh!.physicsImpostor = new PhysicsImpostor(this.mesh!, PhysicsImpostor.SphereImpostor, {mass: 0, });
 
-        console.log(`radius=${this.mesh!.physicsImpostor!.getRadius()}`)
+        console.log(`radius=${this.mesh!.physicsImpostor!.getRadius()}`);
+
+        (this.mesh!.physicsImpostor as any).takeDamage = (amt:number) => {
+            console.log(`asteroid took ${amt} damage`);
+        }
     }
 }
