@@ -85,6 +85,8 @@ export class SquidThing extends Actor implements Damagable {
                     const turnQuat = Util.rotationBetweenVectors(forwardVector, toPlayerVector, 1 * delta);
                     console.log(`${turnQuat}`)
 
+                    this.model!.lookAt(playerShip.model!.position);
+
                     this.model!.rotationQuaternion = this.model!.rotationQuaternion!.multiply(turnQuat);
                 }
             }

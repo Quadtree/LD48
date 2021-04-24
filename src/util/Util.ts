@@ -123,13 +123,13 @@ export class Util {
 
         let angle = Math.acos(Vector3.Dot(uv1, uv2));
 
-        if (Math.abs(angle) > maxTurn){
+        /*if (Math.abs(angle) > maxTurn){
             if (angle >= 0){
                 angle = Math.min(angle, maxTurn);
             } else {
                 angle = Math.max(angle, -maxTurn);
             }
-        }
+        }*/
 
         const axis = Vector3.Cross(uv1, uv2);
         return Quaternion.RotationAxis(axis, angle);
