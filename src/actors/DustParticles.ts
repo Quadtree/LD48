@@ -26,7 +26,7 @@ class DustParticle {
     update(delta:number, camPos:Vector3){
         if (this.inst.position.subtract(camPos).length() > RADIUS){
             const angle = Quaternion.FromEulerAngles(Math.random() * 360, Math.random() * 360, Math.random() * 360);
-            const vec = new Vector3(0, 0, RADIUS);
+            const vec = new Vector3(0, 0, RADIUS * 0.9);
             const mat = new Matrix();
             angle.toRotationMatrix(mat);
 
