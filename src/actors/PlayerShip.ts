@@ -24,7 +24,7 @@ export class PlayerShip extends Ship {
         console.log(`camera position ${this.cam!.position}`)
 
         this.actorManager!.scene!.onKeyboardObservable.add((ed, es) => {
-            if (ed.type == KeyboardEventTypes.KEYDOWN && ed.event.key == "w") this.forwardKeyDown = true;
+            if (ed.type == KeyboardEventTypes.KEYDOWN && ed.event.key == "w") { this.forwardKeyDown = true; console.log("W"); }
             if (ed.type == KeyboardEventTypes.KEYUP && ed.event.key == "w") this.forwardKeyDown = false;
 
             if (ed.type == KeyboardEventTypes.KEYDOWN && ed.event.key == "a") this.leftKeyDown = true;
@@ -75,10 +75,12 @@ export class PlayerShip extends Ship {
 
         this.model!.physicsImpostor!.setLinearVelocity(Vector3.TransformCoordinates(thrust, mat));
 
+        const quat = this.model!.physicsImpostor!.getParentsRotation();
+        quat.multiplyInPlace(Quaternion.FromEulerAngles(-pitch * PlayerShip.turnSpeed, yaw * PlayerShip.turnSpeed, 0));
+        quat.normalize();
 
-        
-        this.model!.physicsImpostor!.setAngularVelocity(this.model!.rotationQuaternion!.multiply(Quaternion.FromEulerAngles(pitch * PlayerShip.turnSpeed, yaw * PlayerShip.turnSpeed, 0)).normalize().toEulerAngles());//.toEulerAngles());
-        //this.model!.physicsImpostor!.setDeltaRotation(Quaternion.FromEulerAngles(pitch * PlayerShip.turnSpeed, yaw * PlayerShip.turnSpeed, 0));
+        this.model!.physicsImpostor!.setAngularVelocity(quat.toEulerAngles());
+        this.model!.physicsImpostor!.wakeUp();
 
         //console.log(`${yaw} ${pitch}`);
     }
