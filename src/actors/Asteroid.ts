@@ -5,6 +5,7 @@ import {MeshBuilder} from "@babylonjs/core/Meshes/meshBuilder";
 import {AbstractMesh} from "@babylonjs/core/Meshes/abstractMesh";
 import {Mesh, StandardMaterial} from "@babylonjs/core/index";
 import {Vector3} from "@babylonjs/core/Maths/math.vector";
+import {PhysicsImpostor} from "@babylonjs/core/Physics/physicsImpostor";
 
 export class Asteroid extends Actor {
     protected mesh:AbstractMesh|null = null;
@@ -30,5 +31,7 @@ export class Asteroid extends Actor {
         mat.diffuseTexture = Asteroid.texture;
 
         this.mesh.material = mat;
+
+        this.mesh!.physicsImpostor = new PhysicsImpostor(this.mesh!, PhysicsImpostor.SphereImpostor, {mass: 5});
     }
 }
