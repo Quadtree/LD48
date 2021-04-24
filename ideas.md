@@ -38,8 +38,10 @@ The problem here is that rendering a cloud for the player to fly through would .
 
 Perhaps make the cloud more of a background and less of fog. That way it doesn't seem so odd that it's mostly uniform.
 
-## TODO
+## Done
 * Pause game when cursor leaves viewport
+
+## TODO
 * Basic weapon firing
 * Particles passing the ship
 * Some kind of enemy

@@ -14,6 +14,10 @@ export class LD48 implements Game {
 
     public static gm:GameManager|null = null;
 
+    public static s:LD48|null = null;
+
+    public mouseIn = true;
+
     async init(gameManager:GameManager):Promise<void> {
         console.log("init()");
 
@@ -22,6 +26,7 @@ export class LD48 implements Game {
         await gameManager.enablePhysics();
 
         LD48.gm = gameManager;
+        LD48.s = this;
 
         this.actorManager.scene = gameManager.scene;
 

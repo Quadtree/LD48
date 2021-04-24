@@ -8,3 +8,11 @@ import {LD48} from "./LD48";
 window.addEventListener('DOMContentLoaded', async () => {
     new GameManager('renderCanvas', new LD48()).start();
 });
+
+document.getElementById("renderCanvas")!.addEventListener("mouseout", () => {
+    if (LD48.s) LD48.s!.mouseIn = false;
+});
+
+document.getElementById("renderCanvas")!.addEventListener("mouseenter", () => {
+    if (LD48.s) LD48.s!.mouseIn = true;
+});

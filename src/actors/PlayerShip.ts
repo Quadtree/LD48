@@ -51,9 +51,11 @@ export class PlayerShip extends Ship {
         const yaw = ((this.actorManager!.scene!.pointerX / LD48.gm!.canvas!.width) - 0.5) * 2;
         const pitch = ((this.actorManager!.scene!.pointerY / LD48.gm!.canvas!.height) - 0.5) * 2;
 
-        this.model!.rotationQuaternion!.copyFrom(this.yesSeriously);
-        this.model?.addRotation(pitch * delta * PlayerShip.turnSpeed, yaw * delta * PlayerShip.turnSpeed, 0);
-        this.yesSeriously = this.model!.rotationQuaternion!.clone();
+        if (LD48.s?.mouseIn){
+            this.model!.rotationQuaternion!.copyFrom(this.yesSeriously);
+            this.model?.addRotation(pitch * delta * PlayerShip.turnSpeed, yaw * delta * PlayerShip.turnSpeed, 0);
+            this.yesSeriously = this.model!.rotationQuaternion!.clone();
+        }
 
         //console.log(yaw * delta * PlayerShip.turnSpeed);
 
