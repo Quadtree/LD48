@@ -85,6 +85,7 @@ export class PlayerShip extends Ship {
 
         this.model!.physicsImpostor!.setLinearVelocity(Vector3.TransformCoordinates(thrust, mat));
         this.model!.physicsImpostor!.setAngularVelocity(new Vector3(0,0,0));
+        //this.model!.physicsImpostor!.setDeltaRotation(Quaternion.RotationYawPitchRoll(-pitch * PlayerShip.turnSpeed, yaw * PlayerShip.turnSpeed, 0));
 
         /*const zeroRotation = this.model!.rotationQuaternion!.clone();
         zeroRotation.multiplyInPlace(Quaternion.FromEulerAngles(0, 0, 0));
