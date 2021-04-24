@@ -81,6 +81,8 @@ export class PlayerShip extends Ship implements Damagable {
         }
     }
 
+    private oldCamPoses:any[] = [];
+
     update(delta: number) {
         super.update(delta);
 
@@ -104,16 +106,15 @@ export class PlayerShip extends Ship implements Damagable {
         const transformed = Vector3.TransformCoordinates(new Vector3(0, 3, -20), mat);
         const camTargetPos = this.model!.position!.add(transformed);
 
-        //this.cam!.position = this.cam!.position.scale(0.8).addInPlace(this.model!.position!.add(transformed).scale(0.2));
+        const curTs = Date.now();
 
-        const camMoveRate = 20 * delta;
+        this.oldCamPoses.unshift([camTargetPos, Date.now()]);
 
-        const camDelta = camTargetPos.subtract(this.cam!.position);
-        if (camDelta.length() < camMoveRate){
-            this.cam!.position.copyFrom(camTargetPos);
-        } else {
-            this.cam!.position = this.cam!.position.add(camDelta.normalize().scale(camMoveRate));
+        while(this.oldCamPoses.length > 1 && this.oldCamPoses[this.oldCamPoses.length - 1][1] < curTs - 100){
+            this.oldCamPoses.pop();
         }
+
+        this.cam!.position.copyFrom(this.oldCamPoses[this.oldCamPoses.length - 1][0]);
 
         this.cam!.rotationQuaternion = this.model!.rotationQuaternion!;
 
