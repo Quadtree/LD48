@@ -11,10 +11,14 @@ import {Starfield} from "./actors/Starfield";
 export class LD48 implements Game {
     private actorManager = new ActorManager()
 
+    public static gm:GameManager|null = null;
+
     async init(gameManager:GameManager):Promise<void> {
         console.log("init()");
 
         new Camera("loadingCamera", new Vector3(0, 0,0 ), gameManager.scene, true);
+
+        LD48.gm = gameManager;
 
         this.actorManager.scene = gameManager.scene;
 

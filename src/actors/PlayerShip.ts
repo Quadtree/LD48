@@ -3,6 +3,7 @@ import {Scene} from "@babylonjs/core/scene";
 import {Camera} from "@babylonjs/core/Cameras/camera";
 import {Vector3} from "@babylonjs/core/Maths/math.vector";
 import {UniversalCamera} from "@babylonjs/core/index";
+import {LD48} from "../LD48";
 
 export class PlayerShip extends Ship {
     private cam:Camera|null = null;
@@ -20,5 +21,14 @@ export class PlayerShip extends Ship {
         console.log(`camera position ${this.cam!.position}`)
 
         Vector3.Forward(false);
+    }
+
+    update(delta: number) {
+        super.update(delta);
+
+        const yaw = ((this.actorManager!.scene!.pointerX / LD48.gm!.canvas.width) - 0.5) * 2;
+        const pitch = ((this.actorManager!.scene!.pointerY / LD48.gm!.canvas.height) - 0.5) * 2;
+
+        console.log(`${yaw} ${pitch}`)
     }
 }

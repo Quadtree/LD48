@@ -3,7 +3,7 @@ import { ActorManager } from "./ActorManager";
 
 export class Actor
 {
-    private actorManager:ActorManager|null = null;
+    protected actorManager:ActorManager|null = null;
 
     public netOwnerID = 1
     public netID = Math.floor(Math.random() * 1000000)
