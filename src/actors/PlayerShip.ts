@@ -103,7 +103,8 @@ export class PlayerShip extends Ship implements Damagable {
 
         const transformed = Vector3.TransformCoordinates(new Vector3(0, 3, -20), mat);
 
-        this.cam!.position = this.cam!.position.scale(0.8).addInPlace(this.model!.position!.add(transformed).scale(0.2));
+        //this.cam!.position = this.cam!.position.scale(0.8).addInPlace(this.model!.position!.add(transformed).scale(0.2));
+        this.cam!.position.copyFrom(this.model!.position!.add(transformed));
         this.cam!.rotationQuaternion = this.model!.rotationQuaternion!;
 
         const thrust = new Vector3();
@@ -116,7 +117,7 @@ export class PlayerShip extends Ship implements Damagable {
 
         if (thrust.length() > 0.1){
             thrust.normalize();
-            thrust.scaleInPlace(20);
+            thrust.scaleInPlace(40);
         } else {
             thrust.set(0,0,0);
         }

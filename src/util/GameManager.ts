@@ -58,14 +58,18 @@ export class GameManager {
 
         this.lastRender = performance.now();
 
-        // Run the render loop.
-        this.engine.runRenderLoop(() => {
-            this.scene.render();
-
+        this.scene.onBeforeRenderObservable.add(() => {
             const delta = performance.now() - this.lastRender;
             this.lastRender = performance.now();
 
             this.game.update(delta / 1_000);
+        })
+
+        // Run the render loop.
+        this.engine.runRenderLoop(() => {
+            this.scene.render();
+
+
         });
 
         // The canvas/window resize event handler.
