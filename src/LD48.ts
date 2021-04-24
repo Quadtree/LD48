@@ -8,6 +8,7 @@ import {Vector3} from "@babylonjs/core/Maths/math.vector";
 import {DirectionalLight} from "@babylonjs/core/Lights/directionalLight";
 import {Starfield} from "./actors/Starfield";
 import {Asteroid} from "./actors/Asteroid";
+import {DustParticles} from "./actors/DustParticles";
 
 export class LD48 implements Game {
     private actorManager = new ActorManager()
@@ -43,6 +44,7 @@ export class LD48 implements Game {
         this.actorManager.add(playerShip);
         this.actorManager.add(new Starfield());
         this.actorManager.add(new Asteroid(new Vector3(0,0,-15)));
+        this.actorManager.add(new DustParticles());
 
         new DirectionalLight("", new Vector3(-1, -1, 0), gameManager.scene);
     }
