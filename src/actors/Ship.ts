@@ -32,7 +32,9 @@ export class Ship extends Actor {
             (mesh as any).isVisible = true;
         }
 
-        this.model!.physicsImpostor = new PhysicsImpostor(this.model!, PhysicsImpostor.BoxImpostor, {mass: 10});
+        this.model!.physicsImpostor = new PhysicsImpostor(this.model!, PhysicsImpostor.ConvexHullImpostor, {mass: 10});
+
+        console.log(`ship_radius=${this.model!.physicsImpostor!.getRadius()}`)
 
         console.log(`ship placed at ${this.model?.position}`)
     }
