@@ -75,7 +75,7 @@ export class PlayerShip extends Ship implements Damagable {
 
                     const pos = cannonLoc.add(Vector3.TransformCoordinates(new Vector3(0, 0, 5), mat));
 
-                    this.actorManager!.add(new EnergyBolt(pos, angle));
+                    this.actorManager!.add(new EnergyBolt(pos, angle, 0, 180));
                 }
             }
         }
