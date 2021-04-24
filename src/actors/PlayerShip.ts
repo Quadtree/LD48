@@ -9,8 +9,9 @@ import {PointerEventTypes} from "@babylonjs/core/Events/pointerEvents";
 import { Plane, Ray } from "@babylonjs/core";
 import {EnergyBolt} from "./EnergyBolt";
 import {Util} from "../util/Util";
+import {Damagable} from "./Damagable";
 
-export class PlayerShip extends Ship {
+export class PlayerShip extends Ship implements Damagable {
     private cam:TargetCamera|null = null;
 
     private static readonly turnSpeed = 2;
@@ -24,6 +25,8 @@ export class PlayerShip extends Ship {
     private cannonCharge = 0;
 
     private yesSeriously:Quaternion = new Quaternion();
+
+    private hp:number = 15;
 
     enteringView(scene: Scene) {
         super.enteringView(scene);
@@ -139,14 +142,33 @@ export class PlayerShip extends Ship {
 
         //console.log(`${yaw} ${pitch}`);
 
-
-
-
-
         this.cannonCharge += delta;
 
         if (this.firing){
             this.fireCannons(delta);
         }
+    }
+
+    takeDamage(amt: number) {
+        this.hp -= amt;
+    }
+
+    getFaction(): number {
+        return 0;
+    }
+
+    getPos(): Vector3 {
+        return this.model!.position.clone();
+    }
+
+    keep(): boolean {
+        return super.keep() && this.hp > 0;
+    }
+
+    exitingWorld() {
+        super.exitingWorld();
+
+        this.model!.dispose();
+        this.cam!.dispose();
     }
 }
