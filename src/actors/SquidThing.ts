@@ -11,6 +11,8 @@ import {Damagable} from "./Damagable";
 export class SquidThing extends Actor implements Damagable {
     static shipModel:AbstractMesh|null = null;
 
+    hp:number = 3;
+
     static async preload(scene: Scene){
         const thing = (await SceneLoader.ImportMeshAsync(null, './assets/squid_thing.glb', '', scene));
 
@@ -49,5 +51,12 @@ export class SquidThing extends Actor implements Damagable {
     }
 
     takeDamage(amt: number) {
+
+        this.hp -= amt;
+        console.log(`took ${amt} damage ${this.hp} left`)
+    }
+
+    keep(): boolean {
+        return super.keep() && this.hp > 0;
     }
 }
