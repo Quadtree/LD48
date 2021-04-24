@@ -40,8 +40,6 @@ export class SquidThing extends Actor implements Damagable {
 
         this.model!.physicsImpostor = new PhysicsImpostor(this.model!, PhysicsImpostor.ConvexHullImpostor, {
             mass: 5,
-            group: Constants.COLLISION_GROUP_ENEMY,
-            mask: Constants.COLLISION_GROUP_PLAYER_SHOT
         } as any);
         this.model!.position.copyFrom(this.startLoc);
 
@@ -109,14 +107,15 @@ export class SquidThing extends Actor implements Damagable {
 
                     angle.toRotationMatrix(Util.mat);
 
-                    this.actorManager!.add(new EnergyBolt(this.model!.position, angle, 1, 60));
+                    this.actorManager!.add(new EnergyBolt(this.model!.position.add(Vector3.TransformCoordinates(Vector3.Forward(false), Util.mat).scaleInPlace(5)), angle, 1, 60));
 
                     this.weaponCharge = 0;
                 }
             }
         }
 
-
+        const moveDelta = this.aimPoint.subtract(this.model!.position).normalize().scaleInPlace(10)
+        this.model!.physicsImpostor!.setLinearVelocity(moveDelta);
     }
 
 

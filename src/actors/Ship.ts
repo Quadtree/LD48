@@ -35,8 +35,6 @@ export class Ship extends Actor {
 
         this.model!.physicsImpostor = new PhysicsImpostor(this.model!, PhysicsImpostor.ConvexHullImpostor, {
             mass: 10,
-            group: Constants.COLLISION_GROUP_PLAYER,
-            mask: Constants.COLLISION_GROUP_ENEMY | Constants.COLLISION_GROUP_ENEMY_SHOT | Constants.COLLISION_GROUP_PLAYER
         } as any);
 
         console.log(`ship_radius=${this.model!.physicsImpostor!.getRadius()}`)
