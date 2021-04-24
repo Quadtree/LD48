@@ -135,6 +135,14 @@ export class Util {
         return Quaternion.RotationAxis(axis, angle);
     }
 
+    static randomPointOnSphere(center:Vector3, radius:number):Vector3 {
+        const angle = Quaternion.FromEulerAngles(Math.random() * 360, Math.random() * 360, Math.random() * 360);
+        const vec = new Vector3(0, 0, radius);
+        angle.toRotationMatrix(Util.mat);
+
+        return center.add(Vector3.TransformCoordinates(vec, Util.mat));
+    }
+
     static mat = new Matrix();
 
     static CHEATS_ENABLED = false;

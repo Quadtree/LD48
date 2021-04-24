@@ -10,9 +10,11 @@ import {Constants} from "../util/Constants";
 import {Damagable} from "./Damagable";
 
 export class Asteroid extends Actor implements Damagable {
-    protected mesh:AbstractMesh|null = null;
+    public mesh:AbstractMesh|null = null;
 
     static texture:Texture|null = null;
+
+    alive = true;
 
     static async preload(scene:Scene){
         this.texture = new Texture("assets/asteroid1.png", scene, true, false, Texture.NEAREST_SAMPLINGMODE);
@@ -34,7 +36,7 @@ export class Asteroid extends Actor implements Damagable {
 
         this.mesh.material = mat;
 
-        this.mesh!.physicsImpostor = new PhysicsImpostor(this.mesh!, PhysicsImpostor.SphereImpostor, {mass: 0, group: Constants.COLLISION_GROUP_ENEMY, mask: Constants.COLLISION_GROUP_ENEMY | Constants.COLLISION_GROUP_ENEMY_SHOT | Constants.COLLISION_GROUP_PLAYER_SHOT | Constants.COLLISION_GROUP_PLAYER} as any);
+        this.mesh!.physicsImpostor = new PhysicsImpostor(this.mesh!, PhysicsImpostor.SphereImpostor, {mass: 100, group: Constants.COLLISION_GROUP_ENEMY, mask: Constants.COLLISION_GROUP_ENEMY | Constants.COLLISION_GROUP_ENEMY_SHOT | Constants.COLLISION_GROUP_PLAYER_SHOT | Constants.COLLISION_GROUP_PLAYER} as any);
 
         console.log(`radius=${this.mesh!.physicsImpostor!.getRadius()}`);
 
@@ -42,6 +44,14 @@ export class Asteroid extends Actor implements Damagable {
 
         }
         console.log(`asteroid ID=${this.mesh!.physicsImpostor!.uniqueId}`);
+
+        this.mesh!.physicsImpostor!.setLinearVelocity(new Vector3((Math.random() * 2 - 1) * 8, (Math.random() * 2 - 1) * 8, (Math.random() * 2 - 1) * 8));
+    }
+
+    exitingView() {
+        super.exitingView();
+
+        this.mesh!.dispose();
     }
 
     takeDamage(amt: number) {
@@ -54,5 +64,9 @@ export class Asteroid extends Actor implements Damagable {
 
     getPos(): Vector3 {
         return this.mesh!.position.clone();
+    }
+
+    keep(): boolean {
+        return super.keep() && this.alive;
     }
 }
