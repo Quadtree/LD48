@@ -3,7 +3,7 @@ import {Scene} from "@babylonjs/core/scene";
 import {AbstractMesh} from "@babylonjs/core/Meshes/abstractMesh";
 import {MeshBuilder} from "@babylonjs/core/Meshes/meshBuilder";
 import {InstancedMesh, Mesh, StandardMaterial} from "@babylonjs/core/index";
-import {Vector3} from "@babylonjs/core/Maths/math.vector";
+import {Matrix, Quaternion, Vector2, Vector3} from "@babylonjs/core/Maths/math.vector";
 import {Asteroid} from "./Asteroid";
 
 const RADIUS = 80;
@@ -16,7 +16,12 @@ class DustParticle {
 
     update(delta:number, camPos:Vector3){
         if (this.inst.position.subtract(camPos).length() > RADIUS){
-            this.inst.position = camPos.add(new Vector3((Math.random() * 2 - 1) * RADIUS, (Math.random() * 2 - 1) * RADIUS, (Math.random() * 2 - 1) * RADIUS));
+            const angle = Quaternion.FromEulerAngles(Math.random() * 360, Math.random() * 360, Math.random() * 360);
+            const vec = new Vector3(0, 0, Math.random() * RADIUS);
+            const mat = new Matrix();
+            angle.toRotationMatrix(mat);
+
+            this.inst.position = camPos.add(Vector3.TransformCoordinates(vec, mat));
         }
     }
 }
