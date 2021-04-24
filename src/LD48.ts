@@ -5,6 +5,7 @@ import {PlayerShip} from "./actors/PlayerShip";
 import {Ship} from "./actors/Ship";
 import {Camera} from "@babylonjs/core/Cameras/camera";
 import {Vector3} from "@babylonjs/core/Maths/math.vector";
+import {DirectionalLight} from "@babylonjs/core/Lights/directionalLight";
 
 export class LD48 implements Game {
     private actorManager = new ActorManager()
@@ -23,6 +24,8 @@ export class LD48 implements Game {
         const playerShip = new PlayerShip();
 
         this.actorManager.add(playerShip);
+
+        new DirectionalLight("", new Vector3(-1, -1, 0), gameManager.scene);
     }
 
     update(delta:number):void {
