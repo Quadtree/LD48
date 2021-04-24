@@ -15,6 +15,8 @@ export class PlayerShip extends Ship {
     private leftKeyDown = false;
     private rightKeyDown = false;
 
+    private yesSeriously:Quaternion = new Quaternion();
+
     enteringView(scene: Scene) {
         super.enteringView(scene);
 
@@ -41,9 +43,9 @@ export class PlayerShip extends Ship {
         const yaw = ((this.actorManager!.scene!.pointerX / LD48.gm!.canvas!.width) - 0.5) * 2;
         const pitch = ((this.actorManager!.scene!.pointerY / LD48.gm!.canvas!.height) - 0.5) * 2;
 
-        //this.model?.addRotation(pitch * delta * PlayerShip.turnSpeed, yaw * delta * PlayerShip.turnSpeed, 0);
-
-
+        this.model!.rotationQuaternion!.copyFrom(this.yesSeriously);
+        this.model?.addRotation(pitch * delta * PlayerShip.turnSpeed, yaw * delta * PlayerShip.turnSpeed, 0);
+        this.yesSeriously = this.model!.rotationQuaternion!.clone();
 
         //console.log(yaw * delta * PlayerShip.turnSpeed);
 
@@ -74,19 +76,21 @@ export class PlayerShip extends Ship {
         }
 
         this.model!.physicsImpostor!.setLinearVelocity(Vector3.TransformCoordinates(thrust, mat));
+        this.model!.physicsImpostor!.setAngularVelocity(new Vector3(0,0,0));
 
-        const zeroRotation = this.model!.rotationQuaternion!.clone();
+        /*const zeroRotation = this.model!.rotationQuaternion!.clone();
         zeroRotation.multiplyInPlace(Quaternion.FromEulerAngles(0, 0, 0));
         zeroRotation.normalize();
 
-        const targetRotation = this.model!.rotationQuaternion!.clone();
+        const targetRotation = Quaternion.RotationYawPitchRoll(-pitch * PlayerShip.turnSpeed, yaw * PlayerShip.turnSpeed, 0);
+
         targetRotation.multiplyInPlace(Quaternion.FromEulerAngles(-pitch * PlayerShip.turnSpeed, yaw * PlayerShip.turnSpeed, 0));
         targetRotation.normalize();
 
         const rot = targetRotation.toEulerAngles().subtract(zeroRotation.toEulerAngles());
         //console.log(`${targetRotation.toEulerAngles()} - ${zeroRotation.toEulerAngles()} = ${rot}`);
 
-        this.model!.physicsImpostor!.setAngularVelocity(rot);
+        this.model!.physicsImpostor!.setAngularVelocity(rot);*/
         this.model!.physicsImpostor!.wakeUp();
 
         //console.log(`${yaw} ${pitch}`);
