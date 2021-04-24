@@ -2,6 +2,8 @@ import { Scene } from "@babylonjs/core/scene";
 import { Actor } from "./Actor";
 import { ActorManagerPlugin } from "./ActorManagerPlugin";
 import { Engine } from "@babylonjs/core/Engines/engine";
+import {Vector3} from "@babylonjs/core/Maths/math.vector";
+import {Damagable} from "../actors/Damagable";
 
 export class ActorManager
 {
@@ -88,6 +90,28 @@ export class ActorManager
         console.log(`actor with ID ${id} does NOT exist`);
 
         return null
+    }
+
+    public damageAtPoint(v3:Vector3, amt:number, faction:number){
+        let nearest:Damagable|null = null;
+        let nearestDist = 10000000;
+
+        for (const a of this.actors){
+            if ((a as any).takeDamage){
+                const dmg = a as unknown as Damagable;
+                if (dmg.getFaction() == faction) {
+                    const dist = dmg.getPos().subtract(v3).length();
+                    if (dist < nearestDist) {
+                        nearest = dmg;
+                        nearestDist = dist;
+                    }
+                }
+            }
+        }
+
+        if (nearest){
+            nearest.takeDamage(amt);
+        }
     }
 
     public get totalActorCount():number {

@@ -62,7 +62,7 @@ export class PlayerShip extends Ship {
 
                 const cannonLocs = [
                     this.model!.position!.add(Vector3.TransformCoordinates(new Vector3(-5, -1, 0), mat)),
-                    //this.model!.position!.add(Vector3.TransformCoordinates(new Vector3(5, -1, 0), mat)),
+                    this.model!.position!.add(Vector3.TransformCoordinates(new Vector3(5, -1, 0), mat)),
                 ];
 
                 for (const cannonLoc of cannonLocs) {
