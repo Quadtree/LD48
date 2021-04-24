@@ -41,9 +41,9 @@ Perhaps make the cloud more of a background and less of fog. That way it doesn't
 ## Done
 * Pause game when cursor leaves viewport
 * Basic weapon firing
+* Particles passing the ship
 
 ## TODO
-* Particles passing the ship
 * Some kind of enemy
 * Background fog, various zones
 * Marker on objective
