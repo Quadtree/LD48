@@ -45,6 +45,9 @@ export class EnergyBolt extends Actor {
             this.timeToLive = -1000;
         }
 
+        (this.mesh.physicsImpostor as any)._onPhysicsCollideCallbacks = {length: 1};
+
+
         this.mesh.physicsImpostor.registerOnPhysicsCollide(this.mesh.physicsImpostor, collider => null);
     }
 
