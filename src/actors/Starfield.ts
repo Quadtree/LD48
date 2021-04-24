@@ -21,6 +21,8 @@ export class Starfield extends Actor {
 
         const mat = new StandardMaterial("", scene);
         mat.emissiveTexture = Starfield.texture;
+        mat.diffuseColor.set(0,0,0);
+        mat.specularColor.set(0,0,0);
 
         this.mesh.material = mat;
     }
