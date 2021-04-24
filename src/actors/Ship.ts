@@ -12,7 +12,7 @@ export class Ship extends Actor {
         Ship.shipModel.visibility = 0;
     }
 
-    private model:AbstractMesh|null = null;
+    protected model:AbstractMesh|null = null;
 
     location:Vector3 = new Vector3();
 

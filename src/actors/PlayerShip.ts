@@ -10,10 +10,12 @@ export class PlayerShip extends Ship {
     enteringView(scene: Scene) {
         super.enteringView(scene);
 
-        this.cam = new UniversalCamera("playerShipCamera", new Vector3(0, 0,0 ), scene, true);
+        this.cam = new UniversalCamera("playerShipCamera", new Vector3(0, 0,0 ), scene);
         scene.activeCamera = this.cam;
 
-        this.cam!.position.copyFrom(this.location.add(new Vector3(0, 0, -20)));
+        const wm = this.model?.getWorldMatrix();
+
+        this.cam!.position.copyFrom(Vector3.TransformCoordinates(new Vector3(0, 3, -20), wm!));
 
         console.log(`camera position ${this.cam!.position}`)
 
