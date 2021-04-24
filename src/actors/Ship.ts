@@ -27,7 +27,7 @@ export class Ship extends Actor {
         this.model = Ship.shipModel!.clone("", null);
         this.model!.position.copyFrom(this.location);
 
-        for (const mesh of this.model?.getChildTransformNodes()){
+        for (const mesh of this.model?.getChildTransformNodes()!){
             (mesh as any).isVisible = true;
         }
 
