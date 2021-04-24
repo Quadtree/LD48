@@ -8,6 +8,7 @@ import {KeyboardEventTypes} from "@babylonjs/core/Events/keyboardEvents";
 import {PointerEventTypes} from "@babylonjs/core/Events/pointerEvents";
 import { Plane, Ray } from "@babylonjs/core";
 import {EnergyBolt} from "./EnergyBolt";
+import {Util} from "../util/Util";
 
 export class PlayerShip extends Ship {
     private cam:TargetCamera|null = null;
@@ -54,17 +55,21 @@ export class PlayerShip extends Ship {
             this.cannonCharge = 0;
 
             const holder = this.actorManager?.scene?.pick(this.actorManager?.scene?.pointerX!, this.actorManager?.scene?.pointerY!);
+            if (holder?.pickedPoint) {
 
-            const mat = new Matrix();
-            this.model!.rotationQuaternion!.toRotationMatrix(mat);
+                const mat = new Matrix();
+                this.model!.rotationQuaternion!.toRotationMatrix(mat);
 
-            const cannonLocs = [
-                this.model?.position!.add(Vector3.TransformCoordinates(new Vector3(-5, -1, 0), mat)),
-                this.model?.position!.add(Vector3.TransformCoordinates(new Vector3(5, -1, 0), mat)),
-            ];
+                const cannonLocs = [
+                    this.model!.position!.add(Vector3.TransformCoordinates(new Vector3(-5, -1, 0), mat)),
+                    this.model!.position!.add(Vector3.TransformCoordinates(new Vector3(5, -1, 0), mat)),
+                ];
 
-            for (const cannonLoc of cannonLocs){
-                this.actorManager!.add(new EnergyBolt(cannonLoc!, this.model!.rotationQuaternion!));
+                for (const cannonLoc of cannonLocs) {
+                    const angle = Util.rotationBetweenVectors(Vector3.Forward(false), holder?.pickedPoint!.subtract(cannonLoc));
+
+                    this.actorManager!.add(new EnergyBolt(cannonLoc, angle));
+                }
             }
         }
     }
