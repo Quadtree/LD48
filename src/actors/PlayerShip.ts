@@ -51,6 +51,8 @@ export class PlayerShip extends Ship implements Damagable {
             if (pi.type == PointerEventTypes.POINTERDOWN) this.firing = true;
             if (pi.type == PointerEventTypes.POINTERUP) this.firing = false;
         });
+
+        this.model!.position = new Vector3(0,0,-1000);
     }
 
     private fireCannons(delta: number){

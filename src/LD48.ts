@@ -10,6 +10,7 @@ import {Starfield} from "./actors/Starfield";
 import {Asteroid} from "./actors/Asteroid";
 import {DustParticles} from "./actors/DustParticles";
 import {SquidThing} from "./actors/SquidThing";
+import {Objective} from "./actors/Objective";
 
 export class LD48 implements Game {
     private actorManager = new ActorManager()
@@ -45,10 +46,8 @@ export class LD48 implements Game {
 
         this.actorManager.add(playerShip);
         this.actorManager.add(new Starfield());
-        this.actorManager.add(new Asteroid(new Vector3(0,0,-15)));
         this.actorManager.add(new DustParticles());
-
-        this.actorManager.add(new SquidThing(new Vector3(0,0,-50)));
+        this.actorManager.add(new Objective());
 
         new DirectionalLight("", new Vector3(-1, -1, 0), gameManager.scene);
     }
