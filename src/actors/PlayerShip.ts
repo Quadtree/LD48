@@ -41,7 +41,9 @@ export class PlayerShip extends Ship {
         const yaw = ((this.actorManager!.scene!.pointerX / LD48.gm!.canvas!.width) - 0.5) * 2;
         const pitch = ((this.actorManager!.scene!.pointerY / LD48.gm!.canvas!.height) - 0.5) * 2;
 
-        this.model?.addRotation(pitch * delta * PlayerShip.turnSpeed, yaw * delta * PlayerShip.turnSpeed, 0);
+        //this.model?.addRotation(pitch * delta * PlayerShip.turnSpeed, yaw * delta * PlayerShip.turnSpeed, 0);
+
+
 
         //console.log(yaw * delta * PlayerShip.turnSpeed);
 
@@ -72,8 +74,11 @@ export class PlayerShip extends Ship {
         }
 
         this.model!.physicsImpostor!.setLinearVelocity(Vector3.TransformCoordinates(thrust, mat));
-        this.model!.physicsImpostor!.setAngularVelocity(new Vector3(0, 0, 0));
 
+
+        
+        this.model!.physicsImpostor!.setAngularVelocity(this.model!.rotationQuaternion!.multiply(Quaternion.FromEulerAngles(pitch * PlayerShip.turnSpeed, yaw * PlayerShip.turnSpeed, 0)).normalize().toEulerAngles());//.toEulerAngles());
+        //this.model!.physicsImpostor!.setDeltaRotation(Quaternion.FromEulerAngles(pitch * PlayerShip.turnSpeed, yaw * PlayerShip.turnSpeed, 0));
 
         //console.log(`${yaw} ${pitch}`);
     }
