@@ -1,6 +1,6 @@
 import { Scene, Sound } from "@babylonjs/core";
 import { AmmoJSPlugin } from "@babylonjs/core/Physics/Plugins/ammoJSPlugin";
-import {Quaternion, Vector3} from "@babylonjs/core/Maths/math.vector";
+import {Matrix, Quaternion, Vector3} from "@babylonjs/core/Maths/math.vector";
 import {AbstractMesh} from "@babylonjs/core/Meshes/abstractMesh";
 
 declare const Ammo: any;
@@ -117,14 +117,25 @@ export class Util {
         }
     }
 
-    static rotationBetweenVectors(v1:Vector3, v2:Vector3):Quaternion {
+    static rotationBetweenVectors(v1:Vector3, v2:Vector3, maxTurn:number = 10000):Quaternion {
         const uv1 = v1.normalizeToNew();
         const uv2 = v2.normalizeToNew();
 
-        const angle = Math.acos(Vector3.Dot(uv1, uv2));
+        let angle = Math.acos(Vector3.Dot(uv1, uv2));
+
+        if (Math.abs(angle) > maxTurn){
+            if (angle >= 0){
+                angle = Math.min(angle, maxTurn);
+            } else {
+                angle = Math.max(angle, -maxTurn);
+            }
+        }
+
         const axis = Vector3.Cross(uv1, uv2);
         return Quaternion.RotationAxis(axis, angle);
     }
+
+    static mat = new Matrix();
 
     static CHEATS_ENABLED = false;
 }

@@ -11,7 +11,7 @@ export class EnergyBolt extends Actor {
 
     private timeToLive = 4;
 
-    constructor(private readonly startPos:Vector3, private readonly angle:Quaternion) {
+    constructor(private readonly startPos:Vector3, private readonly angle:Quaternion, private readonly faction:number = 0, private readonly speed:number = 120) {
         super();
     }
 
@@ -23,16 +23,20 @@ export class EnergyBolt extends Actor {
         this.mesh.position = this.startPos;
         this.mesh.rotationQuaternion = this.angle;
 
-        this.mesh.physicsImpostor = new PhysicsImpostor(this.mesh!, PhysicsImpostor.BoxImpostor, {mass: 1, group: Constants.COLLISION_GROUP_PLAYER_SHOT, mask: Constants.COLLISION_GROUP_ENEMY} as any);
+        this.mesh.physicsImpostor = new PhysicsImpostor(this.mesh!, PhysicsImpostor.BoxImpostor, {
+            mass: 1,
+            group: this.faction == 0 ? Constants.COLLISION_GROUP_PLAYER_SHOT : Constants.COLLISION_GROUP_ENEMY_SHOT,
+            mask: this.faction == 0 ? Constants.COLLISION_GROUP_ENEMY : Constants.COLLISION_GROUP_PLAYER,
+        } as any);
 
         const rotMat = new Matrix();
         this.mesh.rotationQuaternion.toRotationMatrix(rotMat);
 
-        this.mesh.physicsImpostor.setLinearVelocity(Vector3.TransformCoordinates(Vector3.Forward(false), rotMat).scale(120));
+        this.mesh.physicsImpostor.setLinearVelocity(Vector3.TransformCoordinates(Vector3.Forward(false), rotMat).scale(this.speed));
 
         this.mesh.physicsImpostor.onCollideEvent = (self, other) => {
             if (this.timeToLive > 0) {
-                this.actorManager!.damageAtPoint(this.mesh!.position, 1, 1);
+                this.actorManager!.damageAtPoint(this.mesh!.position, 1, 1 - this.faction);
                 this.timeToLive = -1000;
             }
         }
