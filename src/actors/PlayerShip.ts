@@ -6,6 +6,8 @@ import {LD48} from "../LD48";
 import {TargetCamera} from "@babylonjs/core/Cameras/targetCamera";
 import {KeyboardEventTypes} from "@babylonjs/core/Events/keyboardEvents";
 import {PointerEventTypes} from "@babylonjs/core/Events/pointerEvents";
+import { Plane, Ray } from "@babylonjs/core";
+import {EnergyBolt} from "./EnergyBolt";
 
 export class PlayerShip extends Ship {
     private cam:TargetCamera|null = null;
@@ -17,6 +19,8 @@ export class PlayerShip extends Ship {
     private rightKeyDown = false;
 
     private firing = false;
+
+    private cannonCharge = 0;
 
     private yesSeriously:Quaternion = new Quaternion();
 
@@ -43,6 +47,26 @@ export class PlayerShip extends Ship {
             if (pi.type == PointerEventTypes.POINTERDOWN) this.firing = true;
             if (pi.type == PointerEventTypes.POINTERUP) this.firing = false;
         });
+    }
+
+    private fireCannons(delta: number){
+        if (this.cannonCharge >= 0.75){
+            this.cannonCharge = 0;
+
+            const holder = this.actorManager?.scene?.pick(this.actorManager?.scene?.pointerX!, this.actorManager?.scene?.pointerY!);
+
+            const mat = new Matrix();
+            this.model!.rotationQuaternion!.toRotationMatrix(mat);
+
+            const cannonLocs = [
+                this.model?.position!.add(Vector3.TransformCoordinates(new Vector3(-5, -1, 0), mat)),
+                this.model?.position!.add(Vector3.TransformCoordinates(new Vector3(5, -1, 0), mat)),
+            ];
+
+            for (const cannonLoc of cannonLocs){
+                this.actorManager!.add(new EnergyBolt(cannonLoc!, this.model!.rotationQuaternion!));
+            }
+        }
     }
 
     update(delta: number) {
@@ -105,5 +129,15 @@ export class PlayerShip extends Ship {
         this.model!.physicsImpostor!.wakeUp();
 
         //console.log(`${yaw} ${pitch}`);
+
+
+
+
+
+        this.cannonCharge += delta;
+
+        if (this.firing){
+            this.fireCannons(delta);
+        }
     }
 }

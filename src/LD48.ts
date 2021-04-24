@@ -30,6 +30,8 @@ export class LD48 implements Game {
 
         this.actorManager.scene = gameManager.scene;
 
+        this.actorManager.scene!.getPhysicsEngine()!.setGravity(Vector3.Zero());
+
         await Promise.all([
             Ship.preload(gameManager.scene),
             Starfield.preload(gameManager.scene),
