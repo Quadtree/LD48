@@ -42,5 +42,7 @@ export class Ship extends Actor {
         console.log(`ship_radius=${this.model!.physicsImpostor!.getRadius()}`)
 
         console.log(`ship placed at ${this.model?.position}`)
+
+        this.model!.physicsImpostor.registerOnPhysicsCollide(this.model!.physicsImpostor, collider => null);
     }
 }

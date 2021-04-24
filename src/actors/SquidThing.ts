@@ -46,6 +46,8 @@ export class SquidThing extends Actor implements Damagable {
         this.model!.position.copyFrom(this.startLoc);
 
         this.aimPoint.copyFrom(this.startLoc);
+
+        this.model!.physicsImpostor.registerOnPhysicsCollide(this.model!.physicsImpostor, collider => null);
     }
 
     exitingView() {
