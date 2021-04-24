@@ -8,6 +8,7 @@ import {PhysicsImpostor} from "@babylonjs/core/Physics/physicsImpostor";
 import {Constants} from "../util/Constants";
 import {Damagable} from "./Damagable";
 import {PlayerShip} from "./PlayerShip";
+import {EnergyBolt} from "./EnergyBolt";
 
 export class SquidThing extends Actor implements Damagable {
     static shipModel:AbstractMesh|null = null;
@@ -15,6 +16,8 @@ export class SquidThing extends Actor implements Damagable {
     hp:number = 3;
 
     weaponCharge = 0;
+
+    aimPoint:Vector3 = new Vector3(0,0,0);
 
     static async preload(scene: Scene){
         const thing = (await SceneLoader.ImportMeshAsync(null, './assets/squid_thing.glb', '', scene));
@@ -35,8 +38,10 @@ export class SquidThing extends Actor implements Damagable {
         this.model = SquidThing.shipModel!.clone("", null)!;
         Util.setVisibility(this.model, true);
 
-        this.model!.physicsImpostor = new PhysicsImpostor(this.model!, PhysicsImpostor.ConvexHullImpostor, {mass: 10, group: Constants.COLLISION_GROUP_ENEMY, mask: Constants.COLLISION_GROUP_ENEMY | Constants.COLLISION_GROUP_PLAYER_SHOT | Constants.COLLISION_GROUP_PLAYER } as any);
+        this.model!.physicsImpostor = new PhysicsImpostor(this.model!, PhysicsImpostor.ConvexHullImpostor, {mass: 5, group: Constants.COLLISION_GROUP_ENEMY, mask: Constants.COLLISION_GROUP_ENEMY | Constants.COLLISION_GROUP_PLAYER_SHOT | Constants.COLLISION_GROUP_PLAYER } as any);
         this.model!.position.copyFrom(this.startLoc);
+
+        this.aimPoint.copyFrom(this.startLoc);
     }
 
     exitingView() {
@@ -68,29 +73,44 @@ export class SquidThing extends Actor implements Damagable {
 
         this.weaponCharge += delta;
 
-        if (this.weaponCharge > 2){
-            const playerShips = this.actorManager!.actors.filter(it => it instanceof PlayerShip);
+        const playerShips = this.actorManager!.actors.filter(it => it instanceof PlayerShip);
 
-            if (playerShips.length > 0){
-                const playerShip = playerShips[0] as PlayerShip;
+        let inFiringPosition = false;
 
-                if (playerShip.model!.position.subtract(this.model!.position).length() < 70){
-                    this.model!.rotationQuaternion!.toRotationMatrix(Util.mat);
-                    const forwardVector = Vector3.TransformCoordinates(Vector3.Forward(false), Util.mat);
-                    forwardVector.normalize();
+        if (playerShips.length > 0){
+            const playerShip = playerShips[0] as PlayerShip;
 
-                    const toPlayerVector = playerShip.model!.position.subtract(this.model!.position);
-                    toPlayerVector.normalize();
+            if (playerShip.model!.position.subtract(this.model!.position).length() < 400){
+                const aimPointSpeed = playerShip.model!.position.subtract(this.model!.position).length() * delta * 0.8;
+                //console.log(aimPointSpeed);
+                const aimPointMoveTarget = playerShip.model!.position.subtract(this.aimPoint);
 
-                    const turnQuat = Util.rotationBetweenVectors(forwardVector, toPlayerVector, 1 * delta);
-                    console.log(`${turnQuat}`)
+                if (aimPointMoveTarget.length() < 5) inFiringPosition = true;
 
-                    this.model!.lookAt(playerShip.model!.position);
+                if (aimPointMoveTarget.length() > aimPointSpeed) {
+                    const aimPointMove = aimPointMoveTarget.normalize().scaleInPlace(aimPointSpeed);
+                    this.aimPoint.addInPlace(aimPointMove);
+                } else {
+                    this.aimPoint.copyFrom(playerShip.model!.position);
+                }
 
-                    this.model!.rotationQuaternion = this.model!.rotationQuaternion!.multiply(turnQuat);
+                this.model!.lookAt(this.aimPoint);
+
+                //console.log(`${this.aimPoint}`)
+
+                if (this.weaponCharge > 2 && inFiringPosition){
+                    const angle = Util.rotationBetweenVectors(Vector3.Forward(false), playerShip.model!.position);
+
+                    angle.toRotationMatrix(Util.mat);
+
+                    this.actorManager!.add(new EnergyBolt(this.model!.position, angle, 1, 60));
+
+                    this.weaponCharge = 0;
                 }
             }
         }
+
+
     }
 
 

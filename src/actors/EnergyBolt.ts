@@ -29,6 +29,8 @@ export class EnergyBolt extends Actor {
             mask: this.faction == 0 ? Constants.COLLISION_GROUP_ENEMY : Constants.COLLISION_GROUP_PLAYER,
         } as any);
 
+        console.log(`shot group ${this.faction == 0 ? Constants.COLLISION_GROUP_PLAYER_SHOT : Constants.COLLISION_GROUP_ENEMY_SHOT}`)
+
         const rotMat = new Matrix();
         this.mesh.rotationQuaternion.toRotationMatrix(rotMat);
 

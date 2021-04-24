@@ -4,6 +4,7 @@ import { ActorManagerPlugin } from "./ActorManagerPlugin";
 import { Engine } from "@babylonjs/core/Engines/engine";
 import {Vector3} from "@babylonjs/core/Maths/math.vector";
 import {Damagable} from "../actors/Damagable";
+import {PlayerShip} from "../actors/PlayerShip";
 
 export class ActorManager
 {

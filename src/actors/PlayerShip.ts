@@ -151,6 +151,7 @@ export class PlayerShip extends Ship implements Damagable {
 
     takeDamage(amt: number) {
         this.hp -= amt;
+        console.log(`player ship took ${amt} damage ${this.hp} left`)
     }
 
     getFaction(): number {
