@@ -103,7 +103,7 @@ export class SquidThing extends Actor implements Damagable {
                 //console.log(`${this.aimPoint}`)
 
                 if (this.weaponCharge > 2 && inFiringPosition){
-                    const angle = Util.rotationBetweenVectors(Vector3.Forward(false), playerShip.model!.position);
+                    const angle = Util.rotationBetweenVectors(Vector3.Forward(false), playerShip.model!.position.subtract(this.model!.position));
 
                     angle.toRotationMatrix(Util.mat);
 
