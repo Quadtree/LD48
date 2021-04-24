@@ -31,6 +31,7 @@ export class EnergyBolt extends Actor {
         this.mesh.physicsImpostor.setLinearVelocity(Vector3.TransformCoordinates(Vector3.Forward(false), rotMat).scale(120));
 
         this.mesh.physicsImpostor.onCollideEvent = (self, other) => {
+            console.log(`we hit ${self.uniqueId} ${other.uniqueId}`);
             if ((other as any).takeDamage){
                 console.log("DMG");
                 this.timeToLive = -1000;

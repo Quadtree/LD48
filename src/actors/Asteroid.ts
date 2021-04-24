@@ -40,5 +40,6 @@ export class Asteroid extends Actor {
         (this.mesh!.physicsImpostor as any).takeDamage = (amt:number) => {
             console.log(`asteroid took ${amt} damage`);
         }
+        console.log(`asteroid ID=${this.mesh!.physicsImpostor!.uniqueId}`);
     }
 }
