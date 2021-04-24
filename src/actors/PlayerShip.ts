@@ -114,7 +114,7 @@ export class PlayerShip extends Ship implements Damagable {
             this.oldCamPoses.pop();
         }
 
-        this.cam!.position.copyFrom(this.oldCamPoses[this.oldCamPoses.length - 1][1].add(this.model!.position));
+        this.cam!.position.copyFrom(camTargetPos)//this.oldCamPoses[this.oldCamPoses.length - 1][1].add(this.model!.position));
         this.cam!.rotationQuaternion = this.model!.rotationQuaternion! //this.oldCamPoses[this.oldCamPoses.length - 1][2].clone()
 
         const thrust = new Vector3();
