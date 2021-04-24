@@ -2,8 +2,8 @@ import {Ship} from "./Ship";
 import {Scene} from "@babylonjs/core/scene";
 import {Camera} from "@babylonjs/core/Cameras/camera";
 import {Matrix, Quaternion, Vector3} from "@babylonjs/core/Maths/math.vector";
-import {UniversalCamera} from "@babylonjs/core/index";
 import {LD48} from "../LD48";
+import {UniversalCamera} from "@babylonjs/core/cameras/universalCamera";
 
 export class PlayerShip extends Ship {
     private cam:UniversalCamera|null = null;
