@@ -29,6 +29,8 @@ export class PlayerShip extends Ship {
         const yaw = ((this.actorManager!.scene!.pointerX / LD48.gm!.canvas.width) - 0.5) * 2;
         const pitch = ((this.actorManager!.scene!.pointerY / LD48.gm!.canvas.height) - 0.5) * 2;
 
-        console.log(`${yaw} ${pitch}`)
+        this.model?.addRotation(pitch * delta, yaw * delta, 0);
+
+        console.log(`${yaw} ${pitch}`);
     }
 }
