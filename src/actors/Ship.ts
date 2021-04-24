@@ -8,8 +8,13 @@ export class Ship extends Actor {
     static shipModel:AbstractMesh|null = null;
 
     static async preload(scene: Scene){
-        Ship.shipModel = (await SceneLoader.ImportMeshAsync(null, './assets/ship1.glb', '', scene)).meshes[0];
-        Ship.shipModel.isVisible = false;
+        const thing = (await SceneLoader.ImportMeshAsync(null, './assets/ship1.glb', '', scene));
+
+        for (const mesh of thing.meshes){
+            mesh.isVisible = false;
+        }
+
+        Ship.shipModel = thing.meshes[0];
     }
 
     protected model:AbstractMesh|null = null;
@@ -21,7 +26,10 @@ export class Ship extends Actor {
 
         this.model = Ship.shipModel!.clone("", null);
         this.model!.position.copyFrom(this.location);
-        this.model!.isVisible = false;
+
+        for (const mesh of this.model?.getChildTransformNodes()){
+            (mesh as any).isVisible = true;
+        }
 
         console.log(`ship placed at ${this.model?.position}`)
     }
