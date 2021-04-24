@@ -81,8 +81,6 @@ export class PlayerShip extends Ship implements Damagable {
         }
     }
 
-    private oldCamPoses:any[] = [];
-
     update(delta: number) {
         super.update(delta);
 
@@ -103,34 +101,16 @@ export class PlayerShip extends Ship implements Damagable {
 
         //console.log(mat);
 
-        const transformed = Vector3.TransformCoordinates(new Vector3(0, 3, -20), mat);
+        const transformed = Vector3.TransformCoordinates(new Vector3(0 + yaw * 4, 3 + -pitch, -20), mat);
         const camTargetPos = this.model!.position!.add(transformed);
-
-        const curTs = Date.now();
-
-        this.oldCamPoses.unshift([Date.now(), camTargetPos.subtract(this.model!.position), this.model!.rotationQuaternion!]);
-
-        while(this.oldCamPoses.length > 1 && this.oldCamPoses[this.oldCamPoses.length - 1][0] < curTs - 100){
-            this.oldCamPoses.pop();
-        }
 
         this.cam!.position.copyFrom(camTargetPos)//this.oldCamPoses[this.oldCamPoses.length - 1][1].add(this.model!.position));
         this.cam!.rotationQuaternion = this.model!.rotationQuaternion! //this.oldCamPoses[this.oldCamPoses.length - 1][2].clone()
 
         const thrust = new Vector3();
-        if (this.forwardKeyDown) thrust.addInPlace(Vector3.Forward(false));
-        if (this.leftKeyDown) thrust.addInPlace(Vector3.Left());
-        if (this.rightKeyDown) thrust.addInPlace(Vector3.Right());
-
-        //console.log(`TH ${thrust}`);
-
-
-        if (thrust.length() > 0.1){
-            thrust.normalize();
-            thrust.scaleInPlace(40);
-        } else {
-            thrust.set(0,0,0);
-        }
+        if (this.forwardKeyDown) thrust.addInPlace(Vector3.Forward(false).scale(40));
+        if (this.leftKeyDown) thrust.addInPlace(Vector3.Left().scale(15));
+        if (this.rightKeyDown) thrust.addInPlace(Vector3.Right().scale(15));
 
         this.model!.physicsImpostor!.setLinearVelocity(Vector3.TransformCoordinates(thrust, mat));
         this.model!.physicsImpostor!.setAngularVelocity(new Vector3(0,0,0));

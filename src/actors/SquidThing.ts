@@ -114,8 +114,11 @@ export class SquidThing extends Actor implements Damagable {
             }
         }
 
-        const moveDelta = this.aimPoint.subtract(this.model!.position).normalize().scaleInPlace(10)
-        this.model!.physicsImpostor!.setLinearVelocity(moveDelta);
+
+        const moveDelta = this.aimPoint.subtract(this.model!.position)
+        if (moveDelta.length() > 15) {
+            this.model!.physicsImpostor!.setLinearVelocity(moveDelta.normalize().scaleInPlace(10));
+        }
     }
 
 
