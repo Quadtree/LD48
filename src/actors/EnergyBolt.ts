@@ -38,6 +38,11 @@ export class EnergyBolt extends Actor {
         }
 
         this.mesh.physicsImpostor.registerOnPhysicsCollide(this.mesh.physicsImpostor, collider => null);
+
+        this.mesh.physicsImpostor.executeNativeFunction((world, physicsBody) => {
+            world.removeRigidBody(physicsBody);
+            world.addRigidBody(physicsBody, 2, 0);
+        })
     }
 
     exitingView() {
