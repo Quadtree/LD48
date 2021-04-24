@@ -18,7 +18,7 @@ export class Ship extends Actor {
         Ship.shipModel = thing.meshes[0];
     }
 
-    protected model:AbstractMesh|null = null;
+    public model:AbstractMesh|null = null;
 
     location:Vector3 = new Vector3();
 

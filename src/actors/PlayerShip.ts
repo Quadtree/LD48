@@ -37,7 +37,7 @@ export class PlayerShip extends Ship {
 
         const transformed = Vector3.TransformCoordinates(new Vector3(0, 3, -20), mat);
 
-        this.cam!.position.copyFrom(this.model!.position!.add(transformed));
+        this.cam!.position = this.cam!.position.scale(0.8).addInPlace(this.model!.position!.add(transformed).scale(0.2));
         this.cam!.rotationQuaternion = this.model!.rotationQuaternion!;
 
         this.model!.physicsImpostor!.setLinearVelocity(Vector3.TransformCoordinates(Vector3.Forward(false).scale(20), mat));
