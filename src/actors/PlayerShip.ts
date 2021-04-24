@@ -5,6 +5,7 @@ import {Matrix, Quaternion, Vector3} from "@babylonjs/core/Maths/math.vector";
 import {LD48} from "../LD48";
 import {TargetCamera} from "@babylonjs/core/Cameras/targetCamera";
 import {KeyboardEventTypes} from "@babylonjs/core/Events/keyboardEvents";
+import {PointerEventTypes} from "@babylonjs/core/Events/pointerEvents";
 
 export class PlayerShip extends Ship {
     private cam:TargetCamera|null = null;
@@ -14,6 +15,8 @@ export class PlayerShip extends Ship {
     private forwardKeyDown = false;
     private leftKeyDown = false;
     private rightKeyDown = false;
+
+    private firing = false;
 
     private yesSeriously:Quaternion = new Quaternion();
 
@@ -34,7 +37,12 @@ export class PlayerShip extends Ship {
 
             if (ed.type == KeyboardEventTypes.KEYDOWN && ed.event.key == "d") this.rightKeyDown = true;
             if (ed.type == KeyboardEventTypes.KEYUP && ed.event.key == "d") this.rightKeyDown = false;
-        })
+        });
+
+        this.actorManager!.scene!.onPointerObservable.add((pi, es) => {
+            if (pi.type == PointerEventTypes.POINTERDOWN) this.firing = true;
+            if (pi.type == PointerEventTypes.POINTERUP) this.firing = false;
+        });
     }
 
     update(delta: number) {
