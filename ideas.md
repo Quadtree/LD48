@@ -38,3 +38,16 @@ The problem here is that rendering a cloud for the player to fly through would .
 
 Perhaps make the cloud more of a background and less of fog. That way it doesn't seem so odd that it's mostly uniform.
 
+## TODO
+* Basic weapon firing
+* Particles passing the ship
+* Some kind of enemy
+* Background fog, various zones
+* Marker on objective
+* Markers on offscreen enemies
+* Some kind of radar
+* Title screen
+* Final boss fight
+* Victory screen
+* Sound
+* Music
