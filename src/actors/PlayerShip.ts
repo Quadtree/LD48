@@ -68,7 +68,11 @@ export class PlayerShip extends Ship {
                 for (const cannonLoc of cannonLocs) {
                     const angle = Util.rotationBetweenVectors(Vector3.Forward(false), holder?.pickedPoint!.subtract(cannonLoc));
 
-                    this.actorManager!.add(new EnergyBolt(cannonLoc, angle));
+                    angle.toRotationMatrix(mat);
+                    
+                    const pos = cannonLoc.add(Vector3.TransformCoordinates(new Vector3(0, 0, 5), mat));
+
+                    this.actorManager!.add(new EnergyBolt(pos, angle));
                 }
             }
         }

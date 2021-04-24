@@ -8,6 +8,8 @@ import {PhysicsImpostor} from "@babylonjs/core/Physics/physicsImpostor";
 export class EnergyBolt extends Actor {
     private mesh:AbstractMesh|null = null;
 
+    private timeToLive = 4;
+
     constructor(private readonly startPos:Vector3, private readonly angle:Quaternion) {
         super();
     }
@@ -26,9 +28,28 @@ export class EnergyBolt extends Actor {
         this.mesh.rotationQuaternion.toRotationMatrix(rotMat);
 
         this.mesh.physicsImpostor.setLinearVelocity(Vector3.TransformCoordinates(Vector3.Forward(false), rotMat).scale(120));
+
+        this.mesh.physicsImpostor.onCollideEvent = (self, other) => {
+            this.timeToLive = -1000;
+            console.log("COLLIDE");
+        }
+
+        this.mesh.physicsImpostor.registerOnPhysicsCollide(this.mesh.physicsImpostor, collider => null);
+    }
+
+    exitingView() {
+        super.exitingView();
+
+        this.mesh!.dispose();
     }
 
     update(delta: number) {
         super.update(delta);
+
+        this.timeToLive -= delta;
+    }
+
+    keep(): boolean {
+        return super.keep() && this.timeToLive > 0;
     }
 }
