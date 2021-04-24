@@ -25,8 +25,8 @@ export class EnergyBolt extends Actor {
 
         this.mesh.physicsImpostor = new PhysicsImpostor(this.mesh!, PhysicsImpostor.BoxImpostor, {
             mass: 1,
-            group: this.faction == 0 ? Constants.COLLISION_GROUP_PLAYER_SHOT : Constants.COLLISION_GROUP_ENEMY_SHOT,
-            mask: this.faction == 0 ? Constants.COLLISION_GROUP_ENEMY : Constants.COLLISION_GROUP_PLAYER,
+            group: 128, // this.faction == 0 ? Constants.COLLISION_GROUP_PLAYER_SHOT : Constants.COLLISION_GROUP_ENEMY_SHOT,
+            mask: 64, // this.faction == 0 ? Constants.COLLISION_GROUP_ENEMY : Constants.COLLISION_GROUP_PLAYER,
         } as any);
 
         console.log(`shot group ${this.faction == 0 ? Constants.COLLISION_GROUP_PLAYER_SHOT : Constants.COLLISION_GROUP_ENEMY_SHOT}`)

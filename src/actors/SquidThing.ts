@@ -38,7 +38,11 @@ export class SquidThing extends Actor implements Damagable {
         this.model = SquidThing.shipModel!.clone("", null)!;
         Util.setVisibility(this.model, true);
 
-        this.model!.physicsImpostor = new PhysicsImpostor(this.model!, PhysicsImpostor.ConvexHullImpostor, {mass: 5, group: Constants.COLLISION_GROUP_ENEMY, mask: Constants.COLLISION_GROUP_ENEMY | Constants.COLLISION_GROUP_PLAYER_SHOT | Constants.COLLISION_GROUP_PLAYER } as any);
+        this.model!.physicsImpostor = new PhysicsImpostor(this.model!, PhysicsImpostor.ConvexHullImpostor, {
+            mass: 5,
+            group: 512,// Constants.COLLISION_GROUP_ENEMY,
+            mask: 256,// Constants.COLLISION_GROUP_ENEMY | Constants.COLLISION_GROUP_PLAYER_SHOT | Constants.COLLISION_GROUP_PLAYER
+        } as any);
         this.model!.position.copyFrom(this.startLoc);
 
         this.aimPoint.copyFrom(this.startLoc);
