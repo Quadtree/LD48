@@ -7,6 +7,7 @@ import {Camera} from "@babylonjs/core/Cameras/camera";
 import {Vector3} from "@babylonjs/core/Maths/math.vector";
 import {DirectionalLight} from "@babylonjs/core/Lights/directionalLight";
 import {Starfield} from "./actors/Starfield";
+import {Asteroid} from "./actors/Asteroid";
 
 export class LD48 implements Game {
     private actorManager = new ActorManager()
@@ -25,12 +26,14 @@ export class LD48 implements Game {
         await Promise.all([
             Ship.preload(gameManager.scene),
             Starfield.preload(gameManager.scene),
+            Asteroid.preload(gameManager.scene),
         ]);
 
         const playerShip = new PlayerShip();
 
         this.actorManager.add(playerShip);
         this.actorManager.add(new Starfield());
+        this.actorManager.add(new Asteroid(new Vector3(0,0,-15)));
 
         new DirectionalLight("", new Vector3(-1, -1, 0), gameManager.scene);
     }

@@ -1,6 +1,7 @@
 import { Scene, Sound } from "@babylonjs/core";
 import { AmmoJSPlugin } from "@babylonjs/core/Physics/Plugins/ammoJSPlugin";
 import { Vector3 } from "@babylonjs/core/Maths/math.vector";
+import {AbstractMesh} from "@babylonjs/core/Meshes/abstractMesh";
 
 declare const Ammo: any;
 declare const FinalizationRegistry:any;
@@ -104,6 +105,16 @@ export class Util {
         return new Promise<void>((res, rej) => {
             setTimeout(res, ms);
         });
+    }
+
+    static setVisibility(mesh:AbstractMesh, visible:boolean){
+        mesh.isVisible = visible;
+
+        for (const sm of mesh.getChildTransformNodes()){
+            if (sm instanceof AbstractMesh){
+                sm.isVisible = visible;
+            }
+        }
     }
 
     static CHEATS_ENABLED = false;
