@@ -6,6 +6,7 @@ import {AbstractMesh} from "@babylonjs/core/Meshes/abstractMesh";
 import {Mesh, StandardMaterial} from "@babylonjs/core/index";
 import {Vector3} from "@babylonjs/core/Maths/math.vector";
 import {PhysicsImpostor} from "@babylonjs/core/Physics/physicsImpostor";
+import {Constants} from "../util/Constants";
 
 export class Asteroid extends Actor {
     protected mesh:AbstractMesh|null = null;
@@ -32,7 +33,7 @@ export class Asteroid extends Actor {
 
         this.mesh.material = mat;
 
-        this.mesh!.physicsImpostor = new PhysicsImpostor(this.mesh!, PhysicsImpostor.SphereImpostor, {mass: 0, });
+        this.mesh!.physicsImpostor = new PhysicsImpostor(this.mesh!, PhysicsImpostor.SphereImpostor, {mass: 0, group: Constants.COLLISION_GROUP_ENEMY, mask: Constants.COLLISION_GROUP_ENEMY | Constants.COLLISION_GROUP_ENEMY_SHOT | Constants.COLLISION_GROUP_PLAYER_SHOT | Constants.COLLISION_GROUP_PLAYER} as any);
 
         console.log(`radius=${this.mesh!.physicsImpostor!.getRadius()}`);
 

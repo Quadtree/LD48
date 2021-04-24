@@ -4,6 +4,7 @@ import {SceneLoader} from "@babylonjs/core/Loading/sceneLoader";
 import {AbstractMesh} from "@babylonjs/core/Meshes/abstractMesh";
 import {Vector3} from "@babylonjs/core/Maths/math.vector";
 import {PhysicsImpostor} from "@babylonjs/core/Physics/physicsImpostor";
+import {Constants} from "../util/Constants";
 
 export class Ship extends Actor {
     static shipModel:AbstractMesh|null = null;
@@ -32,7 +33,7 @@ export class Ship extends Actor {
             (mesh as any).isVisible = true;
         }
 
-        this.model!.physicsImpostor = new PhysicsImpostor(this.model!, PhysicsImpostor.ConvexHullImpostor, {mass: 10});
+        this.model!.physicsImpostor = new PhysicsImpostor(this.model!, PhysicsImpostor.ConvexHullImpostor, {mass: 10, group: Constants.COLLISION_GROUP_PLAYER, mask: Constants.COLLISION_GROUP_ENEMY | Constants.COLLISION_GROUP_ENEMY_SHOT | Constants.COLLISION_GROUP_PLAYER } as any);
 
         console.log(`ship_radius=${this.model!.physicsImpostor!.getRadius()}`)
 

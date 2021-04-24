@@ -4,6 +4,7 @@ import {AbstractMesh} from "@babylonjs/core/Meshes/abstractMesh";
 import {MeshBuilder} from "@babylonjs/core/Meshes/meshBuilder";
 import {Matrix, Quaternion, Vector3} from "@babylonjs/core/Maths/math.vector";
 import {PhysicsImpostor} from "@babylonjs/core/Physics/physicsImpostor";
+import {Constants} from "../util/Constants";
 
 export class EnergyBolt extends Actor {
     private mesh:AbstractMesh|null = null;
@@ -22,7 +23,7 @@ export class EnergyBolt extends Actor {
         this.mesh.position = this.startPos;
         this.mesh.rotationQuaternion = this.angle;
 
-        this.mesh.physicsImpostor = new PhysicsImpostor(this.mesh!, PhysicsImpostor.BoxImpostor, {mass: 1, group: 2, mask: 32} as any);
+        this.mesh.physicsImpostor = new PhysicsImpostor(this.mesh!, PhysicsImpostor.BoxImpostor, {mass: 1, group: Constants.COLLISION_GROUP_PLAYER_SHOT, mask: Constants.COLLISION_GROUP_ENEMY} as any);
 
         const rotMat = new Matrix();
         this.mesh.rotationQuaternion.toRotationMatrix(rotMat);
@@ -38,11 +39,6 @@ export class EnergyBolt extends Actor {
         }
 
         this.mesh.physicsImpostor.registerOnPhysicsCollide(this.mesh.physicsImpostor, collider => null);
-
-        /*this.mesh.physicsImpostor.executeNativeFunction((world, physicsBody) => {
-            world.removeRigidBody(physicsBody);
-            world.addRigidBody(physicsBody, 2, 0);
-        })*/
     }
 
     exitingView() {
