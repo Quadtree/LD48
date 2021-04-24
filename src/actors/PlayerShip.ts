@@ -3,22 +3,18 @@ import {Scene} from "@babylonjs/core/scene";
 import {Camera} from "@babylonjs/core/Cameras/camera";
 import {Matrix, Quaternion, Vector3} from "@babylonjs/core/Maths/math.vector";
 import {LD48} from "../LD48";
-import {UniversalCamera} from "@babylonjs/core/cameras/universalCamera";
+import {TargetCamera} from "@babylonjs/core/Cameras/targetCamera";
 
 export class PlayerShip extends Ship {
-    private cam:UniversalCamera|null = null;
+    private cam:TargetCamera|null = null;
 
     private static readonly turnSpeed = 2;
 
     enteringView(scene: Scene) {
         super.enteringView(scene);
 
-        this.cam = new UniversalCamera("playerShipCamera", new Vector3(0, 0,0 ), scene);
+        this.cam = new TargetCamera("playerShipCamera", new Vector3(0, 0,0 ), scene);
         scene.activeCamera = this.cam as Camera;
-
-
-
-
 
         console.log(`camera position ${this.cam!.position}`)
 
