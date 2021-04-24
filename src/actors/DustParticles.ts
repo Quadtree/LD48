@@ -7,17 +7,26 @@ import {Matrix, Quaternion, Vector2, Vector3} from "@babylonjs/core/Maths/math.v
 import {Asteroid} from "./Asteroid";
 
 const RADIUS = 80;
-const NUM = 80;
+const NUM = 140;
 
 class DustParticle {
     constructor(private inst:InstancedMesh) {
         inst.position.x = 1000000;
     }
 
+    init(camPos:Vector3){
+        const angle = Quaternion.FromEulerAngles(Math.random() * 360, Math.random() * 360, Math.random() * 360);
+        const vec = new Vector3(0, 0, Math.random() * RADIUS);
+        const mat = new Matrix();
+        angle.toRotationMatrix(mat);
+
+        this.inst.position = camPos.add(Vector3.TransformCoordinates(vec, mat));
+    }
+
     update(delta:number, camPos:Vector3){
         if (this.inst.position.subtract(camPos).length() > RADIUS){
             const angle = Quaternion.FromEulerAngles(Math.random() * 360, Math.random() * 360, Math.random() * 360);
-            const vec = new Vector3(0, 0, Math.random() * RADIUS);
+            const vec = new Vector3(0, 0, RADIUS);
             const mat = new Matrix();
             angle.toRotationMatrix(mat);
 
