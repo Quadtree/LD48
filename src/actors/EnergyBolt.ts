@@ -39,8 +39,10 @@ export class EnergyBolt extends Actor {
         this.mesh.physicsImpostor.onCollideEvent = (self, other) => {
             if (this.timeToLive > 0) {
                 this.actorManager!.damageAtPoint(this.mesh!.position, 1, 1 - this.faction);
-                this.timeToLive = -1000;
+
             }
+            console.log('collided!');
+            this.timeToLive = -1000;
         }
 
         this.mesh.physicsImpostor.registerOnPhysicsCollide(this.mesh.physicsImpostor, collider => null);
