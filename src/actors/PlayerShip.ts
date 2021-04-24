@@ -75,9 +75,11 @@ export class PlayerShip extends Ship {
 
         this.model!.physicsImpostor!.setLinearVelocity(Vector3.TransformCoordinates(thrust, mat));
 
-        const quat = this.model!.physicsImpostor!.getParentsRotation();
+        const quat = this.model!.absoluteRotationQuaternion!;
         quat.multiplyInPlace(Quaternion.FromEulerAngles(-pitch * PlayerShip.turnSpeed, yaw * PlayerShip.turnSpeed, 0));
         quat.normalize();
+
+        console.log(`${quat.toEulerAngles()}`);
 
         this.model!.physicsImpostor!.setAngularVelocity(quat.toEulerAngles());
         this.model!.physicsImpostor!.wakeUp();
