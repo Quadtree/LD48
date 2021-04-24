@@ -40,6 +40,8 @@ export class PlayerShip extends Ship {
         this.cam!.position.copyFrom(this.model!.position!.add(transformed));
         this.cam!.rotationQuaternion = this.model!.rotationQuaternion!;
 
+        this.model!.physicsImpostor!.setLinearVelocity(Vector3.TransformCoordinates(Vector3.Forward(false).scale(20), mat));
+
         //console.log(`${yaw} ${pitch}`);
     }
 }

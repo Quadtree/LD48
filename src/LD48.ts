@@ -19,6 +19,8 @@ export class LD48 implements Game {
 
         new Camera("loadingCamera", new Vector3(0, 0,0 ), gameManager.scene, true);
 
+        await gameManager.enablePhysics();
+
         LD48.gm = gameManager;
 
         this.actorManager.scene = gameManager.scene;

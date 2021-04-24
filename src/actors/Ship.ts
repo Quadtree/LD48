@@ -3,6 +3,7 @@ import {Scene} from "@babylonjs/core/scene";
 import {SceneLoader} from "@babylonjs/core/Loading/sceneLoader";
 import {AbstractMesh} from "@babylonjs/core/Meshes/abstractMesh";
 import {Vector3} from "@babylonjs/core/Maths/math.vector";
+import {PhysicsImpostor} from "@babylonjs/core/Physics/physicsImpostor";
 
 export class Ship extends Actor {
     static shipModel:AbstractMesh|null = null;
@@ -30,6 +31,8 @@ export class Ship extends Actor {
         for (const mesh of this.model?.getChildTransformNodes()!){
             (mesh as any).isVisible = true;
         }
+
+        this.model!.physicsImpostor = new PhysicsImpostor(this.model!, PhysicsImpostor.BoxImpostor, {mass: 10});
 
         console.log(`ship placed at ${this.model?.position}`)
     }
