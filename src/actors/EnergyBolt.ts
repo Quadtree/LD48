@@ -22,7 +22,7 @@ export class EnergyBolt extends Actor {
         this.mesh.position = this.startPos;
         this.mesh.rotationQuaternion = this.angle;
 
-        this.mesh.physicsImpostor = new PhysicsImpostor(this.mesh!, PhysicsImpostor.BoxImpostor, {mass: 1});
+        this.mesh.physicsImpostor = new PhysicsImpostor(this.mesh!, PhysicsImpostor.BoxImpostor, {mass: 1, group: 2, mask: 32} as any);
 
         const rotMat = new Matrix();
         this.mesh.rotationQuaternion.toRotationMatrix(rotMat);
@@ -39,10 +39,10 @@ export class EnergyBolt extends Actor {
 
         this.mesh.physicsImpostor.registerOnPhysicsCollide(this.mesh.physicsImpostor, collider => null);
 
-        this.mesh.physicsImpostor.executeNativeFunction((world, physicsBody) => {
+        /*this.mesh.physicsImpostor.executeNativeFunction((world, physicsBody) => {
             world.removeRigidBody(physicsBody);
             world.addRigidBody(physicsBody, 2, 0);
-        })
+        })*/
     }
 
     exitingView() {
