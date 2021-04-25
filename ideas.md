@@ -62,6 +62,7 @@ Perhaps make the cloud more of a background and less of fog. That way it doesn't
 * Checkpoints that restore HP and missiles
 * Final player ship model
 * Final asteroid model
+* Improved background stars
 * Better particles flying around
 * Particle effects
 * Better shot graphics
