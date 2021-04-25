@@ -47,7 +47,6 @@ export class Objective extends Actor {
 
             if (zone == 1){
                 targetOfType[SpawnableTypes.TYPE_ASTEROID] = 25;
-                targetOfType[SpawnableTypes.TYPE_SQUIDTHING] = 1;
             }
 
             for (const type in targetOfType) {
@@ -79,6 +78,8 @@ export class Objective extends Actor {
                     astCount++;
                 }
             }
+
+            
         }
 
 
