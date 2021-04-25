@@ -11,8 +11,9 @@ import {PlayerShip} from "./PlayerShip";
 import {EnergyBolt} from "./EnergyBolt";
 import {Trackable} from "./Trackable";
 import {Color4} from "@babylonjs/core";
+import {Spawnable, SpawnableTypes} from "./Spawnable";
 
-export class SquidThing extends Actor implements Damagable, Trackable {
+export class SquidThing extends Actor implements Damagable, Trackable, Spawnable {
     static shipModel:AbstractMesh|null = null;
 
     hp:number = 3;
@@ -137,5 +138,12 @@ export class SquidThing extends Actor implements Damagable, Trackable {
 
     getText(): string {
         return "?";
+    }
+
+    getSpawnableType(): string {
+        return SpawnableTypes.TYPE_SQUIDTHING;
+    }
+
+    despawn() {
     }
 }

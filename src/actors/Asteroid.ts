@@ -8,8 +8,9 @@ import {Vector3} from "@babylonjs/core/Maths/math.vector";
 import {PhysicsImpostor} from "@babylonjs/core/Physics/physicsImpostor";
 import {Constants} from "../util/Constants";
 import {Damagable} from "./Damagable";
+import {Spawnable, SpawnableTypes} from "./Spawnable";
 
-export class Asteroid extends Actor implements Damagable {
+export class Asteroid extends Actor implements Damagable, Spawnable {
     public mesh:AbstractMesh|null = null;
 
     static texture:Texture|null = null;
@@ -68,5 +69,13 @@ export class Asteroid extends Actor implements Damagable {
 
     keep(): boolean {
         return super.keep() && this.alive;
+    }
+
+    getSpawnableType(): string {
+        return SpawnableTypes.TYPE_ASTEROID;
+    }
+
+    despawn() {
+        this.alive = false;
     }
 }
