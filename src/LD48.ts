@@ -55,6 +55,16 @@ export class LD48 implements Game {
             Missile.preload(gameManager.scene),
         ]);
 
+        this.restart();
+
+        //this.actorManager.add(new Beacon(new Vector3(0,0,-1900), "Start", true));
+
+        new DirectionalLight("", new Vector3(-1, -1, 0), gameManager.scene);
+    }
+
+    restart(){
+        this.actorManager.destroyAllActors();
+
         const playerShip = new PlayerShip();
 
         this.actorManager.add(playerShip);
@@ -64,10 +74,6 @@ export class LD48 implements Game {
         this.actorManager.add(new TitleScreen());
         this.actorManager.add(new ScienceShip());
         this.actorManager.add(new Beacon(new Vector3(0,-150,-400)));
-
-        //this.actorManager.add(new Beacon(new Vector3(0,0,-1900), "Start", true));
-
-        new DirectionalLight("", new Vector3(-1, -1, 0), gameManager.scene);
     }
 
     update(delta:number):void {

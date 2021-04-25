@@ -60,6 +60,12 @@ export class DustParticles extends Actor {
         }
     }
 
+    exitingView() {
+        super.exitingView();
+
+        this.mesh!.dispose();
+    }
+
     update(delta: number) {
         super.update(delta);
 

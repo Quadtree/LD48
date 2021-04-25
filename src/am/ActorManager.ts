@@ -51,6 +51,7 @@ export class ActorManager
                 this.actors[i].exitingWorld()
                 this.actors[i].destroyed();
                 this.actors.splice(i, 1);
+                --i;
             }
         }
 
@@ -113,6 +114,20 @@ export class ActorManager
         if (nearest){
             nearest.takeDamage(amt);
         }
+    }
+
+    destroyAllActors(){
+        for (let i=0;i<this.actors.length;++i){
+            if (this._isInView) this.actors[i].exitingView();
+            this.actors[i].exitingWorld()
+            this.actors[i].destroyed();
+            this.actors.splice(i, 1);
+            --i;
+        }
+
+        this.actorAddQueue = [];
+
+        console.log(`all actors destroyed: ${this.actors.length}`)
     }
 
     public get totalActorCount():number {

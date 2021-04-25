@@ -187,6 +187,12 @@ export class HUD extends Actor {
         console.log("UI created");
     }
 
+    exitingView() {
+        super.exitingView();
+
+        this.texture!.dispose();
+    }
+
     update(delta: number) {
         super.update(delta);
 

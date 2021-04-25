@@ -63,6 +63,8 @@ export class PlayerShip extends Ship implements Damagable {
                 }
             }
 
+            if (ed.type == KeyboardEventTypes.KEYUP && ed.event.key == "r") LD48.s!.restart();
+
             if (ed.type == KeyboardEventTypes.KEYDOWN && ed.event.key == "1" && Util.CHEATS_ENABLED) cheatToPos(-1700);
             if (ed.type == KeyboardEventTypes.KEYDOWN && ed.event.key == "2" && Util.CHEATS_ENABLED) cheatToPos(-800);
             if (ed.type == KeyboardEventTypes.KEYDOWN && ed.event.key == "3" && Util.CHEATS_ENABLED) cheatToPos(-400);
@@ -206,8 +208,8 @@ export class PlayerShip extends Ship implements Damagable {
         return super.keep() && this.hp > 0;
     }
 
-    exitingWorld() {
-        super.exitingWorld();
+    exitingView() {
+        super.exitingView();
 
         this.model!.dispose();
         this.cam!.dispose();

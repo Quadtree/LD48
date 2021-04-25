@@ -94,6 +94,8 @@ export class TitleScreen extends Actor {
         this.createDifficultyButton("Medium", 40, 1);
         this.createDifficultyButton("Hard", 80, 3);
         this.createDifficultyButton("Impossible", 120, 6);
+
+        LD48.s!.paused = true;
     }
 
     exitingView() {
