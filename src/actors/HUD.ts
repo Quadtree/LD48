@@ -89,6 +89,8 @@ export class HUD extends Actor {
 
     private trackingLabels:{[key:string]:TrackingLabel} = {};
 
+    public statusLabel:TextBlock|null = null;
+
     public static debugData:TextBlock|null = null;
 
     enteringView(scene: Scene) {
@@ -104,6 +106,16 @@ export class HUD extends Actor {
             HUD.debugData.text = "DEBUG DATA";
             this.texture.addControl(HUD.debugData);
         }
+
+        const globalViewport = this.texture._getGlobalViewport();
+
+        this.statusLabel = new TextBlock("");
+        this.statusLabel.color = "white";
+        this.statusLabel.leftInPixels = -globalViewport.width / 2 + 80;
+        this.statusLabel.topInPixels = globalViewport.height / 2 - 40;
+        this.statusLabel.text = "TEXT";
+
+        this.texture.addControl(this.statusLabel);
 
         console.log("UI created");
     }
@@ -123,6 +135,8 @@ export class HUD extends Actor {
             const playerShip = playerShips[0] as PlayerShip;
 
             playerShipPos = playerShip.model!.position;
+
+            this.statusLabel!.text = `HP: ${playerShip.hp} Missiles: ${playerShip.missiles}`;
         }
 
         for (const a of this.actorManager!.actors){
@@ -142,5 +156,7 @@ export class HUD extends Actor {
                 this.trackingLabels[k].update(playerShipPos);
             }
         }
+
+
     }
 }

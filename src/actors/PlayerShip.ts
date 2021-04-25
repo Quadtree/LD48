@@ -29,7 +29,8 @@ export class PlayerShip extends Ship implements Damagable {
 
     private yesSeriously:Quaternion = new Quaternion();
 
-    private hp:number = 15;
+    hp:number = 15;
+    missiles = 4;
 
     enteringView(scene: Scene) {
         super.enteringView(scene);
