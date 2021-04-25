@@ -145,5 +145,6 @@ export class SquidThing extends Actor implements Damagable, Trackable, Spawnable
     }
 
     despawn() {
+        return false;
     }
 }

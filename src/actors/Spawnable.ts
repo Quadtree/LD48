@@ -10,5 +10,5 @@ export interface Spawnable {
 
     getPos():Vector3;
 
-    despawn():void;
+    despawn():boolean;
 }

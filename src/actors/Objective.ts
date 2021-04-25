@@ -59,7 +59,7 @@ export class Objective extends Actor {
 
                 for (const ast of allAsteroids) {
                     if (ast.getPos().subtract(playerShip.model!.position).length() > 60) {
-                        ast.despawn();
+                        if (!ast.despawn()) astCount++;
                     } else {
                         astCount++;
                     }

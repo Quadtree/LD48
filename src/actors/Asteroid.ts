@@ -77,5 +77,6 @@ export class Asteroid extends Actor implements Damagable, Spawnable {
 
     despawn() {
         this.alive = false;
+        return true;
     }
 }
