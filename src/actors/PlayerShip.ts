@@ -132,7 +132,7 @@ export class PlayerShip extends Ship implements Damagable {
         const yaw = ((this.actorManager!.scene!.pointerX / LD48.gm!.canvas!.width) - 0.5) * 2;
         const pitch = ((this.actorManager!.scene!.pointerY / LD48.gm!.canvas!.height) - 0.5) * 2;
 
-        if (LD48.s?.mouseIn){
+        if (LD48.s?.mouseIn && delta > 0){
             this.model!.rotationQuaternion!.copyFrom(this.yesSeriously);
             this.model?.addRotation(pitch * delta * PlayerShip.turnSpeed, yaw * delta * PlayerShip.turnSpeed, 0);
             this.yesSeriously = this.model!.rotationQuaternion!.clone();
@@ -146,7 +146,7 @@ export class PlayerShip extends Ship implements Damagable {
 
         //console.log(mat);
 
-        const transformed = Vector3.TransformCoordinates(new Vector3(0 + yaw * 4, 3 + -pitch, -20), mat);
+        const transformed = Vector3.TransformCoordinates(new Vector3(0 + (yaw * 4 * (delta == 0 ? 0 : 1)), 3 + (-pitch * (delta == 0 ? 0 : 1)), -20), mat);
         const camTargetPos = this.model!.position!.add(transformed);
 
         this.cam!.position.copyFrom(camTargetPos)//this.oldCamPoses[this.oldCamPoses.length - 1][1].add(this.model!.position));

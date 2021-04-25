@@ -12,11 +12,12 @@ import {EnergyBolt} from "./EnergyBolt";
 import {Trackable} from "./Trackable";
 import {Color4} from "@babylonjs/core";
 import {Spawnable, SpawnableTypes} from "./Spawnable";
+import {LD48} from "../LD48";
 
 export class SquidThing extends Actor implements Damagable, Trackable, Spawnable {
     static shipModel:AbstractMesh|null = null;
 
-    hp:number = 3;
+    hp:number = 2 + LD48.s!.difficulty;
 
     weaponCharge = 0;
 

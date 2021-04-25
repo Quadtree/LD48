@@ -5,6 +5,7 @@ import {Scene} from "@babylonjs/core/scene";
 import {Vector3} from "@babylonjs/core/Maths/math.vector";
 import {Mesh} from "@babylonjs/core/index";
 import {AbstractMesh} from "@babylonjs/core/Meshes/abstractMesh";
+import {LD48} from "../LD48";
 
 export class SquidBoss extends SquidThing {
     static shipModel:AbstractMesh|null = null;
@@ -19,7 +20,7 @@ export class SquidBoss extends SquidThing {
     constructor(pos:Vector3) {
         super(pos);
 
-        this.hp = 30;
+        this.hp = 15 + 10 * LD48.s!.difficulty;
     }
 
     protected getModelTemplate(){
@@ -27,11 +28,11 @@ export class SquidBoss extends SquidThing {
     }
 
     getAttackCooldown(): number {
-        return 0.25;
+        return Math.max(0.70 - (Math.pow(LD48.s!.difficulty, 2) * 0.05), 0.08);
     }
 
     protected getBaseSpeed(){
-        return 7.5;
+        return 5.5 + LD48.s!.difficulty;
     }
 
     protected getTurboSpeed(){

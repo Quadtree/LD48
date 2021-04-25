@@ -10,6 +10,7 @@ import {Spawnable, SpawnableTypes} from "./Spawnable";
 import {HUD} from "./HUD";
 import {SquidSlower} from "./SquidSlower";
 import {SquidBoss} from "./SquidBoss";
+import {LD48} from "../LD48";
 
 export class Objective extends Actor {
     private spawnCharge:{[key:string]:number} = {};
@@ -106,7 +107,7 @@ export class Objective extends Actor {
 
                 if (astCount < targetOfType[type] && type != SpawnableTypes.TYPE_ASTEROID) {
                     if (typeof this.spawnCharge[type] === "undefined") this.spawnCharge[type] = 1;
-                    this.spawnCharge[type] += (targetOfType[type] - astCount) * delta * .02;
+                    this.spawnCharge[type] += (targetOfType[type] - astCount) * delta * .025;
                 }
 
                 this.spawnCharge[SpawnableTypes.TYPE_ASTEROID] = 1000;

@@ -7,6 +7,7 @@ import "@babylonjs/core/Physics/physicsEngineComponent";
 import "@babylonjs/core/Lights/Shadows/shadowGeneratorSceneComponent";
 import { Game } from "./Game";
 import { AmmoJSPlugin } from "@babylonjs/core";
+import {LD48} from "../LD48";
 
 declare const Ammo:any;
 
@@ -62,14 +63,16 @@ export class GameManager {
             const delta = performance.now() - this.lastRender;
             this.lastRender = performance.now();
 
-            this.game.update(delta / 1_000);
+            if (!LD48.s!.paused) {
+                this.game.update(delta / 1_000);
+            } else {
+                this.game.update(0);
+            }
         })
 
         // Run the render loop.
         this.engine.runRenderLoop(() => {
             this.scene.render();
-
-
         });
 
         // The canvas/window resize event handler.

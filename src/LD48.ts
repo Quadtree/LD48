@@ -16,6 +16,7 @@ import {Beacon} from "./actors/Beacon";
 import {SquidBoss} from "./actors/SquidBoss";
 import {ScienceShip} from "./actors/ScienceShip";
 import {Missile} from "./actors/Missile";
+import {TitleScreen} from "./actors/TitleScreen";
 
 export class LD48 implements Game {
     private actorManager = new ActorManager()
@@ -25,6 +26,10 @@ export class LD48 implements Game {
     public static s:LD48|null = null;
 
     public mouseIn = true;
+
+    paused = true;
+
+    difficulty = 0;
 
     async init(gameManager:GameManager):Promise<void> {
         console.log("init()");
@@ -56,7 +61,7 @@ export class LD48 implements Game {
         this.actorManager.add(new Starfield());
         this.actorManager.add(new DustParticles());
         this.actorManager.add(new Objective());
-        this.actorManager.add(new HUD());
+        this.actorManager.add(new TitleScreen());
         this.actorManager.add(new ScienceShip());
         this.actorManager.add(new Beacon(new Vector3(0,-150,-400)));
 
