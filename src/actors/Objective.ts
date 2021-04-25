@@ -13,6 +13,7 @@ import {SquidBoss} from "./SquidBoss";
 import {LD48} from "../LD48";
 import {EnergyBolt} from "./EnergyBolt";
 import {VictoryScreen} from "./VictoryScreen";
+import {HemisphericLight} from "@babylonjs/core/Lights/hemisphericLight";
 
 export class Objective extends Actor {
     private spawnCharge:{[key:string]:number} = {};
@@ -24,6 +25,21 @@ export class Objective extends Actor {
     private lastCheckpointZone = -1;
 
     private respawnTimer = 0;
+
+    hemiLight:HemisphericLight|null = null;
+
+    exitingView() {
+        super.exitingView();
+
+        this.hemiLight!.dispose();
+    }
+
+    enteringView(scene: Scene) {
+        super.enteringView(scene);
+
+        this.hemiLight = new HemisphericLight("", new Vector3(0, 1, 0), scene);
+        this.hemiLight.intensity = 0.1;
+    }
 
     update(delta: number) {
         super.update(delta);
@@ -45,6 +61,7 @@ export class Objective extends Actor {
         let zone = 0;
         this.actorManager!.scene!.fogMode = Scene.FOGMODE_NONE;
         this.actorManager!.scene!.fogColor.set(0.2, 0.2, 0.2);
+        this.hemiLight!.groundColor.set(0.2, 0.2, 0.2);
 
         if (playerShips.length > 0) {
             const playerShip = playerShips[0] as PlayerShip;
@@ -56,18 +73,22 @@ export class Objective extends Actor {
             } else if (dist > 1450){
                 this.actorManager!.scene!.fogMode = Scene.FOGMODE_LINEAR;
                 this.actorManager!.scene!.fogColor.set(0.2, 0.2, 0.2);
+                this.hemiLight!.groundColor.set(0.2, 0.2, 0.2);
                 zone = 1;
             } else if (dist > 700){
                 this.actorManager!.scene!.fogMode = Scene.FOGMODE_LINEAR;
                 this.actorManager!.scene!.fogColor.set(0.3, 0.3, 0.0);
+                this.hemiLight!.groundColor.set(0.3, 0.3, 0.0);
                 zone = 2;
             } else if (dist > 300){
                 this.actorManager!.scene!.fogMode = Scene.FOGMODE_LINEAR;
                 this.actorManager!.scene!.fogColor.set(0.4, 0.0, 0.0);
+                this.hemiLight!.groundColor.set(0.4, 0.0, 0.0);
                 zone = 3;
             } else {
                 this.actorManager!.scene!.fogMode = Scene.FOGMODE_LINEAR;
                 this.actorManager!.scene!.fogColor.set(0.4, 0.0, 0.4);
+                this.hemiLight!.groundColor.set(0.4, 0.0, 0.4);
                 zone = 4;
             }
 

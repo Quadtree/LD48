@@ -74,6 +74,8 @@ export class VictoryScreen extends Actor {
         this.helpText.color = "#BBBBBB";
 
         this.createDifficultyButton();
+
+        LD48.s!.paused = true;
     }
 
     exitingView() {

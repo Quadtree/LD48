@@ -38,6 +38,12 @@ export class Starfield extends Actor {
         this.mesh!.material = mat;
     }
 
+    exitingView() {
+        super.exitingView();
+
+        this.mesh!.dispose();
+    }
+
     update(delta: number) {
         super.update(delta);
 

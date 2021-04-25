@@ -59,7 +59,7 @@ export class EnergyBolt extends Actor {
 
         if (EnergyBolt.faction0Material === null){
             const mat = new StandardMaterial("", scene);
-            mat.emissiveColor = new Color3(0.7, 0.7, 1);
+            mat.emissiveColor = new Color3(0.4, 1.0, 0.6);
             mat.specularColor = new Color3(0,0,0);
             mat.diffuseColor = new Color3(0,0,0);
             EnergyBolt.faction0Material = mat;

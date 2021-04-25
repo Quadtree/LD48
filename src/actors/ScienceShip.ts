@@ -25,6 +25,7 @@ export class ScienceShip extends Actor implements Trackable {
 
         this.mesh = ScienceShip.shipModel!.clone("", null);
         Util.setVisibility(this.mesh!, true);
+        this.mesh!.scaling.setAll(2.5);
     }
 
     getText(): string {
