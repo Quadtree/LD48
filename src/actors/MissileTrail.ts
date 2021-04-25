@@ -4,6 +4,7 @@ import {Color4, ParticleSystem} from "@babylonjs/core";
 import {Texture} from "@babylonjs/core/Materials/Textures/texture";
 import {Vector3} from "@babylonjs/core/Maths/math.vector";
 import {Missile} from "./Missile";
+import {Util} from "../util/Util";
 
 export class MissileTrail extends Actor {
     system:ParticleSystem|null = null;
@@ -59,7 +60,9 @@ export class MissileTrail extends Actor {
         super.update(delta);
 
         if (this.missile.keep()){
-            (this.system!.emitter as Vector3).copyFrom(this.missile.mesh!.position);
+            this.missile.mesh!.rotationQuaternion!.toRotationMatrix(Util.mat);
+
+            (this.system!.emitter as Vector3).copyFrom(this.missile.mesh!.position.add(Vector3.TransformCoordinates(new Vector3(0,0,-2), Util.mat)));
         } else {
             this.system!.emitRate = 0
             this.timeToLive -= delta;
