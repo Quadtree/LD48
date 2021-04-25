@@ -114,9 +114,11 @@ export class SquidThing extends Actor implements Damagable, Trackable, Spawnable
 
         const moveDelta = this.aimPoint.subtract(this.model!.position)
         if (moveDelta.length() > 120) {
-            this.model!.physicsImpostor!.setLinearVelocity(moveDelta.normalize().scaleInPlace(60));
-        } else if (moveDelta.length() > 15) {
-            this.model!.physicsImpostor!.setLinearVelocity(moveDelta.normalize().scaleInPlace(10));
+            this.model!.physicsImpostor!.setLinearVelocity(moveDelta.normalize().scaleInPlace(this.getTurboSpeed()));
+        } else if (moveDelta.length() > 40) {
+            this.model!.physicsImpostor!.setLinearVelocity(moveDelta.normalize().scaleInPlace(this.getBaseSpeed()));
+        } else {
+            this.model!.physicsImpostor!.setLinearVelocity(moveDelta.normalize().scaleInPlace(0));
         }
     }
 
@@ -130,6 +132,14 @@ export class SquidThing extends Actor implements Damagable, Trackable, Spawnable
 
             this.weaponCharge = 0;
         }
+    }
+
+    protected getBaseSpeed(){
+        return 10;
+    }
+
+    protected getTurboSpeed(){
+        return 60;
     }
 
     getMesh(): AbstractMesh {

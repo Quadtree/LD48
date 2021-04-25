@@ -13,6 +13,8 @@ export class SquidSlower extends SquidThing {
 
     private eyeBeam:Mesh|null = null;
 
+    public isUsingEyeBeam = false;
+
     enteringView(scene: Scene) {
         super.enteringView(scene);
 
@@ -43,11 +45,14 @@ export class SquidSlower extends SquidThing {
             this.eyeBeam!.position = playerShip.model!.position.add(this.model!.position).scaleInPlace(0.5);
             this.eyeBeam!.scaling.z = rangeToTarget;
             this.eyeBeam!.lookAt(playerShip.model!.position);
+
+            this.isUsingEyeBeam = true;
         }
     }
 
     update(delta: number) {
         Util.setVisibility(this.eyeBeam!, false);
+        this.isUsingEyeBeam = false;
 
         super.update(delta);
     }
@@ -60,5 +65,13 @@ export class SquidSlower extends SquidThing {
 
     getSpawnableType(): string {
         return SpawnableTypes.TYPE_SQUIDSLOWER;
+    }
+
+    protected getBaseSpeed(){
+        return 20;
+    }
+
+    protected getTurboSpeed(){
+        return 35;
     }
 }

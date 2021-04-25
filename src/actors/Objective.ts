@@ -83,7 +83,7 @@ export class Objective extends Actor {
 
                 this.spawnCharge[SpawnableTypes.TYPE_ASTEROID] = 1000;
 
-                HUD.debugData!.text = JSON.stringify(this.spawnCharge);
+                //HUD.debugData!.text = JSON.stringify(this.spawnCharge);
 
                 while (astCount < targetOfType[type] && (this.spawnCharge[type] >= 1)) {
                     playerShip.model!.rotationQuaternion!.toRotationMatrix(Util.mat);

@@ -10,6 +10,8 @@ import { Plane, Ray } from "@babylonjs/core";
 import {EnergyBolt} from "./EnergyBolt";
 import {Util} from "../util/Util";
 import {Damagable} from "./Damagable";
+import {installations} from "firebase";
+import {HUD} from "./HUD";
 
 export class PlayerShip extends Ship implements Damagable {
     private cam:TargetCamera|null = null;
@@ -113,6 +115,10 @@ export class PlayerShip extends Ship implements Damagable {
         if (this.forwardKeyDown) thrust.addInPlace(Vector3.Forward(false).scale(40));
         if (this.leftKeyDown) thrust.addInPlace(Vector3.Left().scale(15));
         if (this.rightKeyDown) thrust.addInPlace(Vector3.Right().scale(15));
+
+        thrust.scaleInPlace(1 / (1 + this.actorManager!.actors.filter(it => (it as any).isUsingEyeBeam).length * 1.4));
+
+        HUD.debugData!.text = `${thrust.length()}`;
 
         this.model!.physicsImpostor!.setLinearVelocity(Vector3.TransformCoordinates(thrust, mat));
         this.model!.physicsImpostor!.setAngularVelocity(new Vector3(0,0,0));
