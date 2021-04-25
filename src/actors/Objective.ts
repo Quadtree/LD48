@@ -7,8 +7,11 @@ import {Vector3} from "@babylonjs/core/Maths/math.vector";
 import {installations} from "firebase";
 import {SquidThing} from "./SquidThing";
 import {Spawnable, SpawnableTypes} from "./Spawnable";
+import {HUD} from "./HUD";
 
 export class Objective extends Actor {
+    private spawnCharge:{[key:string]:number} = {};
+
     update(delta: number) {
         super.update(delta);
 
@@ -47,6 +50,7 @@ export class Objective extends Actor {
 
             if (zone == 1){
                 targetOfType[SpawnableTypes.TYPE_ASTEROID] = 25;
+                targetOfType[SpawnableTypes.TYPE_SQUIDTHING] = 2;
             }
 
             for (const type in targetOfType) {
@@ -54,17 +58,29 @@ export class Objective extends Actor {
                     return (it as any).getSpawnableType && (it as any).getSpawnableType() == type;
                 }).map(it => it as unknown as Spawnable);
 
+                let despawnRange = 60;
+                if (type == SpawnableTypes.TYPE_SQUIDTHING) despawnRange = 350;
+
                 let astCount = 0;
 
                 for (const ast of allAsteroids) {
-                    if (ast.getPos().subtract(playerShip.model!.position).length() > 60) {
+                    if (ast.getPos().subtract(playerShip.model!.position).length() > despawnRange) {
                         if (!ast.despawn()) astCount++;
                     } else {
                         astCount++;
                     }
                 }
 
-                while (astCount < targetOfType[type]) {
+                if (astCount < targetOfType[type] && type != SpawnableTypes.TYPE_ASTEROID) {
+                    if (typeof this.spawnCharge[type] === "undefined") this.spawnCharge[type] = 1;
+                    this.spawnCharge[type] += (targetOfType[type] - astCount) * delta * .07;
+                }
+
+                this.spawnCharge[SpawnableTypes.TYPE_ASTEROID] = 1000;
+
+                HUD.debugData!.text = JSON.stringify(this.spawnCharge);
+
+                while (astCount < targetOfType[type] && (this.spawnCharge[type] > 1)) {
                     playerShip.model!.rotationQuaternion!.toRotationMatrix(Util.mat);
 
                     let spawnRange = 20;
@@ -76,10 +92,12 @@ export class Objective extends Actor {
                     if (type == SpawnableTypes.TYPE_SQUIDTHING) this.actorManager!.add(new SquidThing(pos));
 
                     astCount++;
+
+                    this.spawnCharge[type] -= 1;
                 }
             }
 
-            
+
         }
 
 

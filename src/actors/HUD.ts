@@ -61,7 +61,7 @@ class TrackingLabel {
 
 
 
-        HUD.debugData!.text = `${projectedPosition}`;
+        //HUD.debugData!.text = `${projectedPosition}`;
 
         if (playerShipPos) {
             this.distanceLabel.text = `${Math.round(playerShipPos.subtract(mesh.position).length())}`;

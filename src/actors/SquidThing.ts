@@ -110,7 +110,7 @@ export class SquidThing extends Actor implements Damagable, Trackable, Spawnable
 
                     angle.toRotationMatrix(Util.mat);
 
-                    this.actorManager!.add(new EnergyBolt(this.model!.position.add(Vector3.TransformCoordinates(Vector3.Forward(false), Util.mat).scaleInPlace(5)), angle, 1, 60));
+                    this.actorManager!.add(new EnergyBolt(this.model!.position.add(Vector3.TransformCoordinates(Vector3.Forward(false), Util.mat).scaleInPlace(5)), angle, 1, 140));
 
                     this.weaponCharge = 0;
                 }
@@ -119,7 +119,9 @@ export class SquidThing extends Actor implements Damagable, Trackable, Spawnable
 
 
         const moveDelta = this.aimPoint.subtract(this.model!.position)
-        if (moveDelta.length() > 15) {
+        if (moveDelta.length() > 120) {
+            this.model!.physicsImpostor!.setLinearVelocity(moveDelta.normalize().scaleInPlace(60));
+        } else if (moveDelta.length() > 15) {
             this.model!.physicsImpostor!.setLinearVelocity(moveDelta.normalize().scaleInPlace(10));
         }
     }
@@ -145,6 +147,7 @@ export class SquidThing extends Actor implements Damagable, Trackable, Spawnable
     }
 
     despawn() {
-        return false;
+        this.hp = -10000;
+        return true;
     }
 }

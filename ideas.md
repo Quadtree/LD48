@@ -44,9 +44,9 @@ Perhaps make the cloud more of a background and less of fog. That way it doesn't
 * Particles passing the ship
 * Some kind of enemy
 * Background fog, various zones
+* Marker on objective
 
 ## TODO
-* Marker on objective
 * Zone 2: Some squid enemies
 * Zone 3: More squid enemies, and a DOT
 * Zone 4: Objective & boss
