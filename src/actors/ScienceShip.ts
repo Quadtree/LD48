@@ -41,7 +41,7 @@ export class ScienceShip extends Actor implements Trackable {
     }
 
     isActivelyTrackable(): boolean {
-        HUD.debugData!.text = `${this.getRangeToPlayer()}`;
+        //HUD.debugData!.text = `${this.getRangeToPlayer()}`;
         return this.getRangeToPlayer() < 600;
     }
 

@@ -84,6 +84,32 @@ class TrackingLabel {
     }
 }
 
+class StatusBar {
+    constructor(private tex:AdvancedDynamicTexture, private graphic:string, private src:() => number, private y:number) {
+    }
+
+    private elements:Image[] = [];
+
+    update(){
+        const val = this.src();
+
+        while (val > this.elements.length){
+            let nextShieldPos = this.elements.length * 40;
+
+            const globalViewport = this.tex._getGlobalViewport();
+
+            const nElement = new Image("", this.graphic);
+            nElement.topInPixels = globalViewport.height / 2 - 40 + this.y;
+            nElement.leftInPixels = -globalViewport.width / 2 + 40 + nextShieldPos;
+            nElement.widthInPixels = 32;
+            nElement.heightInPixels = 32;
+
+            this.tex.addControl(nElement);
+            this.elements.push(nElement);
+        }
+    }
+}
+
 export class HUD extends Actor {
     private texture:AdvancedDynamicTexture|null = null;
 
@@ -91,9 +117,10 @@ export class HUD extends Actor {
 
     public statusLabel:TextBlock|null = null;
 
-    shields:Image[] = [];
-
     public static debugData:TextBlock|null = null;
+
+    private armorBar:StatusBar|null = null;
+    private missileBar:StatusBar|null = null;
 
     enteringView(scene: Scene) {
         super.enteringView(scene);
@@ -116,8 +143,33 @@ export class HUD extends Actor {
         this.statusLabel.leftInPixels = -globalViewport.width / 2 + 80;
         this.statusLabel.topInPixels = globalViewport.height / 2 - 40;
         this.statusLabel.text = "TEXT";
+        this.statusLabel.isVisible = false;
 
         this.texture.addControl(this.statusLabel);
+
+        this.armorBar = new StatusBar(this.texture, "assets/shield.png", () => {
+            const playerShips = this.actorManager!.actors.filter(it => it instanceof PlayerShip);
+
+            if (playerShips.length > 0) {
+                const playerShip = playerShips[0] as PlayerShip;
+
+                return playerShip.hp;
+            }
+
+            return 0;
+        }, 0);
+
+        this.missileBar = new StatusBar(this.texture, "assets/missile.png", () => {
+            const playerShips = this.actorManager!.actors.filter(it => it instanceof PlayerShip);
+
+            if (playerShips.length > 0) {
+                const playerShip = playerShips[0] as PlayerShip;
+
+                return playerShip.missiles;
+            }
+
+            return 0;
+        }, -45);
 
         console.log("UI created");
     }
@@ -140,12 +192,7 @@ export class HUD extends Actor {
 
             this.statusLabel!.text = `HP: ${Math.round(playerShip.hp)} Missiles: ${playerShip.missiles}`;
 
-            if (playerShip.hp > this.shields.length){
-                let nextShieldPos = 20;
-                if (this.shields.length > 0) nextShieldPos = this.shields[this.shields.length - 1].leftInPixels;
 
-                const shield = 
-            }
         }
 
         for (const a of this.actorManager!.actors){
@@ -166,6 +213,7 @@ export class HUD extends Actor {
             }
         }
 
-
+        this.armorBar!.update();
+        this.missileBar!.update();
     }
 }
