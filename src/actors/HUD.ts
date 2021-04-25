@@ -5,16 +5,26 @@ import {Trackable} from "./Trackable";
 import {TextBlock} from "@babylonjs/gui/2D/controls/textBlock";
 import {Vector3} from "@babylonjs/core/Maths/math.vector";
 import {Util} from "../util/Util";
+import {Control, Rectangle} from "@babylonjs/gui";
 
 class TrackingLabel {
     public active:boolean = true;
     public label:TextBlock;
+    public rectangle:Rectangle;
 
     constructor(private scene:Scene, private tex:AdvancedDynamicTexture, private trackable:Trackable) {
         this.label = new TextBlock("TEST");
         tex.addControl(this.label);
-        //this.label.linkWithMesh(trackable.getMesh());
         this.label.color = this.trackable.getColor().toHexString(true);
+
+        this.rectangle = new Rectangle();
+        tex.addControl(this.rectangle);
+        this.rectangle.color = this.trackable.getColor().toHexString(true);
+        this.rectangle.width = "32px";
+        this.rectangle.height = "32px";
+
+        this.rectangle.horizontalAlignment = Control.HORIZONTAL_ALIGNMENT_CENTER;
+        this.rectangle.verticalAlignment = Control.VERTICAL_ALIGNMENT_CENTER;
     }
 
     update(){
@@ -28,8 +38,8 @@ class TrackingLabel {
         let position = mesh.getBoundingInfo ? mesh.getBoundingInfo().boundingSphere.center : (Vector3.ZeroReadOnly as Vector3);
         let projectedPosition = Vector3.Project(position, mesh.getWorldMatrix(), this.scene.getTransformMatrix(), globalViewport);
 
-        projectedPosition.x = Math.min(Math.max(projectedPosition.x, 90), globalViewport.width - 90);
-        projectedPosition.y = Math.min(Math.max(projectedPosition.y, 90), globalViewport.height - 90);
+        projectedPosition.x = Math.min(Math.max(projectedPosition.x, 120), globalViewport.width - 120);
+        projectedPosition.y = Math.min(Math.max(projectedPosition.y, 120), globalViewport.height - 120);
 
         if (projectedPosition.z < 0 || projectedPosition.z > 1) {
 
@@ -37,11 +47,16 @@ class TrackingLabel {
 
         HUD.debugData!.text = `${projectedPosition}`;
 
-        this.label._moveToProjectedPosition(projectedPosition);
+        this.label._moveToProjectedPosition(projectedPosition.add(new Vector3(0, 30, 0)));
+        this.rectangle._moveToProjectedPosition(projectedPosition.add(new Vector3(-globalViewport.width / 2, -globalViewport.height / 2 + 90, 0)));
+
+        //this.rectangle.left = "20px";
+        //this.rectangle.top = "20px";
     }
 
     destroy(){
         this.tex.removeControl(this.label);
+        this.tex.removeControl(this.rectangle);
     }
 }
 
