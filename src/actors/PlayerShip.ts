@@ -33,6 +33,8 @@ export class PlayerShip extends Ship implements Damagable {
     hp:number = 15;
     missiles = 4;
 
+    radiationDamage = false;
+
     enteringView(scene: Scene) {
         super.enteringView(scene);
 
@@ -61,10 +63,10 @@ export class PlayerShip extends Ship implements Damagable {
                 }
             }
 
-            if (ed.type == KeyboardEventTypes.KEYDOWN && ed.event.key == "1" && Util.CHEATS_ENABLED) cheatToPos(1700);
-            if (ed.type == KeyboardEventTypes.KEYDOWN && ed.event.key == "2" && Util.CHEATS_ENABLED) cheatToPos(800);
-            if (ed.type == KeyboardEventTypes.KEYDOWN && ed.event.key == "3" && Util.CHEATS_ENABLED) cheatToPos(400);
-            if (ed.type == KeyboardEventTypes.KEYDOWN && ed.event.key == "4" && Util.CHEATS_ENABLED) cheatToPos(100);
+            if (ed.type == KeyboardEventTypes.KEYDOWN && ed.event.key == "1" && Util.CHEATS_ENABLED) cheatToPos(-1700);
+            if (ed.type == KeyboardEventTypes.KEYDOWN && ed.event.key == "2" && Util.CHEATS_ENABLED) cheatToPos(-800);
+            if (ed.type == KeyboardEventTypes.KEYDOWN && ed.event.key == "3" && Util.CHEATS_ENABLED) cheatToPos(-400);
+            if (ed.type == KeyboardEventTypes.KEYDOWN && ed.event.key == "4" && Util.CHEATS_ENABLED) cheatToPos(-100);
 
             if (ed.type == KeyboardEventTypes.KEYDOWN && ed.event.key == "i" && Util.CHEATS_ENABLED) this.hp = 9999999;
             if (ed.type == KeyboardEventTypes.KEYDOWN && ed.event.key == "p" && Util.CHEATS_ENABLED){

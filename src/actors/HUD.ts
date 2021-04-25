@@ -126,6 +126,8 @@ export class HUD extends Actor {
     private armorBar:StatusBar|null = null;
     private missileBar:StatusBar|null = null;
 
+    private radiationDamageLabel = new TextBlock();
+
     enteringView(scene: Scene) {
         super.enteringView(scene);
 
@@ -175,6 +177,13 @@ export class HUD extends Actor {
             return 0;
         }, -45);
 
+        this.texture.addControl(this.radiationDamageLabel);
+        this.radiationDamageLabel.leftInPixels = -globalViewport.width / 2 + 165;
+        this.radiationDamageLabel.topInPixels = globalViewport.height / 2 - 125;
+        this.radiationDamageLabel.color = "red";
+        this.radiationDamageLabel.text = "WARNING: RADIATION DAMAGE";
+
+
         console.log("UI created");
     }
 
@@ -196,7 +205,9 @@ export class HUD extends Actor {
 
             this.statusLabel!.text = `HP: ${Math.round(playerShip.hp)} Missiles: ${playerShip.missiles}`;
 
-
+            this.radiationDamageLabel.isVisible = playerShip.radiationDamage;
+        } else {
+            this.radiationDamageLabel.isVisible = false;
         }
 
         for (const a of this.actorManager!.actors){

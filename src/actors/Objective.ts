@@ -67,10 +67,13 @@ export class Objective extends Actor {
                 targetOfType[SpawnableTypes.TYPE_SQUIDSLOWER] = 2;
             }
 
+            playerShip.radiationDamage = false;
+
             if (zone == 3){
                 targetOfType[SpawnableTypes.TYPE_SQUIDTHING] = 6;
 
                 playerShip.takeDamage(0.1 * delta);
+                playerShip.radiationDamage = true;
             }
 
             if (zone == 4){
