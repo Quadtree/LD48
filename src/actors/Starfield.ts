@@ -5,14 +5,24 @@ import {MeshBuilder} from "@babylonjs/core/Meshes/meshBuilder";
 import {Mesh, StandardMaterial} from "@babylonjs/core/index";
 import {Texture} from "@babylonjs/core/Materials/Textures/texture";
 import {PlayerShip} from "./PlayerShip";
+import {SceneLoader} from "@babylonjs/core/Loading/sceneLoader";
+import {Util} from "../util/Util";
 
 export class Starfield extends Actor {
     protected mesh:AbstractMesh|null = null;
 
     static texture:Texture|null = null;
 
+    static shipModel:AbstractMesh|null = null;
+
     static async preload(scene:Scene){
         this.texture = new Texture("assets/starfield1.png", scene, true, false, Texture.NEAREST_SAMPLINGMODE);
+
+
+        //const thing = (await SceneLoader.ImportMeshAsync(null, './assets/starfield.glb', '', scene));
+
+        //Starfield.shipModel = thing.meshes[0];
+        //Util.setVisibility(Starfield.shipModel, false);
     }
 
     enteringView(scene: Scene) {
@@ -25,7 +35,7 @@ export class Starfield extends Actor {
         mat.diffuseColor.set(0,0,0);
         mat.specularColor.set(0,0,0);
 
-        this.mesh.material = mat;
+        this.mesh!.material = mat;
     }
 
     update(delta: number) {

@@ -59,9 +59,9 @@ Perhaps make the cloud more of a background and less of fog. That way it doesn't
 * Victory screen
 * Final player ship model
 * Final asteroid model
+* Improved background stars
 
 ## TODO
-* Improved background stars
 * Better particles flying around
 * Particle effects
 * Better shot graphics
