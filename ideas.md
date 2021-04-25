@@ -53,6 +53,7 @@ Perhaps make the cloud more of a background and less of fog. That way it doesn't
 
 ## TODO
 * Missiles
+* HUD displaying HP and missiles
 * Title screen
 * Victory screen
 * Notification that you're taking "radiation damage" in the red zone
