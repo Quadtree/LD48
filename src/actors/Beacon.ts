@@ -35,6 +35,6 @@ export class Beacon extends Actor implements Trackable {
     }
 
     getColor(): Color4 {
-        return new Color4(0,0,1,1);
+        return new Color4(0.25, 0.25, 1, 1);
     }
 }

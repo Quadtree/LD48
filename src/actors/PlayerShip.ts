@@ -115,9 +115,13 @@ export class PlayerShip extends Ship implements Damagable {
     }
 
     private fireMissile(){
-        this.model!.rotationQuaternion!.toRotationMatrix(Util.mat);
+        if (this.missiles > 0) {
+            this.model!.rotationQuaternion!.toRotationMatrix(Util.mat);
 
-        this.actorManager!.add(new Missile(this.model!.position.add(Vector3.TransformCoordinates(new Vector3(0, 0, 5), Util.mat)), this.model!.rotationQuaternion!.clone(), 0, 180));
+            this.actorManager!.add(new Missile(this.model!.position.add(Vector3.TransformCoordinates(new Vector3(0, 0, 5), Util.mat)), this.model!.rotationQuaternion!.clone(), 0, 180));
+
+            this.missiles -= 1;
+        }
     }
 
     update(delta: number) {

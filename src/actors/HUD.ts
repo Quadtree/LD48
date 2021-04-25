@@ -107,6 +107,10 @@ class StatusBar {
             this.tex.addControl(nElement);
             this.elements.push(nElement);
         }
+
+        if (this.elements.length > val){
+            this.tex.removeControl(this.elements.pop()!);
+        }
     }
 }
 
