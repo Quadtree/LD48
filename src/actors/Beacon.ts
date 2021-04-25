@@ -10,20 +10,20 @@ import {Vector3} from "@babylonjs/core/Maths/math.vector";
 export class Beacon extends Actor implements Trackable {
     public mesh:AbstractMesh|null = null;
 
-    constructor(private startLoc:Vector3) {
+    constructor(private startLoc:Vector3, private text:string = "Last Known Position", private visible:boolean = false) {
         super();
     }
 
     enteringView(scene: Scene) {
         super.enteringView(scene);
 
-        this.mesh = MeshBuilder.CreatePlane("", {});
-        Util.setVisibility(this.mesh, false);
+        this.mesh = MeshBuilder.CreateBox("", {});
+        Util.setVisibility(this.mesh, this.visible);
         this.mesh!.position.copyFrom(this.startLoc);
     }
 
     getText(): string {
-        return "Last Known Position";
+        return this.text;
     }
 
     getMesh(): AbstractMesh {

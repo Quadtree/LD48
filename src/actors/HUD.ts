@@ -23,8 +23,8 @@ class TrackingLabel {
         this.rectangle.width = "32px";
         this.rectangle.height = "32px";
 
-        this.rectangle.horizontalAlignment = Control.HORIZONTAL_ALIGNMENT_CENTER;
-        this.rectangle.verticalAlignment = Control.VERTICAL_ALIGNMENT_CENTER;
+        //this.rectangle.horizontalAlignment = Control.HORIZONTAL_ALIGNMENT_CENTER;
+        //this.rectangle.verticalAlignment = Control.VERTICAL_ALIGNMENT_CENTER;
     }
 
     update(){
@@ -47,8 +47,8 @@ class TrackingLabel {
 
         HUD.debugData!.text = `${projectedPosition}`;
 
-        this.label._moveToProjectedPosition(projectedPosition.add(new Vector3(0, 30, 0)));
-        this.rectangle._moveToProjectedPosition(projectedPosition.add(new Vector3(-globalViewport.width / 2, -globalViewport.height / 2 + 90, 0)));
+        this.label._moveToProjectedPosition(projectedPosition.add(new Vector3(0, -30, 0)));
+        this.rectangle._moveToProjectedPosition(projectedPosition.add(new Vector3(-globalViewport.width / 2 + 16, -globalViewport.height / 2 + 16, 0)));
 
         //this.rectangle.left = "20px";
         //this.rectangle.top = "20px";
