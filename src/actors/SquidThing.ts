@@ -45,7 +45,7 @@ export class SquidThing extends Actor implements Damagable, Trackable, Spawnable
     }
 
     getAttackCooldown(){
-        return 2.6 - LD48.s!.difficulty * .2;
+        return (2.6 - LD48.s!.difficulty * .2) * 0.65;
     }
 
     enteringView(scene: Scene) {

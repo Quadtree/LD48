@@ -253,7 +253,7 @@ export class PlayerShip extends Ship implements Damagable {
 
         //console.log(`player ship took ${amt} damage ${this.hp} left`)
 
-        if (this.hp <= 0) this.killedByDamage = true
+        if (!this.keep()) this.killedByDamage = true
     }
 
     getFaction(): number {
@@ -265,7 +265,7 @@ export class PlayerShip extends Ship implements Damagable {
     }
 
     keep(): boolean {
-        return super.keep() && this.hp > 0;
+        return super.keep() && this.hp >= 1;
     }
 
     exitingView() {
