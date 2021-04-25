@@ -26,7 +26,11 @@ export class Objective extends Actor {
 
     private respawnTimer = 0;
 
+    victoryTimer = 0;
+
     hemiLight:HemisphericLight|null = null;
+
+    shownVictoryScreen = false
 
     exitingView() {
         super.exitingView();
@@ -44,7 +48,7 @@ export class Objective extends Actor {
     update(delta: number) {
         super.update(delta);
 
-        if (this.bossHasSpawned){
+        if (this.bossHasSpawned && !this.shownVictoryScreen){
             let bossAlive = false;
             for (const a of this.actorManager!.actors){
                 if (a instanceof SquidBoss){
@@ -52,7 +56,13 @@ export class Objective extends Actor {
                 }
             }
             if (!bossAlive){
-                this.actorManager!.add(new VictoryScreen());
+                this.victoryTimer += delta;
+                if (this.victoryTimer > 2.5) {
+                    this.actorManager!.add(new VictoryScreen());
+                    this.shownVictoryScreen = true;
+                }
+            } else {
+                this.victoryTimer = 0;
             }
         }
 

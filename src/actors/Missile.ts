@@ -27,6 +27,8 @@ export class Missile extends EnergyBolt {
 
         this.mesh!.physicsImpostor = new PhysicsImpostor(this.mesh!, PhysicsImpostor.ConvexHullImpostor, {
             mass: 1,
+            group: 1,
+            mask: 0xFFFE
         } as any);
     }
 
@@ -39,7 +41,7 @@ export class Missile extends EnergyBolt {
         this.timeToLive = 12;
     }
 
-    getDamageOnHit(){
+    getDamageOnHit():number{
         return 5;
     }
 

@@ -38,4 +38,8 @@ export class SquidBoss extends SquidThing {
     protected getTurboSpeed(){
         return 25;
     }
+
+    getExplosionSize(){
+        return 40;
+    }
 }

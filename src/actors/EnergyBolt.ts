@@ -9,6 +9,7 @@ import {Color3, Material, StandardMaterial} from "@babylonjs/core/index";
 import {Explosion} from "./Explosion";
 import {Sound} from "@babylonjs/core";
 import {Util} from "../util/Util";
+import {LD48} from "../LD48";
 
 export class EnergyBolt extends Actor {
     mesh:AbstractMesh|null = null;
@@ -36,6 +37,7 @@ export class EnergyBolt extends Actor {
         EnergyBolt.missileHitSound = await Util.loadSound("assets/missilehit.wav", scene);
 
         EnergyBolt.playerFireSound.setVolume(0.1)
+        EnergyBolt.fireSound.setVolume(0.1)
     }
 
     createMesh(){
@@ -43,11 +45,16 @@ export class EnergyBolt extends Actor {
 
         this.mesh!.physicsImpostor = new PhysicsImpostor(this.mesh!, PhysicsImpostor.BoxImpostor, {
             mass: 1,
+            group: 1,
+            mask: 0xFFFE
         } as any);
     }
 
-    getDamageOnHit(){
-        return 1;
+    getDamageOnHit():number{
+        if (this.faction == 1 && LD48.s!.difficulty == 0)
+            return 0.5;
+        else
+            return 1;
     }
 
     enteringView(scene: Scene) {

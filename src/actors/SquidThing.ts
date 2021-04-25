@@ -75,8 +75,12 @@ export class SquidThing extends Actor implements Damagable, Trackable, Spawnable
 
         if (this.killedByDamage){
             SquidThing.destroyedSound!.play();
-            this.actorManager!.add(new Explosion(this.model!.position.clone(), 8, new Color3(1,0,1)))
+            this.actorManager!.add(new Explosion(this.model!.position.clone(), this.getExplosionSize(), new Color3(1,0,1)))
         }
+    }
+
+    getExplosionSize(){
+        return 8;
     }
 
     getPos(): Vector3 {

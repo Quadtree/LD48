@@ -96,7 +96,7 @@ export class ActorManager
 
     public damageAtPoint(v3:Vector3, amt:number, faction:number){
         let nearest:Damagable|null = null;
-        let nearestDist = 10000000;
+        let nearestDist = 25;
 
         for (const a of this.actors){
             if ((a as any).takeDamage){
