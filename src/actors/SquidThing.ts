@@ -10,9 +10,11 @@ import {Damagable} from "./Damagable";
 import {PlayerShip} from "./PlayerShip";
 import {EnergyBolt} from "./EnergyBolt";
 import {Trackable} from "./Trackable";
-import {Color4} from "@babylonjs/core";
+import {Color4, StandardMaterial} from "@babylonjs/core";
 import {Spawnable, SpawnableTypes} from "./Spawnable";
 import {LD48} from "../LD48";
+import {Explosion} from "./Explosion";
+import {Color3} from "@babylonjs/core/index";
 
 export class SquidThing extends Actor implements Damagable, Trackable, Spawnable {
     static shipModel:AbstractMesh|null = null;
@@ -22,6 +24,8 @@ export class SquidThing extends Actor implements Damagable, Trackable, Spawnable
     weaponCharge = 0;
 
     aimPoint:Vector3 = new Vector3(0,0,0);
+
+    killedByDamage = false
 
     static async preload(scene: Scene){
         const thing = (await SceneLoader.ImportMeshAsync(null, './assets/squid_thing.glb', '', scene));
@@ -64,6 +68,10 @@ export class SquidThing extends Actor implements Damagable, Trackable, Spawnable
         super.exitingView();
 
         this.model!.dispose();
+
+        if (this.killedByDamage){
+            this.actorManager!.add(new Explosion(this.model!.position.clone(), 8, new Color3(1,0,1)))
+        }
     }
 
     getPos(): Vector3 {
@@ -78,6 +86,10 @@ export class SquidThing extends Actor implements Damagable, Trackable, Spawnable
 
         this.hp -= amt;
         console.log(`took ${amt} damage ${this.hp} left`)
+
+        if (this.hp <= 0){
+            this.killedByDamage = true
+        }
     }
 
     keep(): boolean {
