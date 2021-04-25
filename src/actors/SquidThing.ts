@@ -10,7 +10,7 @@ import {Damagable} from "./Damagable";
 import {PlayerShip} from "./PlayerShip";
 import {EnergyBolt} from "./EnergyBolt";
 import {Trackable} from "./Trackable";
-import {Color4, StandardMaterial} from "@babylonjs/core";
+import {Color4, Sound, StandardMaterial} from "@babylonjs/core";
 import {Spawnable, SpawnableTypes} from "./Spawnable";
 import {LD48} from "../LD48";
 import {Explosion} from "./Explosion";
@@ -27,11 +27,15 @@ export class SquidThing extends Actor implements Damagable, Trackable, Spawnable
 
     killedByDamage = false
 
+    static destroyedSound:Sound|null = null;
+
     static async preload(scene: Scene){
         const thing = (await SceneLoader.ImportMeshAsync(null, './assets/squid_thing.glb', '', scene));
 
         SquidThing.shipModel = thing.meshes[0];
         Util.setVisibility(SquidThing.shipModel, false);
+
+        SquidThing.destroyedSound = await Util.loadSound("assets/enemydestroyed.wav", scene);
     }
 
     public model:AbstractMesh|null = null;
@@ -70,6 +74,7 @@ export class SquidThing extends Actor implements Damagable, Trackable, Spawnable
         this.model!.dispose();
 
         if (this.killedByDamage){
+            SquidThing.destroyedSound!.play();
             this.actorManager!.add(new Explosion(this.model!.position.clone(), 8, new Color3(1,0,1)))
         }
     }

@@ -7,6 +7,8 @@ import {PhysicsImpostor} from "@babylonjs/core/Physics/physicsImpostor";
 import {Constants} from "../util/Constants";
 import {Color3, Material, StandardMaterial} from "@babylonjs/core/index";
 import {Explosion} from "./Explosion";
+import {Sound} from "@babylonjs/core";
+import {Util} from "../util/Util";
 
 export class EnergyBolt extends Actor {
     mesh:AbstractMesh|null = null;
@@ -16,8 +18,24 @@ export class EnergyBolt extends Actor {
     static faction0Material:Material|null = null;
     static faction1Material:Material|null = null;
 
+    static fireSound:Sound|null = null;
+    static playerFireSound:Sound|null = null;
+    static missileFireSound:Sound|null = null;
+    static hitSound:Sound|null = null;
+    static missileHitSound:Sound|null = null;
+
     constructor(private readonly startPos:Vector3, private readonly angle:Quaternion, private readonly faction:number = 0, private readonly speed:number = 120) {
         super();
+    }
+
+    static async preload(scene:Scene){
+        EnergyBolt.fireSound = await Util.loadSound("assets/boltfire.wav", scene);
+        EnergyBolt.playerFireSound = await Util.loadSound("assets/boltfire1.wav", scene);
+        EnergyBolt.missileFireSound = await Util.loadSound("assets/missilelaunch.wav", scene);
+        EnergyBolt.hitSound = await Util.loadSound("assets/bolthit.wav", scene);
+        EnergyBolt.missileHitSound = await Util.loadSound("assets/missilehit.wav", scene);
+
+        EnergyBolt.playerFireSound.setVolume(0.1)
     }
 
     createMesh(){
@@ -36,6 +54,15 @@ export class EnergyBolt extends Actor {
         super.enteringView(scene);
 
         this.createMesh();
+
+        if (this.isGlowing()) {
+            if (this.faction == 1)
+                EnergyBolt.fireSound!.play();
+            else
+                EnergyBolt.playerFireSound!.play();
+        } else {
+            EnergyBolt.missileFireSound!.play();
+        }
 
         this.mesh!.position = this.startPos;
         this.mesh!.rotationQuaternion = this.angle;
@@ -56,6 +83,12 @@ export class EnergyBolt extends Actor {
             this.timeToLive = -1000;
 
             this.actorManager!.add(new Explosion(this.mesh!.position.clone(), this.isGlowing() ? 1 : 4, this.isGlowing() ? (this.mesh!.material as StandardMaterial).emissiveColor : new Color3(1, .71, 0)))
+
+            if (this.isGlowing()){
+                EnergyBolt.hitSound!.play();
+            } else {
+                EnergyBolt.missileHitSound!.play();
+            }
         }
 
         this.mesh!.physicsImpostor!.registerOnPhysicsCollide(this.mesh!.physicsImpostor!, collider => null);

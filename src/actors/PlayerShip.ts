@@ -6,7 +6,7 @@ import {LD48} from "../LD48";
 import {TargetCamera} from "@babylonjs/core/Cameras/targetCamera";
 import {KeyboardEventTypes} from "@babylonjs/core/Events/keyboardEvents";
 import {PointerEventTypes} from "@babylonjs/core/Events/pointerEvents";
-import {Color3, Plane, Ray} from "@babylonjs/core";
+import {Color3, Plane, Ray, Sound} from "@babylonjs/core";
 import {EnergyBolt} from "./EnergyBolt";
 import {Util} from "../util/Util";
 import {Damagable} from "./Damagable";
@@ -37,6 +37,14 @@ export class PlayerShip extends Ship implements Damagable {
     radiationDamage = false;
 
     actualThrust = new Vector3();
+
+    static takeDamageSound:Sound|null = null;
+    static destroyedSound:Sound|null = null;
+
+    static async preload(scene:Scene){
+        PlayerShip.takeDamageSound = await Util.loadSound("assets/playerdamaged.wav", scene);
+        PlayerShip.destroyedSound = await Util.loadSound("assets/playerdestroyed.wav", scene);
+    }
 
     constructor(private startPos:Vector3) {
         super();
@@ -215,8 +223,15 @@ export class PlayerShip extends Ship implements Damagable {
     killedByDamage = false
 
     takeDamage(amt: number) {
+        const prevRound = Math.round(this.hp);
+
         this.hp -= amt;
-        console.log(`player ship took ${amt} damage ${this.hp} left`)
+
+        if (Math.round(this.hp) < prevRound){
+            PlayerShip.takeDamageSound!.play();
+        }
+
+        //console.log(`player ship took ${amt} damage ${this.hp} left`)
 
         if (this.hp <= 0) this.killedByDamage = true
     }
@@ -238,6 +253,9 @@ export class PlayerShip extends Ship implements Damagable {
 
         this.model!.dispose();
 
-        if (this.killedByDamage) this.actorManager!.add(new Explosion(this.model!.position.clone(), 10, new Color3(1, .71, 0)))
+        if (this.killedByDamage){
+            PlayerShip.destroyedSound!.play();
+            this.actorManager!.add(new Explosion(this.model!.position.clone(), 10, new Color3(1, .71, 0)))
+        }
     }
 }

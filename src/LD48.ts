@@ -17,6 +17,7 @@ import {SquidBoss} from "./actors/SquidBoss";
 import {ScienceShip} from "./actors/ScienceShip";
 import {Missile} from "./actors/Missile";
 import {TitleScreen} from "./actors/TitleScreen";
+import {EnergyBolt} from "./actors/EnergyBolt";
 
 export class LD48 implements Game {
     private actorManager = new ActorManager()
@@ -47,12 +48,14 @@ export class LD48 implements Game {
 
         await Promise.all([
             Ship.preload(gameManager.scene),
+            PlayerShip.preload(gameManager.scene),
             Starfield.preload(gameManager.scene),
             Asteroid.preload(gameManager.scene),
             SquidThing.preload(gameManager.scene),
             SquidBoss.preload(gameManager.scene),
             ScienceShip.preload(gameManager.scene),
             Missile.preload(gameManager.scene),
+            EnergyBolt.preload(gameManager.scene),
         ]);
 
         this.restart();
