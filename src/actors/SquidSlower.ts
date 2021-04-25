@@ -29,7 +29,7 @@ export class SquidSlower extends SquidThing {
             }
         }
 
-        this.eyeBeam = MeshBuilder.CreateCylinder("", {});
+        this.eyeBeam = MeshBuilder.CreateBox("", {width: 0.5, height: 0.5, depth: 1});
         this.eyeBeam.material = SquidSlower.eyeMat;
         Util.setVisibility(this.eyeBeam, false);
     }
@@ -43,10 +43,13 @@ export class SquidSlower extends SquidThing {
             this.eyeBeam!.position = playerShip.model!.position.add(this.model!.position).scaleInPlace(0.5);
             this.eyeBeam!.scaling.z = rangeToTarget;
             this.eyeBeam!.lookAt(playerShip.model!.position);
-
-        } else {
-            Util.setVisibility(this.eyeBeam!, false);
         }
+    }
+
+    update(delta: number) {
+        Util.setVisibility(this.eyeBeam!, false);
+
+        super.update(delta);
     }
 
     exitingView() {
