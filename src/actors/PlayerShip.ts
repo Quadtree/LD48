@@ -29,6 +29,8 @@ class EngineTrail {
 
         //if (!Explosion.texture) Explosion.texture =
 
+        this.system.createSphereEmitter(0.05, 0);
+
         this.system.particleTexture = new Texture("assets/solid.png", scene);
         this.system.minLifeTime = 0.7
         this.system.maxLifeTime = 0.8
@@ -39,6 +41,7 @@ class EngineTrail {
         this.system.colorDead = new Color4(.5,.5,.5,0);
         //this.system.manualEmitCount = 20
         this.system.emitRate = 0
+
 
         this.system.direction1 = new Vector3(.2,.2,.2).scale(0.0)
         this.system.direction2 = this.system.direction1.scale(-1)
@@ -171,8 +174,8 @@ export class PlayerShip extends Ship implements Damagable {
 
         this.targetingSphere = MeshBuilder.CreateIcoSphere("", {radius: 100});
 
-        this.engineFlames.push(new EngineTrail(scene, this, new Vector3(-0.7,0,-2)));
-        this.engineFlames.push(new EngineTrail(scene, this, new Vector3(.7,0,-2)));
+        this.engineFlames.push(new EngineTrail(scene, this, new Vector3(-0.5,-0.1,-2)));
+        this.engineFlames.push(new EngineTrail(scene, this, new Vector3(.5,-0.1,-2)));
     }
 
     private fireCannons(delta: number){
