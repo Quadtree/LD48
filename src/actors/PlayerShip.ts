@@ -39,7 +39,9 @@ export class PlayerShip extends Ship implements Damagable {
         console.log(`camera position ${this.cam!.position}`)
 
         this.actorManager!.scene!.onKeyboardObservable.add((ed, es) => {
-            if (ed.type == KeyboardEventTypes.KEYDOWN && ed.event.key == "w") { this.forwardKeyDown = true; console.log("W"); }
+            //console.log(ed.event.key);
+
+            if (ed.type == KeyboardEventTypes.KEYDOWN && ed.event.key == "w") { this.forwardKeyDown = true; }
             if (ed.type == KeyboardEventTypes.KEYUP && ed.event.key == "w") this.forwardKeyDown = false;
 
             if (ed.type == KeyboardEventTypes.KEYDOWN && ed.event.key == "a") this.leftKeyDown = true;
@@ -47,6 +49,19 @@ export class PlayerShip extends Ship implements Damagable {
 
             if (ed.type == KeyboardEventTypes.KEYDOWN && ed.event.key == "d") this.rightKeyDown = true;
             if (ed.type == KeyboardEventTypes.KEYUP && ed.event.key == "d") this.rightKeyDown = false;
+
+            const cheatToPos = (pos:number) => {
+                for (const actor of this.actorManager!.actors){
+                    if (actor instanceof PlayerShip){
+                        actor.model!.position.z = pos;
+                    }
+                }
+            }
+
+            if (ed.type == KeyboardEventTypes.KEYDOWN && ed.event.key == "1" && Util.CHEATS_ENABLED) cheatToPos(1700);
+            if (ed.type == KeyboardEventTypes.KEYDOWN && ed.event.key == "2" && Util.CHEATS_ENABLED) cheatToPos(800);
+            if (ed.type == KeyboardEventTypes.KEYDOWN && ed.event.key == "3" && Util.CHEATS_ENABLED) cheatToPos(400);
+            if (ed.type == KeyboardEventTypes.KEYDOWN && ed.event.key == "4" && Util.CHEATS_ENABLED) cheatToPos(100);
         });
 
         this.actorManager!.scene!.onPointerObservable.add((pi, es) => {

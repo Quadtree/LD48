@@ -35,10 +35,14 @@ export class SquidThing extends Actor implements Damagable, Trackable, Spawnable
         super();
     }
 
+    getAttackCooldown(){
+        return 2;
+    }
+
     enteringView(scene: Scene) {
         super.enteringView(scene);
 
-        this.model = SquidThing.shipModel!.clone("", null)!;
+        this.model = this.getModelTemplate().clone("", null)!;
         Util.setVisibility(this.model, true);
 
         this.model!.physicsImpostor = new PhysicsImpostor(this.model!, PhysicsImpostor.ConvexHullImpostor, {
@@ -49,6 +53,10 @@ export class SquidThing extends Actor implements Damagable, Trackable, Spawnable
         this.aimPoint.copyFrom(this.startLoc);
 
         this.model!.physicsImpostor.registerOnPhysicsCollide(this.model!.physicsImpostor, collider => null);
+    }
+
+    protected getModelTemplate(){
+        return SquidThing.shipModel!;
     }
 
     exitingView() {
@@ -123,7 +131,7 @@ export class SquidThing extends Actor implements Damagable, Trackable, Spawnable
     }
 
     protected fireWeapon(playerShip:PlayerShip){
-        if (this.weaponCharge > 2){
+        if (this.weaponCharge > this.getAttackCooldown()){
             const angle = Util.rotationBetweenVectors(Vector3.Forward(false), playerShip.model!.position.subtract(this.model!.position));
 
             angle.toRotationMatrix(Util.mat);

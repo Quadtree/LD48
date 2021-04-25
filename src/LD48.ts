@@ -13,6 +13,7 @@ import {SquidThing} from "./actors/SquidThing";
 import {Objective} from "./actors/Objective";
 import {HUD} from "./actors/HUD";
 import {Beacon} from "./actors/Beacon";
+import {SquidBoss} from "./actors/SquidBoss";
 
 export class LD48 implements Game {
     private actorManager = new ActorManager()
@@ -42,6 +43,7 @@ export class LD48 implements Game {
             Starfield.preload(gameManager.scene),
             Asteroid.preload(gameManager.scene),
             SquidThing.preload(gameManager.scene),
+            SquidBoss.preload(gameManager.scene),
         ]);
 
         const playerShip = new PlayerShip();

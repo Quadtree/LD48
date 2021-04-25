@@ -55,5 +55,6 @@ Perhaps make the cloud more of a background and less of fog. That way it doesn't
 * Missiles
 * Title screen
 * Victory screen
+* Notification that you're taking "radiation damage" in the red zone
 * Sound
 * Music

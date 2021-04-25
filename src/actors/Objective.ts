@@ -9,9 +9,12 @@ import {SquidThing} from "./SquidThing";
 import {Spawnable, SpawnableTypes} from "./Spawnable";
 import {HUD} from "./HUD";
 import {SquidSlower} from "./SquidSlower";
+import {SquidBoss} from "./SquidBoss";
 
 export class Objective extends Actor {
     private spawnCharge:{[key:string]:number} = {};
+
+    private bossHasSpawned = false;
 
     update(delta: number) {
         super.update(delta);
@@ -71,8 +74,13 @@ export class Objective extends Actor {
             }
 
             if (zone == 4){
-                targetOfType[SpawnableTypes.TYPE_SQUIDTHING] = 1;
-                targetOfType[SpawnableTypes.TYPE_SQUIDSLOWER] = 2;
+                //targetOfType[SpawnableTypes.TYPE_SQUIDTHING] = 1;
+                //targetOfType[SpawnableTypes.TYPE_SQUIDSLOWER] = 2;
+
+                if (!this.bossHasSpawned){
+                    this.actorManager!.add(new SquidBoss(new Vector3(0,0,0)));
+                    this.bossHasSpawned = true;
+                }
             }
 
             for (const type in targetOfType) {
@@ -119,10 +127,6 @@ export class Objective extends Actor {
                     this.spawnCharge[type] -= 1;
                 }
             }
-
-
         }
-
-
     }
 }
