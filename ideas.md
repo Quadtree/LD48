@@ -62,8 +62,8 @@ Perhaps make the cloud more of a background and less of fog. That way it doesn't
 * Improved background stars
 * Better particles flying around
 * Better shot graphics
+* Particle effects
 
 ## TODO
-* Particle effects
 * Sound
 * Music

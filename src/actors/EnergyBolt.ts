@@ -55,7 +55,7 @@ export class EnergyBolt extends Actor {
             console.log('collided!');
             this.timeToLive = -1000;
 
-            this.actorManager!.add(new Explosion(this.mesh!.position.clone(), 1, (this.mesh!.material as StandardMaterial).emissiveColor))
+            this.actorManager!.add(new Explosion(this.mesh!.position.clone(), this.isGlowing() ? 1 : 4, this.isGlowing() ? (this.mesh!.material as StandardMaterial).emissiveColor : new Color3(1, .71, 0)))
         }
 
         this.mesh!.physicsImpostor!.registerOnPhysicsCollide(this.mesh!.physicsImpostor!, collider => null);

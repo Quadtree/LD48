@@ -6,7 +6,7 @@ import {LD48} from "../LD48";
 import {TargetCamera} from "@babylonjs/core/Cameras/targetCamera";
 import {KeyboardEventTypes} from "@babylonjs/core/Events/keyboardEvents";
 import {PointerEventTypes} from "@babylonjs/core/Events/pointerEvents";
-import { Plane, Ray } from "@babylonjs/core";
+import {Color3, Plane, Ray} from "@babylonjs/core";
 import {EnergyBolt} from "./EnergyBolt";
 import {Util} from "../util/Util";
 import {Damagable} from "./Damagable";
@@ -14,6 +14,7 @@ import {installations} from "firebase";
 import {HUD} from "./HUD";
 import {SquidThing} from "./SquidThing";
 import {Missile} from "./Missile";
+import {Explosion} from "./Explosion";
 
 export class PlayerShip extends Ship implements Damagable {
     private cam:TargetCamera|null = null;
@@ -45,6 +46,9 @@ export class PlayerShip extends Ship implements Damagable {
         super.enteringView(scene);
 
         this.cam = new TargetCamera("playerShipCamera", new Vector3(0, 0,0 ), scene);
+
+        if (scene.activeCamera) scene.activeCamera.dispose();
+
         scene.activeCamera = this.cam as Camera;
 
         console.log(`camera position ${this.cam!.position}`)
@@ -208,9 +212,13 @@ export class PlayerShip extends Ship implements Damagable {
         }
     }
 
+    killedByDamage = false
+
     takeDamage(amt: number) {
         this.hp -= amt;
         console.log(`player ship took ${amt} damage ${this.hp} left`)
+
+        if (this.hp <= 0) this.killedByDamage = true
     }
 
     getFaction(): number {
@@ -229,6 +237,7 @@ export class PlayerShip extends Ship implements Damagable {
         super.exitingView();
 
         this.model!.dispose();
-        this.cam!.dispose();
+
+        if (this.killedByDamage) this.actorManager!.add(new Explosion(this.model!.position.clone(), 10, new Color3(1, .71, 0)))
     }
 }
