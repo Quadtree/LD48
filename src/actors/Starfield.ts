@@ -12,7 +12,7 @@ export class Starfield extends Actor {
     static texture:Texture|null = null;
 
     static async preload(scene:Scene){
-        this.texture = new Texture("assets/starfield1.png", scene);
+        this.texture = new Texture("assets/starfield1.png", scene, true, false, Texture.NEAREST_SAMPLINGMODE);
     }
 
     enteringView(scene: Scene) {
