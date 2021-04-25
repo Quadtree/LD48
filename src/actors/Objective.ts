@@ -103,7 +103,7 @@ export class Objective extends Actor {
 
                 if (astCount < targetOfType[type] && type != SpawnableTypes.TYPE_ASTEROID) {
                     if (typeof this.spawnCharge[type] === "undefined") this.spawnCharge[type] = 1;
-                    this.spawnCharge[type] += (targetOfType[type] - astCount) * delta * .07;
+                    this.spawnCharge[type] += (targetOfType[type] - astCount) * delta * .02;
                 }
 
                 this.spawnCharge[SpawnableTypes.TYPE_ASTEROID] = 1000;

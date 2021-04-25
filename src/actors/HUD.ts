@@ -136,7 +136,7 @@ export class HUD extends Actor {
 
             playerShipPos = playerShip.model!.position;
 
-            this.statusLabel!.text = `HP: ${playerShip.hp} Missiles: ${playerShip.missiles}`;
+            this.statusLabel!.text = `HP: ${Math.round(playerShip.hp)} Missiles: ${playerShip.missiles}`;
         }
 
         for (const a of this.actorManager!.actors){

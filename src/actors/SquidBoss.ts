@@ -31,7 +31,7 @@ export class SquidBoss extends SquidThing {
     }
 
     protected getBaseSpeed(){
-        return 5;
+        return 7.5;
     }
 
     protected getTurboSpeed(){

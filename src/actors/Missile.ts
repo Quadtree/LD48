@@ -58,9 +58,11 @@ export class Missile extends EnergyBolt {
         }
 
         if (target){
+            this.aimPoint = this.aimPoint.subtract(this.mesh!.position).normalize().scale(20).add(this.mesh!.position);
+
             const aimPointDelta = target.model!.position.subtract(this.aimPoint);
 
-            const AIM_POINT_MOVE_SPEED = 30 * delta;
+            const AIM_POINT_MOVE_SPEED = 25 * delta;
 
             if (aimPointDelta.length() < AIM_POINT_MOVE_SPEED){
                 this.aimPoint.copyFrom(target.model!.position);
