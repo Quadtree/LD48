@@ -58,7 +58,7 @@ export class TitleScreen extends Actor {
         this.background.color = "#222222";
         this.background.alpha = 0.7;
 
-        const GAME_NAME = "Obscurus";
+        const GAME_NAME = "Cloud 57";
 
         this.texture.addControl(this.titleTextShadow);
         this.titleTextShadow.fontSize = 120;
@@ -75,7 +75,7 @@ export class TitleScreen extends Actor {
 
         this.texture.addControl(this.helpText);
         this.helpText.textWrapping = true;
-        this.helpText.text = "A science vessel has been lost in a mysterious cloud. As they went deeper and deeper into the cloud, they reported some very odd readings. Eventually, we lost contact with them. Go to their last known location and try to find them.\n\n" +
+        this.helpText.text = "A science vessel has been lost in a mysterious cloud designated Cloud 57. As they went deeper and deeper into the cloud, they passed through several layers and reported some odd readings. Eventually, we lost contact with them. Go to their last known location and try to find them.\n\n" +
             "Controls:\n" +
             "WAD/Arrow Keys - Move/Strafe\n" +
             "Mouse - Turn\n" +

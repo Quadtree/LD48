@@ -68,7 +68,7 @@ export class VictoryScreen extends Actor {
 
         this.texture.addControl(this.helpText);
         this.helpText.textWrapping = true;
-        this.helpText.text = "You found the science vessel and were able to give it the spare parts it needed to escape! Well done!";
+        this.helpText.text = "You found the science vessel and were able to help it escape! Well done!";
         this.helpText.widthInPixels = 500;
         this.helpText.topInPixels = -100;
         this.helpText.color = "#BBBBBB";
