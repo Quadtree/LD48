@@ -4,6 +4,7 @@ import {Scene} from "@babylonjs/core/scene";
 import {Trackable} from "./Trackable";
 import {TextBlock} from "@babylonjs/gui/2D/controls/textBlock";
 import {Vector3} from "@babylonjs/core/Maths/math.vector";
+import {Util} from "../util/Util";
 
 class TrackingLabel {
     public active:boolean = true;
@@ -12,7 +13,7 @@ class TrackingLabel {
     constructor(private scene:Scene, private tex:AdvancedDynamicTexture, private trackable:Trackable) {
         this.label = new TextBlock("TEST");
         tex.addControl(this.label);
-        this.label.linkWithMesh(trackable.getMesh());
+        //this.label.linkWithMesh(trackable.getMesh());
         this.label.color = this.trackable.getColor().toHexString(true);
     }
 
@@ -26,9 +27,15 @@ class TrackingLabel {
 
         let position = mesh.getBoundingInfo ? mesh.getBoundingInfo().boundingSphere.center : (Vector3.ZeroReadOnly as Vector3);
         let projectedPosition = Vector3.Project(position, mesh.getWorldMatrix(), this.scene.getTransformMatrix(), globalViewport);
+
+        projectedPosition.x = Math.min(Math.max(projectedPosition.x, 90), globalViewport.width - 90);
+        projectedPosition.y = Math.min(Math.max(projectedPosition.y, 90), globalViewport.height - 90);
+
         if (projectedPosition.z < 0 || projectedPosition.z > 1) {
 
         }
+
+        HUD.debugData!.text = `${projectedPosition}`;
 
         this.label._moveToProjectedPosition(projectedPosition);
     }
@@ -43,10 +50,21 @@ export class HUD extends Actor {
 
     private trackingLabels:{[key:string]:TrackingLabel} = {};
 
+    public static debugData:TextBlock|null = null;
+
     enteringView(scene: Scene) {
         super.enteringView(scene);
 
         this.texture = AdvancedDynamicTexture.CreateFullscreenUI("MainUI");
+
+        HUD.debugData = new TextBlock("DEBUG");
+        if (Util.CHEATS_ENABLED) {
+            HUD.debugData.color = "#ffffff";
+            HUD.debugData.left = -600;
+            HUD.debugData.top = -600;
+            HUD.debugData.text = "DEBUG DATA";
+            this.texture.addControl(HUD.debugData);
+        }
 
         console.log("UI created");
     }
