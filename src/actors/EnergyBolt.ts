@@ -7,7 +7,7 @@ import {PhysicsImpostor} from "@babylonjs/core/Physics/physicsImpostor";
 import {Constants} from "../util/Constants";
 
 export class EnergyBolt extends Actor {
-    private mesh:AbstractMesh|null = null;
+    mesh:AbstractMesh|null = null;
 
     private timeToLive = 4;
 
@@ -15,35 +15,43 @@ export class EnergyBolt extends Actor {
         super();
     }
 
+    createMesh(){
+        this.mesh = MeshBuilder.CreateBox("", {width: 0.25, depth: 2, height: 0.25});
+    }
+
+    getDamageOnHit(){
+        return 1;
+    }
+
     enteringView(scene: Scene) {
         super.enteringView(scene);
 
-        this.mesh = MeshBuilder.CreateBox("", {width: 0.25, depth: 2, height: 0.25});
+        this.createMesh();
 
-        this.mesh.position = this.startPos;
-        this.mesh.rotationQuaternion = this.angle;
+        this.mesh!.position = this.startPos;
+        this.mesh!.rotationQuaternion = this.angle;
 
-        this.mesh.physicsImpostor = new PhysicsImpostor(this.mesh!, PhysicsImpostor.BoxImpostor, {
+        this.mesh!.physicsImpostor = new PhysicsImpostor(this.mesh!, PhysicsImpostor.BoxImpostor, {
             mass: 1,
         } as any);
 
         console.log(`shot group ${this.faction == 0 ? Constants.COLLISION_GROUP_PLAYER_SHOT : Constants.COLLISION_GROUP_ENEMY_SHOT}`)
 
         const rotMat = new Matrix();
-        this.mesh.rotationQuaternion.toRotationMatrix(rotMat);
+        this.mesh!.rotationQuaternion.toRotationMatrix(rotMat);
 
-        this.mesh.physicsImpostor.setLinearVelocity(Vector3.TransformCoordinates(Vector3.Forward(false), rotMat).scale(this.speed));
+        this.mesh!.physicsImpostor.setLinearVelocity(Vector3.TransformCoordinates(Vector3.Forward(false), rotMat).scale(this.speed));
 
-        this.mesh.physicsImpostor.onCollideEvent = (self, other) => {
+        this.mesh!.physicsImpostor.onCollideEvent = (self, other) => {
             if (this.timeToLive > 0) {
-                this.actorManager!.damageAtPoint(this.mesh!.position, 1, 1 - this.faction);
+                this.actorManager!.damageAtPoint(this.mesh!.position, this.getDamageOnHit(), 1 - this.faction);
 
             }
             console.log('collided!');
             this.timeToLive = -1000;
         }
 
-        this.mesh.physicsImpostor.registerOnPhysicsCollide(this.mesh.physicsImpostor, collider => null);
+        this.mesh!.physicsImpostor.registerOnPhysicsCollide(this.mesh!.physicsImpostor, collider => null);
     }
 
     exitingView() {

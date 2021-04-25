@@ -13,6 +13,7 @@ import {Damagable} from "./Damagable";
 import {installations} from "firebase";
 import {HUD} from "./HUD";
 import {SquidThing} from "./SquidThing";
+import {Missile} from "./Missile";
 
 export class PlayerShip extends Ship implements Damagable {
     private cam:TargetCamera|null = null;
@@ -76,8 +77,10 @@ export class PlayerShip extends Ship implements Damagable {
         });
 
         this.actorManager!.scene!.onPointerObservable.add((pi, es) => {
-            if (pi.type == PointerEventTypes.POINTERDOWN) this.firing = true;
-            if (pi.type == PointerEventTypes.POINTERUP) this.firing = false;
+            if (pi.type == PointerEventTypes.POINTERDOWN && pi.event.buttons == 1) this.firing = true;
+            if (pi.type == PointerEventTypes.POINTERUP && pi.event.buttons == 1) this.firing = false;
+
+            if (pi.type == PointerEventTypes.POINTERDOWN && pi.event.buttons == 2) this.fireMissile();
         });
 
         this.model!.position = new Vector3(0,0,-1950);
@@ -109,6 +112,12 @@ export class PlayerShip extends Ship implements Damagable {
                 }
             }
         }
+    }
+
+    private fireMissile(){
+        this.model!.rotationQuaternion!.toRotationMatrix(Util.mat);
+
+        this.actorManager!.add(new Missile(this.model!.position.add(Vector3.TransformCoordinates(new Vector3(0, 0, 5), Util.mat)), this.model!.rotationQuaternion!, 0, 180));
     }
 
     update(delta: number) {
