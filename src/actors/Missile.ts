@@ -6,6 +6,7 @@ import {Util} from "../util/Util";
 import {Vector3} from "@babylonjs/core/Maths/math.vector";
 import {SquidThing} from "./SquidThing";
 import {PhysicsImpostor} from "@babylonjs/core/Physics/physicsImpostor";
+import {MissileTrail} from "./MissileTrail";
 
 export class Missile extends EnergyBolt {
     static shipModel:AbstractMesh|null = null;
@@ -39,6 +40,8 @@ export class Missile extends EnergyBolt {
         this.aimPoint = this.mesh!.position.add(Vector3.TransformCoordinates(new Vector3(0,0,40), Util.mat));
 
         this.timeToLive = 12;
+
+        this.actorManager!.add(new MissileTrail(this));
     }
 
     getDamageOnHit():number{
@@ -53,7 +56,7 @@ export class Missile extends EnergyBolt {
 
         for (const a of this.actorManager!.actors){
             if (a instanceof SquidThing){
-                const dist = a.model!.position.subtract(this.mesh!.position).length();
+                const dist = a.model!.position.subtract(this.aimPoint).length();
                 if (dist < nearestTargetDist){
                     target = a;
                     nearestTargetDist = dist;

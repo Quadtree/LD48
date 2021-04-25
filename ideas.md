@@ -63,8 +63,6 @@ Perhaps make the cloud more of a background and less of fog. That way it doesn't
 * Better particles flying around
 * Better shot graphics
 * Particle effects
-
-## TODO
 * Sound
   * Energy bolt fired
   * Missile fired
@@ -73,4 +71,6 @@ Perhaps make the cloud more of a background and less of fog. That way it doesn't
   * Player ship damaged
   * Player ship destroyed
   * Squid thing destroyed
+
+## TODO
 * Music
