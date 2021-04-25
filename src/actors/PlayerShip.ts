@@ -52,14 +52,14 @@ export class PlayerShip extends Ship implements Damagable {
         this.actorManager!.scene!.onKeyboardObservable.add((ed, es) => {
             //console.log(ed.event.key);
 
-            if (ed.type == KeyboardEventTypes.KEYDOWN && ed.event.key == "w") { this.forwardKeyDown = true; }
-            if (ed.type == KeyboardEventTypes.KEYUP && ed.event.key == "w") this.forwardKeyDown = false;
+            if (ed.type == KeyboardEventTypes.KEYDOWN && (ed.event.key == "w" || ed.event.key == "ArrowUp")) { this.forwardKeyDown = true; }
+            if (ed.type == KeyboardEventTypes.KEYUP && (ed.event.key == "w" || ed.event.key == "ArrowUp")) this.forwardKeyDown = false;
 
-            if (ed.type == KeyboardEventTypes.KEYDOWN && ed.event.key == "a") this.leftKeyDown = true;
-            if (ed.type == KeyboardEventTypes.KEYUP && ed.event.key == "a") this.leftKeyDown = false;
+            if (ed.type == KeyboardEventTypes.KEYDOWN && (ed.event.key == "a" || ed.event.key == "ArrowLeft")) this.leftKeyDown = true;
+            if (ed.type == KeyboardEventTypes.KEYUP && (ed.event.key == "a" || ed.event.key == "ArrowLeft")) this.leftKeyDown = false;
 
-            if (ed.type == KeyboardEventTypes.KEYDOWN && ed.event.key == "d") this.rightKeyDown = true;
-            if (ed.type == KeyboardEventTypes.KEYUP && ed.event.key == "d") this.rightKeyDown = false;
+            if (ed.type == KeyboardEventTypes.KEYDOWN && (ed.event.key == "d" || ed.event.key == "ArrowRight")) this.rightKeyDown = true;
+            if (ed.type == KeyboardEventTypes.KEYUP && (ed.event.key == "d" || ed.event.key == "ArrowRight")) this.rightKeyDown = false;
 
             const cheatToPos = (pos:number) => {
                 for (const actor of this.actorManager!.actors){

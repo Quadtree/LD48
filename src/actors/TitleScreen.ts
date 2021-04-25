@@ -80,7 +80,8 @@ export class TitleScreen extends Actor {
             "WAD/Arrow Keys - Move/Strafe\n" +
             "Mouse - Turn\n" +
             "Left Click - Fire cannons\n" +
-            "Right Click - Fire missile\n\n" +
+            "Right Click - Fire missile\n" +
+            "R - Restart game\n\n" +
             "Select Difficulty";
         this.helpText.widthInPixels = 500;
         this.helpText.topInPixels = -100;
