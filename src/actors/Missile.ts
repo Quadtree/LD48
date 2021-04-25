@@ -35,6 +35,8 @@ export class Missile extends EnergyBolt {
 
         this.mesh!.rotationQuaternion!.toRotationMatrix(Util.mat);
         this.aimPoint = this.mesh!.position.add(Vector3.TransformCoordinates(new Vector3(0,0,40), Util.mat));
+
+        this.timeToLive = 12;
     }
 
     getDamageOnHit(){

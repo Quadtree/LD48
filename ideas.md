@@ -57,9 +57,9 @@ Perhaps make the cloud more of a background and less of fog. That way it doesn't
 * Title screen
 * Checkpoints that restore HP and missiles
 * Victory screen
+* Final player ship model
 
 ## TODO
-* Final player ship model
 * Final asteroid model
 * Improved background stars
 * Better particles flying around
