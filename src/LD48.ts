@@ -56,6 +56,7 @@ export class LD48 implements Game {
             ScienceShip.preload(gameManager.scene),
             Missile.preload(gameManager.scene),
             EnergyBolt.preload(gameManager.scene),
+            Objective.preload(gameManager.scene),
         ]);
 
         this.restart();

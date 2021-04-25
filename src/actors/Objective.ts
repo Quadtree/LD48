@@ -14,6 +14,7 @@ import {LD48} from "../LD48";
 import {EnergyBolt} from "./EnergyBolt";
 import {VictoryScreen} from "./VictoryScreen";
 import {HemisphericLight} from "@babylonjs/core/Lights/hemisphericLight";
+import {Sound} from "@babylonjs/core";
 
 export class Objective extends Actor {
     private spawnCharge:{[key:string]:number} = {};
@@ -31,6 +32,16 @@ export class Objective extends Actor {
     hemiLight:HemisphericLight|null = null;
 
     shownVictoryScreen = false
+
+    static ambientBGM:Sound|null = null;
+    static bossBGM:Sound|null = null;
+
+    static currentlyPlayingBGM:number = -1;
+
+    static async preload(scene:Scene){
+        Util.loadSound("assets/ld48_ambient.ogg", scene, true).then(it => Objective.ambientBGM = it);
+        Util.loadSound("assets/ld48_boss.ogg", scene, true).then(it => Objective.bossBGM = it);
+    }
 
     exitingView() {
         super.exitingView();
@@ -202,6 +213,30 @@ export class Objective extends Actor {
                 this.spawnCharge = {};
 
                 this.actorManager!.add(new PlayerShip(this.lastCheckpoint));
+            }
+        }
+
+        let desiredPlayingBGM = -1;
+        if ((!LD48.s!.paused && !this.bossHasSpawned) || this.shownVictoryScreen){
+            desiredPlayingBGM = 1;
+        } else if (this.bossHasSpawned && !this.shownVictoryScreen) {
+            desiredPlayingBGM = 2;
+        }
+
+        if (desiredPlayingBGM != Objective.currentlyPlayingBGM){
+            if (Objective.currentlyPlayingBGM == 1 && Objective.ambientBGM) Objective.ambientBGM.stop();
+            if (Objective.currentlyPlayingBGM == 2 && Objective.bossBGM) Objective.bossBGM.stop();
+
+            if (desiredPlayingBGM == 1 && Objective.ambientBGM){
+                Objective.ambientBGM.setVolume(0.4);
+                Objective.ambientBGM.play();
+                Objective.currentlyPlayingBGM = 1;
+            }
+
+            if (desiredPlayingBGM == 2 && Objective.bossBGM){
+                Objective.bossBGM.setVolume(0.4);
+                Objective.bossBGM.play();
+                Objective.currentlyPlayingBGM = 2;
             }
         }
     }
