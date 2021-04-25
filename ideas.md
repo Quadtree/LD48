@@ -52,14 +52,14 @@ Perhaps make the cloud more of a background and less of fog. That way it doesn't
 * Zone 4: Objective & boss
 * HUD displaying HP and missiles
 * Missiles
+* Final HUD displaying HP and missiles
 
 ## TODO
-* Final HUD displaying HP and missiles
-* Checkpoints that restore HP and missiles
 * Title screen
 * Victory screen
 * Notification that you're taking "radiation damage" in the red zone
 
+* Checkpoints that restore HP and missiles
 * Final player ship model
 * Final asteroid model
 * Better particles flying around
