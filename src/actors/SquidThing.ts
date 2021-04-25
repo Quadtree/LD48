@@ -9,8 +9,10 @@ import {Constants} from "../util/Constants";
 import {Damagable} from "./Damagable";
 import {PlayerShip} from "./PlayerShip";
 import {EnergyBolt} from "./EnergyBolt";
+import {Trackable} from "./Trackable";
+import {Color4} from "@babylonjs/core";
 
-export class SquidThing extends Actor implements Damagable {
+export class SquidThing extends Actor implements Damagable, Trackable {
     static shipModel:AbstractMesh|null = null;
 
     hp:number = 3;
@@ -121,5 +123,19 @@ export class SquidThing extends Actor implements Damagable {
         }
     }
 
+    getMesh(): AbstractMesh {
+        return this.model!;
+    }
 
+    getColor(): Color4 {
+        return new Color4(1,0,0,1);
+    }
+
+    isActivelyTrackable(): boolean {
+        return true;
+    }
+
+    getText(): string {
+        return "?";
+    }
 }
