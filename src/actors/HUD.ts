@@ -6,16 +6,22 @@ import {TextBlock} from "@babylonjs/gui/2D/controls/textBlock";
 import {Vector3} from "@babylonjs/core/Maths/math.vector";
 import {Util} from "../util/Util";
 import {Control, Rectangle} from "@babylonjs/gui";
+import {PlayerShip} from "./PlayerShip";
 
 class TrackingLabel {
     public active:boolean = true;
     public label:TextBlock;
+    public distanceLabel:TextBlock;
     public rectangle:Rectangle;
 
     constructor(private scene:Scene, private tex:AdvancedDynamicTexture, private trackable:Trackable) {
         this.label = new TextBlock("TEST");
         tex.addControl(this.label);
         this.label.color = this.trackable.getColor().toHexString(true);
+
+        this.distanceLabel = new TextBlock("DIST");
+        tex.addControl(this.distanceLabel);
+        this.distanceLabel.color = this.trackable.getColor().toHexString(true);
 
         this.rectangle = new Rectangle();
         tex.addControl(this.rectangle);
@@ -27,10 +33,12 @@ class TrackingLabel {
         //this.rectangle.verticalAlignment = Control.VERTICAL_ALIGNMENT_CENTER;
     }
 
-    update(){
+    update(playerShipPos:Vector3|null){
         if (this.label.text != this.trackable.getText()) {
             this.label.text = this.trackable.getText();
         }
+
+
 
         const mesh = this.trackable.getMesh();
         const globalViewport = this.tex._getGlobalViewport();
@@ -38,16 +46,30 @@ class TrackingLabel {
         let position = mesh.getBoundingInfo ? mesh.getBoundingInfo().boundingSphere.center : (Vector3.ZeroReadOnly as Vector3);
         let projectedPosition = Vector3.Project(position, mesh.getWorldMatrix(), this.scene.getTransformMatrix(), globalViewport);
 
+        if ((projectedPosition.z < 0 || projectedPosition.z > 1) &&
+            projectedPosition.x > 120 && projectedPosition.x < globalViewport.width - 120 &&
+            projectedPosition.y > 120 && projectedPosition.y < globalViewport.height - 120) {
+            const ang = Math.atan2(projectedPosition.y - globalViewport.width / 2, projectedPosition.x - globalViewport.height / 2);
+
+            projectedPosition.x = -1000;
+            projectedPosition.y = 0;//Math.sin(ang) * globalViewport.width / 2 * 1.5 + globalViewport.width / 2;
+        }
+
         projectedPosition.x = Math.min(Math.max(projectedPosition.x, 120), globalViewport.width - 120);
         projectedPosition.y = Math.min(Math.max(projectedPosition.y, 120), globalViewport.height - 120);
 
-        if (projectedPosition.z < 0 || projectedPosition.z > 1) {
 
-        }
 
         HUD.debugData!.text = `${projectedPosition}`;
 
+        if (playerShipPos) {
+            this.distanceLabel.text = `${Math.round(playerShipPos.subtract(mesh.position).length())}`;
+        } else {
+            this.distanceLabel.text = `???`;
+        }
+
         this.label._moveToProjectedPosition(projectedPosition.add(new Vector3(0, -30, 0)));
+        this.distanceLabel._moveToProjectedPosition(projectedPosition.add(new Vector3(0, 30, 0)));
         this.rectangle._moveToProjectedPosition(projectedPosition.add(new Vector3(-globalViewport.width / 2 + 16, -globalViewport.height / 2 + 16, 0)));
 
         //this.rectangle.left = "20px";
@@ -57,6 +79,7 @@ class TrackingLabel {
     destroy(){
         this.tex.removeControl(this.label);
         this.tex.removeControl(this.rectangle);
+        this.tex.removeControl(this.distanceLabel);
     }
 }
 
@@ -91,6 +114,16 @@ export class HUD extends Actor {
             this.trackingLabels[k].active = false;
         }
 
+        const playerShips = this.actorManager!.actors.filter(it => it instanceof PlayerShip);
+
+        let playerShipPos = null;
+
+        if (playerShips.length > 0) {
+            const playerShip = playerShips[0] as PlayerShip;
+
+            playerShipPos = playerShip.model!.position;
+        }
+
         for (const a of this.actorManager!.actors){
             if (a.keep() && (a as any).isActivelyTrackable && (a as any).isActivelyTrackable()) {
                 if (typeof this.trackingLabels[a.netID] === "undefined") {
@@ -105,7 +138,7 @@ export class HUD extends Actor {
                 this.trackingLabels[k].destroy();
                 delete this.trackingLabels[k];
             } else {
-                this.trackingLabels[k].update();
+                this.trackingLabels[k].update(playerShipPos);
             }
         }
     }

@@ -51,7 +51,7 @@ export class LD48 implements Game {
         this.actorManager.add(new DustParticles());
         this.actorManager.add(new Objective());
         this.actorManager.add(new HUD());
-        this.actorManager.add(new Beacon(new Vector3(0,200,400)));
+        //this.actorManager.add(new Beacon(new Vector3(0,200,400)));
 
         this.actorManager.add(new Beacon(new Vector3(0,0,-1900), "Start", true));
 
