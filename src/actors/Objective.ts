@@ -12,6 +12,7 @@ import {SquidSlower} from "./SquidSlower";
 import {SquidBoss} from "./SquidBoss";
 import {LD48} from "../LD48";
 import {EnergyBolt} from "./EnergyBolt";
+import {VictoryScreen} from "./VictoryScreen";
 
 export class Objective extends Actor {
     private spawnCharge:{[key:string]:number} = {};
@@ -26,6 +27,18 @@ export class Objective extends Actor {
 
     update(delta: number) {
         super.update(delta);
+
+        if (this.bossHasSpawned){
+            let bossAlive = false;
+            for (const a of this.actorManager!.actors){
+                if (a instanceof SquidBoss){
+                    bossAlive = true;
+                }
+            }
+            if (!bossAlive){
+                this.actorManager!.add(new VictoryScreen());
+            }
+        }
 
         const playerShips = this.actorManager!.actors.filter(it => it instanceof PlayerShip);
 

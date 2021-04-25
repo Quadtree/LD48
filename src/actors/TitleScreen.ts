@@ -58,17 +58,19 @@ export class TitleScreen extends Actor {
         this.background.color = "#222222";
         this.background.alpha = 0.7;
 
+        const GAME_NAME = "Obscurus";
+
         this.texture.addControl(this.titleTextShadow);
         this.titleTextShadow.fontSize = 120;
-        this.titleTextShadow.text = "Deep Cloud";
-        this.titleTextShadow.topInPixels = -297;
+        this.titleTextShadow.text = GAME_NAME;
+        this.titleTextShadow.topInPixels = -397;
         this.titleTextShadow.leftInPixels = 3;
         this.titleTextShadow.color = "#000000";
 
         this.texture.addControl(this.titleText);
         this.titleText.fontSize = 120;
-        this.titleText.text = "Deep Cloud";
-        this.titleText.topInPixels = -300;
+        this.titleText.text = GAME_NAME;
+        this.titleText.topInPixels = -400;
         this.titleText.color = "#00AACC";
 
         this.texture.addControl(this.helpText);

@@ -56,10 +56,9 @@ Perhaps make the cloud more of a background and less of fog. That way it doesn't
 * Notification that you're taking "radiation damage" in the red zone
 * Title screen
 * Checkpoints that restore HP and missiles
-
-## TODO
 * Victory screen
 
+## TODO
 * Final player ship model
 * Final asteroid model
 * Improved background stars
