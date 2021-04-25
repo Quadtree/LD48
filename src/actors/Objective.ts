@@ -50,12 +50,29 @@ export class Objective extends Actor {
             const targetOfType:{[key:string]:number} = {};
 
             if (zone == 0){
-                targetOfType[SpawnableTypes.TYPE_SQUIDSLOWER] = 1;
+                //targetOfType[SpawnableTypes.TYPE_SQUIDSLOWER] = 1;
             }
 
             if (zone == 1){
                 targetOfType[SpawnableTypes.TYPE_ASTEROID] = 25;
                 targetOfType[SpawnableTypes.TYPE_SQUIDTHING] = 2;
+            }
+
+            if (zone == 2){
+                targetOfType[SpawnableTypes.TYPE_ASTEROID] = 2;
+                targetOfType[SpawnableTypes.TYPE_SQUIDTHING] = 4;
+                targetOfType[SpawnableTypes.TYPE_SQUIDSLOWER] = 2;
+            }
+
+            if (zone == 3){
+                targetOfType[SpawnableTypes.TYPE_SQUIDTHING] = 6;
+
+                playerShip.takeDamage(0.1 * delta);
+            }
+
+            if (zone == 4){
+                targetOfType[SpawnableTypes.TYPE_SQUIDTHING] = 1;
+                targetOfType[SpawnableTypes.TYPE_SQUIDSLOWER] = 2;
             }
 
             for (const type in targetOfType) {

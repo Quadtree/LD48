@@ -45,16 +45,15 @@ Perhaps make the cloud more of a background and less of fog. That way it doesn't
 * Some kind of enemy
 * Background fog, various zones
 * Marker on objective
-
-## TODO
 * Zone 2: Some squid enemies
 * Zone 3: More squid enemies, and a DOT
-* Zone 4: Objective & boss
 * Markers on offscreen enemies
-* Missiles
 * Some kind of radar
+
+## TODO
+* Zone 4: Objective & boss
+* Missiles
 * Title screen
-* Final boss fight
 * Victory screen
 * Sound
 * Music
