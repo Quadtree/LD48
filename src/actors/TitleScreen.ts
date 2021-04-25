@@ -6,6 +6,7 @@ import {TextBlock} from "@babylonjs/gui/2D/controls/textBlock";
 import {LD48} from "../LD48";
 import {HUD} from "./HUD";
 import {Engine} from "@babylonjs/core/Engines/engine";
+import {PlayerShip} from "./PlayerShip";
 
 export class TitleScreen extends Actor {
     private texture: AdvancedDynamicTexture | null = null;
@@ -35,6 +36,12 @@ export class TitleScreen extends Actor {
             this.alive = false;
 
             console.log(`${name} ${difficulty}`);
+
+            for (const a of this.actorManager!.actors){
+                if (a instanceof PlayerShip){
+                    a.hp = a.getMaxHP();
+                }
+            }
 
             Engine.audioEngine!.audioContext!.resume();
         };
