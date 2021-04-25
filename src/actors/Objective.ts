@@ -11,11 +11,18 @@ import {HUD} from "./HUD";
 import {SquidSlower} from "./SquidSlower";
 import {SquidBoss} from "./SquidBoss";
 import {LD48} from "../LD48";
+import {EnergyBolt} from "./EnergyBolt";
 
 export class Objective extends Actor {
     private spawnCharge:{[key:string]:number} = {};
 
     private bossHasSpawned = false;
+
+    private lastCheckpoint = new Vector3(0,0,-5000);
+
+    private lastCheckpointZone = -1;
+
+    private respawnTimer = 0;
 
     update(delta: number) {
         super.update(delta);
@@ -87,6 +94,11 @@ export class Objective extends Actor {
                 }
             }
 
+            if (zone > this.lastCheckpointZone){
+                this.lastCheckpointZone = zone;
+                this.lastCheckpoint = playerShip.model!.position;
+            }
+
             for (const type in targetOfType) {
                 const allAsteroids = this.actorManager!.actors.filter(it => {
                     return (it as any).getSpawnableType && (it as any).getSpawnableType() == type;
@@ -130,6 +142,22 @@ export class Objective extends Actor {
 
                     this.spawnCharge[type] -= 1;
                 }
+            }
+
+            this.respawnTimer = 0;
+        } else {
+            this.respawnTimer += delta;
+
+            if (this.respawnTimer > 2.5){
+                for (const a of this.actorManager!.actors){
+                    if (a instanceof SquidThing) a.hp = -10000;
+                    if (a instanceof EnergyBolt) a.timeToLive = -10000;
+                }
+
+                this.bossHasSpawned = false;
+                this.spawnCharge = {};
+
+                this.actorManager!.add(new PlayerShip(this.lastCheckpoint));
             }
         }
     }

@@ -91,7 +91,7 @@ class StatusBar {
     private elements:Image[] = [];
 
     update(){
-        const val = this.src();
+        const val = Math.max(this.src(), 0);
 
         while (val > this.elements.length){
             let nextShieldPos = this.elements.length * 40;

@@ -65,7 +65,7 @@ export class LD48 implements Game {
     restart(){
         this.actorManager.destroyAllActors();
 
-        const playerShip = new PlayerShip();
+        const playerShip = new PlayerShip(new Vector3(0,0,-1950));
 
         this.actorManager.add(playerShip);
         this.actorManager.add(new Starfield());

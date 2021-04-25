@@ -35,6 +35,10 @@ export class PlayerShip extends Ship implements Damagable {
 
     radiationDamage = false;
 
+    constructor(private startPos:Vector3) {
+        super();
+    }
+
     enteringView(scene: Scene) {
         super.enteringView(scene);
 
@@ -87,7 +91,7 @@ export class PlayerShip extends Ship implements Damagable {
             if (pi.type == PointerEventTypes.POINTERDOWN && pi.event.buttons == 2) this.fireMissile();
         });
 
-        this.model!.position = new Vector3(0,0,-1950);
+        this.model!.position = this.startPos;
     }
 
     private fireCannons(delta: number){

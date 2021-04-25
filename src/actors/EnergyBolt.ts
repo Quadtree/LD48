@@ -9,7 +9,7 @@ import {Constants} from "../util/Constants";
 export class EnergyBolt extends Actor {
     mesh:AbstractMesh|null = null;
 
-    private timeToLive = 4;
+    timeToLive = 4;
 
     constructor(private readonly startPos:Vector3, private readonly angle:Quaternion, private readonly faction:number = 0, private readonly speed:number = 120) {
         super();
