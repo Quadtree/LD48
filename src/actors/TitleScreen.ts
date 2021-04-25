@@ -5,6 +5,7 @@ import {Rectangle} from "@babylonjs/gui";
 import {TextBlock} from "@babylonjs/gui/2D/controls/textBlock";
 import {LD48} from "../LD48";
 import {HUD} from "./HUD";
+import {Engine} from "@babylonjs/core/Engines/engine";
 
 export class TitleScreen extends Actor {
     private texture: AdvancedDynamicTexture | null = null;
@@ -34,6 +35,8 @@ export class TitleScreen extends Actor {
             this.alive = false;
 
             console.log(`${name} ${difficulty}`);
+
+            Engine.audioEngine!.audioContext!.resume();
         };
 
         button.onPointerDownObservable.add(startCallback);

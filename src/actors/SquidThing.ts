@@ -19,7 +19,7 @@ import {Color3} from "@babylonjs/core/index";
 export class SquidThing extends Actor implements Damagable, Trackable, Spawnable {
     static shipModel:AbstractMesh|null = null;
 
-    hp:number = 2 + LD48.s!.difficulty;
+    hp:number = 2 + LD48.s!.difficulty / 2;
 
     weaponCharge = 0;
 
@@ -45,7 +45,7 @@ export class SquidThing extends Actor implements Damagable, Trackable, Spawnable
     }
 
     getAttackCooldown(){
-        return 2;
+        return 2.6 - LD48.s!.difficulty * .2;
     }
 
     enteringView(scene: Scene) {
