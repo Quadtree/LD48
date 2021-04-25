@@ -5,7 +5,7 @@ import {Trackable} from "./Trackable";
 import {TextBlock} from "@babylonjs/gui/2D/controls/textBlock";
 import {Vector3} from "@babylonjs/core/Maths/math.vector";
 import {Util} from "../util/Util";
-import {Control, Rectangle} from "@babylonjs/gui";
+import {Control, Image, Rectangle} from "@babylonjs/gui";
 import {PlayerShip} from "./PlayerShip";
 
 class TrackingLabel {
@@ -91,6 +91,8 @@ export class HUD extends Actor {
 
     public statusLabel:TextBlock|null = null;
 
+    shields:Image[] = [];
+
     public static debugData:TextBlock|null = null;
 
     enteringView(scene: Scene) {
@@ -137,6 +139,13 @@ export class HUD extends Actor {
             playerShipPos = playerShip.model!.position;
 
             this.statusLabel!.text = `HP: ${Math.round(playerShip.hp)} Missiles: ${playerShip.missiles}`;
+
+            if (playerShip.hp > this.shields.length){
+                let nextShieldPos = 20;
+                if (this.shields.length > 0) nextShieldPos = this.shields[this.shields.length - 1].leftInPixels;
+
+                const shield = 
+            }
         }
 
         for (const a of this.actorManager!.actors){
