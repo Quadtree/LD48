@@ -68,7 +68,10 @@ export class Objective extends Actor {
                 while (astCount < targetOfType[type]) {
                     playerShip.model!.rotationQuaternion!.toRotationMatrix(Util.mat);
 
-                    const pos = Util.randomPointOnSphere(playerShip.model!.position.add(Vector3.TransformCoordinates(new Vector3(0, 0, 30), Util.mat)), 20);
+                    let spawnRange = 20;
+                    if (type == SpawnableTypes.TYPE_SQUIDTHING) spawnRange = 140;
+
+                    const pos = Util.randomPointOnSphere(playerShip.model!.position.add(Vector3.TransformCoordinates(new Vector3(0, 0, 30), Util.mat)), spawnRange);
 
                     if (type == SpawnableTypes.TYPE_ASTEROID) this.actorManager!.add(new Asteroid(pos));
                     if (type == SpawnableTypes.TYPE_SQUIDTHING) this.actorManager!.add(new SquidThing(pos));
