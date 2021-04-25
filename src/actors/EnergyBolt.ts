@@ -52,7 +52,7 @@ export class EnergyBolt extends Actor {
 
     getDamageOnHit():number{
         if (this.faction == 1 && LD48.s!.difficulty == 0)
-            return 0.5;
+            return 1;
         else
             return 1;
     }

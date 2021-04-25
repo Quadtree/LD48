@@ -28,11 +28,11 @@ export class SquidBoss extends SquidThing {
     }
 
     getAttackCooldown(): number {
-        return Math.max(0.70 - (Math.pow(LD48.s!.difficulty, 2) * 0.05), 0.08);
+        return Math.max(0.70 - (Math.pow(LD48.s!.difficulty, 2) * 0.05), 0.08) * 2;
     }
 
     protected getBaseSpeed(){
-        return 5.5 + LD48.s!.difficulty;
+        return 6;
     }
 
     protected getTurboSpeed(){

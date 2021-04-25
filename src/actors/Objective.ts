@@ -140,8 +140,8 @@ export class Objective extends Actor {
             }
 
             if (zone == 4){
-                //targetOfType[SpawnableTypes.TYPE_SQUIDTHING] = 1;
-                targetOfType[SpawnableTypes.TYPE_SQUIDSLOWER] = 1;
+                targetOfType[SpawnableTypes.TYPE_SQUIDTHING] = 1;
+                targetOfType[SpawnableTypes.TYPE_SQUIDSLOWER] = 3;
 
                 if (!this.bossHasSpawned){
                     this.actorManager!.add(new SquidBoss(new Vector3(0,0,0)));

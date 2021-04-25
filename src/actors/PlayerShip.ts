@@ -33,7 +33,11 @@ export class PlayerShip extends Ship implements Damagable {
 
     private yesSeriously:Quaternion = new Quaternion();
 
-    hp:number = 15;
+    getMaxHP(){
+        return 20 - 2 * LD48.s!.difficulty
+    }
+
+    hp:number = 20;
     missiles = 4;
 
     radiationDamage = false;
@@ -226,6 +230,8 @@ export class PlayerShip extends Ship implements Damagable {
         if (this.firing){
             this.fireCannons(delta);
         }
+
+        if (this.hp > this.getMaxHP()) this.hp = this.getMaxHP();
     }
 
     killedByDamage = false
