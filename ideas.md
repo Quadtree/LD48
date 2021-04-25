@@ -66,4 +66,11 @@ Perhaps make the cloud more of a background and less of fog. That way it doesn't
 
 ## TODO
 * Sound
+  * Energy bolt fired
+  * Missile fired
+  * Energy bolt hit
+  * Missile hit
+  * Player ship damaged
+  * Player ship destroyed
+  * Squid thing destroyed
 * Music
