@@ -33,6 +33,8 @@ class TrackingLabel {
         //this.rectangle.verticalAlignment = Control.VERTICAL_ALIGNMENT_CENTER;
     }
 
+    private validProjectedPosition:Vector3 = new Vector3();
+
     update(playerShipPos:Vector3|null){
         if (this.label.text != this.trackable.getText()) {
             this.label.text = this.trackable.getText();
@@ -46,13 +48,12 @@ class TrackingLabel {
         let position = mesh.getBoundingInfo ? mesh.getBoundingInfo().boundingSphere.center : (Vector3.ZeroReadOnly as Vector3);
         let projectedPosition = Vector3.Project(position, mesh.getWorldMatrix(), this.scene.getTransformMatrix(), globalViewport);
 
-        if ((projectedPosition.z < 0 || projectedPosition.z > 1) &&
-            projectedPosition.x > 120 && projectedPosition.x < globalViewport.width - 120 &&
-            projectedPosition.y > 120 && projectedPosition.y < globalViewport.height - 120) {
-            const ang = Math.atan2(projectedPosition.y - globalViewport.width / 2, projectedPosition.x - globalViewport.height / 2);
-
-            projectedPosition.x = -1000;
-            projectedPosition.y = 0;//Math.sin(ang) * globalViewport.width / 2 * 1.5 + globalViewport.width / 2;
+        if ((projectedPosition.z < 0 || projectedPosition.z > 1)){ //&&
+            //projectedPosition.x > 120 && projectedPosition.x < globalViewport.width - 120 &&
+            //projectedPosition.y > 120 && projectedPosition.y < globalViewport.height - 120) {
+            projectedPosition = this.validProjectedPosition.clone();
+        } else {
+            this.validProjectedPosition = projectedPosition.clone();
         }
 
         projectedPosition.x = Math.min(Math.max(projectedPosition.x, 120), globalViewport.width - 120);
