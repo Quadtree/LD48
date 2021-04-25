@@ -145,5 +145,5 @@ export class Util {
 
     static mat = new Matrix();
 
-    static CHEATS_ENABLED = true;
+    static CHEATS_ENABLED = false;
 }

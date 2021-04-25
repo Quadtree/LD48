@@ -15,6 +15,8 @@ import {HUD} from "./HUD";
 import {SquidThing} from "./SquidThing";
 import {Missile} from "./Missile";
 import {Explosion} from "./Explosion";
+import {AbstractMesh} from "@babylonjs/core/Meshes/abstractMesh";
+import {MeshBuilder} from "@babylonjs/core/Meshes/meshBuilder";
 
 export class PlayerShip extends Ship implements Damagable {
     private cam:TargetCamera|null = null;
@@ -49,6 +51,8 @@ export class PlayerShip extends Ship implements Damagable {
     constructor(private startPos:Vector3) {
         super();
     }
+
+    targetingSphere:AbstractMesh|null = null;
 
     enteringView(scene: Scene) {
         super.enteringView(scene);
@@ -106,6 +110,8 @@ export class PlayerShip extends Ship implements Damagable {
         });
 
         this.model!.position = this.startPos;
+
+        this.targetingSphere = MeshBuilder.CreateIcoSphere("", {radius: 100});
     }
 
     private fireCannons(delta: number){
@@ -148,6 +154,8 @@ export class PlayerShip extends Ship implements Damagable {
 
     update(delta: number) {
         super.update(delta);
+
+        this.targetingSphere!.position = this.model!.position;
 
         const yaw = ((this.actorManager!.scene!.pointerX / LD48.gm!.canvas!.width) - 0.5) * 2;
         const pitch = ((this.actorManager!.scene!.pointerY / LD48.gm!.canvas!.height) - 0.5) * 2;
@@ -257,5 +265,7 @@ export class PlayerShip extends Ship implements Damagable {
             PlayerShip.destroyedSound!.play();
             this.actorManager!.add(new Explosion(this.model!.position.clone(), 10, new Color3(1, .71, 0)))
         }
+
+        this.targetingSphere!.dispose();
     }
 }
