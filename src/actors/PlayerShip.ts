@@ -32,13 +32,13 @@ class EngineTrail {
         this.system.createSphereEmitter(0.05, 0);
 
         this.system.particleTexture = new Texture("assets/solid.png", scene);
-        this.system.minLifeTime = 0.7
-        this.system.maxLifeTime = 0.8
+        this.system.minLifeTime = 0.1
+        this.system.maxLifeTime = 0.2
         this.system.minSize = 0.4
         this.system.maxSize = 0.5
-        this.system.color1 = new Color4(1,.71,0,1);
-        this.system.color2 = new Color4(.5,.5,.5,1);
-        this.system.colorDead = new Color4(.5,.5,.5,0);
+        this.system.color1 = new Color4(1,.8,0,1);
+        this.system.color2 = new Color4(1,.8,0,1);
+        this.system.colorDead = new Color4(1,.8,0,0);
         //this.system.manualEmitCount = 20
         this.system.emitRate = 0
 
