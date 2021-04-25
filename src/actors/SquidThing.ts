@@ -105,14 +105,8 @@ export class SquidThing extends Actor implements Damagable, Trackable, Spawnable
 
                 //console.log(`${this.aimPoint}`)
 
-                if (this.weaponCharge > 2 && inFiringPosition){
-                    const angle = Util.rotationBetweenVectors(Vector3.Forward(false), playerShip.model!.position.subtract(this.model!.position));
-
-                    angle.toRotationMatrix(Util.mat);
-
-                    this.actorManager!.add(new EnergyBolt(this.model!.position.add(Vector3.TransformCoordinates(Vector3.Forward(false), Util.mat).scaleInPlace(5)), angle, 1, 140));
-
-                    this.weaponCharge = 0;
+                if (inFiringPosition){
+                    this.fireWeapon(playerShip);
                 }
             }
         }
@@ -123,6 +117,18 @@ export class SquidThing extends Actor implements Damagable, Trackable, Spawnable
             this.model!.physicsImpostor!.setLinearVelocity(moveDelta.normalize().scaleInPlace(60));
         } else if (moveDelta.length() > 15) {
             this.model!.physicsImpostor!.setLinearVelocity(moveDelta.normalize().scaleInPlace(10));
+        }
+    }
+
+    protected fireWeapon(playerShip:PlayerShip){
+        if (this.weaponCharge > 2){
+            const angle = Util.rotationBetweenVectors(Vector3.Forward(false), playerShip.model!.position.subtract(this.model!.position));
+
+            angle.toRotationMatrix(Util.mat);
+
+            this.actorManager!.add(new EnergyBolt(this.model!.position.add(Vector3.TransformCoordinates(Vector3.Forward(false), Util.mat).scaleInPlace(5)), angle, 1, 140));
+
+            this.weaponCharge = 0;
         }
     }
 

@@ -8,6 +8,7 @@ import {installations} from "firebase";
 import {SquidThing} from "./SquidThing";
 import {Spawnable, SpawnableTypes} from "./Spawnable";
 import {HUD} from "./HUD";
+import {SquidSlower} from "./SquidSlower";
 
 export class Objective extends Actor {
     private spawnCharge:{[key:string]:number} = {};
@@ -48,6 +49,10 @@ export class Objective extends Actor {
 
             const targetOfType:{[key:string]:number} = {};
 
+            if (zone == 0){
+                targetOfType[SpawnableTypes.TYPE_SQUIDSLOWER] = 1;
+            }
+
             if (zone == 1){
                 targetOfType[SpawnableTypes.TYPE_ASTEROID] = 25;
                 targetOfType[SpawnableTypes.TYPE_SQUIDTHING] = 2;
@@ -59,7 +64,7 @@ export class Objective extends Actor {
                 }).map(it => it as unknown as Spawnable);
 
                 let despawnRange = 60;
-                if (type == SpawnableTypes.TYPE_SQUIDTHING) despawnRange = 350;
+                if (type == SpawnableTypes.TYPE_SQUIDTHING || type == SpawnableTypes.TYPE_SQUIDSLOWER) despawnRange = 350;
 
                 let astCount = 0;
 
@@ -80,16 +85,17 @@ export class Objective extends Actor {
 
                 HUD.debugData!.text = JSON.stringify(this.spawnCharge);
 
-                while (astCount < targetOfType[type] && (this.spawnCharge[type] > 1)) {
+                while (astCount < targetOfType[type] && (this.spawnCharge[type] >= 1)) {
                     playerShip.model!.rotationQuaternion!.toRotationMatrix(Util.mat);
 
                     let spawnRange = 20;
-                    if (type == SpawnableTypes.TYPE_SQUIDTHING) spawnRange = 140;
+                    if (type == SpawnableTypes.TYPE_SQUIDTHING || type == SpawnableTypes.TYPE_SQUIDSLOWER) spawnRange = 140;
 
                     const pos = Util.randomPointOnSphere(playerShip.model!.position.add(Vector3.TransformCoordinates(new Vector3(0, 0, 30), Util.mat)), spawnRange);
 
                     if (type == SpawnableTypes.TYPE_ASTEROID) this.actorManager!.add(new Asteroid(pos));
                     if (type == SpawnableTypes.TYPE_SQUIDTHING) this.actorManager!.add(new SquidThing(pos));
+                    if (type == SpawnableTypes.TYPE_SQUIDSLOWER) this.actorManager!.add(new SquidSlower(pos));
 
                     astCount++;
 
