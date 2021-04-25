@@ -6,6 +6,7 @@ import {Matrix, Quaternion, Vector3} from "@babylonjs/core/Maths/math.vector";
 import {PhysicsImpostor} from "@babylonjs/core/Physics/physicsImpostor";
 import {Constants} from "../util/Constants";
 import {Color3, Material, StandardMaterial} from "@babylonjs/core/index";
+import {Explosion} from "./Explosion";
 
 export class EnergyBolt extends Actor {
     mesh:AbstractMesh|null = null;
@@ -53,6 +54,8 @@ export class EnergyBolt extends Actor {
             }
             console.log('collided!');
             this.timeToLive = -1000;
+
+            this.actorManager!.add(new Explosion(this.mesh!.position.clone(), 1, (this.mesh!.material as StandardMaterial).emissiveColor))
         }
 
         this.mesh!.physicsImpostor!.registerOnPhysicsCollide(this.mesh!.physicsImpostor!, collider => null);
