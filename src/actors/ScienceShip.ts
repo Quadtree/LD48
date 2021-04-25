@@ -31,7 +31,7 @@ export class ScienceShip extends Actor implements Trackable {
     getText(): string {
         const range = this.getRangeToPlayer();
         if (range < 150){
-            return "Science Ship";
+            return "Science Vessel";
         } else {
             return "Unknown Signal";
         }
