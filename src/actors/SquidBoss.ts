@@ -42,4 +42,8 @@ export class SquidBoss extends SquidThing {
     getExplosionSize(){
         return 40;
     }
+
+    protected getShotOffset(){
+        return 20;
+    }
 }

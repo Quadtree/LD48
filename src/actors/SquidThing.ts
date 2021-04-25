@@ -158,10 +158,14 @@ export class SquidThing extends Actor implements Damagable, Trackable, Spawnable
 
             angle.toRotationMatrix(Util.mat);
 
-            this.actorManager!.add(new EnergyBolt(this.model!.position.add(Vector3.TransformCoordinates(Vector3.Forward(false), Util.mat).scaleInPlace(5)), angle, 1, 140));
+            this.actorManager!.add(new EnergyBolt(this.model!.position.add(Vector3.TransformCoordinates(Vector3.Forward(false), Util.mat).scaleInPlace(this.getShotOffset())), angle, 1, 140));
 
             this.weaponCharge = 0;
         }
+    }
+
+    protected getShotOffset(){
+        return 5;
     }
 
     protected getBaseSpeed(){

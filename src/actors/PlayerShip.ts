@@ -193,19 +193,25 @@ export class PlayerShip extends Ship implements Damagable {
 
         //HUD.debugData!.text = `${thrust.length()}`;
 
-        const desiredThrust = Vector3.TransformCoordinates(thrust, mat);
+        if (delta > 0) {
+            const desiredThrust = Vector3.TransformCoordinates(thrust, mat);
 
-        const maxChangeRate = delta * 80;
+            const maxChangeRate = delta * 80;
 
-        const desiredToActualDelta = desiredThrust.subtract(this.actualThrust);
-        if (desiredToActualDelta.length() <= maxChangeRate){
-            this.actualThrust.copyFrom(desiredThrust);
+            const desiredToActualDelta = desiredThrust.subtract(this.actualThrust);
+            if (desiredToActualDelta.length() <= maxChangeRate) {
+                this.actualThrust.copyFrom(desiredThrust);
+            } else {
+                this.actualThrust.addInPlace(desiredToActualDelta.normalize().scale(maxChangeRate));
+            }
+
+            this.model!.physicsImpostor!.setLinearVelocity(this.actualThrust);
         } else {
-            this.actualThrust.addInPlace(desiredToActualDelta.normalize().scale(maxChangeRate));
+            this.model!.physicsImpostor!.setLinearVelocity(new Vector3(0,0,0));
         }
 
-        this.model!.physicsImpostor!.setLinearVelocity(this.actualThrust);
         this.model!.physicsImpostor!.setAngularVelocity(new Vector3(0,0,0));
+
         //this.model!.physicsImpostor!.setDeltaRotation(Quaternion.RotationYawPitchRoll(-pitch * PlayerShip.turnSpeed, yaw * PlayerShip.turnSpeed, 0));
 
         /*const zeroRotation = this.model!.rotationQuaternion!.clone();
