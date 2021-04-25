@@ -5,11 +5,15 @@ import {MeshBuilder} from "@babylonjs/core/Meshes/meshBuilder";
 import {Matrix, Quaternion, Vector3} from "@babylonjs/core/Maths/math.vector";
 import {PhysicsImpostor} from "@babylonjs/core/Physics/physicsImpostor";
 import {Constants} from "../util/Constants";
+import {Color3, Material, StandardMaterial} from "@babylonjs/core/index";
 
 export class EnergyBolt extends Actor {
     mesh:AbstractMesh|null = null;
 
     timeToLive = 4;
+
+    static faction0Material:Material|null = null;
+    static faction1Material:Material|null = null;
 
     constructor(private readonly startPos:Vector3, private readonly angle:Quaternion, private readonly faction:number = 0, private readonly speed:number = 120) {
         super();
@@ -35,8 +39,6 @@ export class EnergyBolt extends Actor {
         this.mesh!.position = this.startPos;
         this.mesh!.rotationQuaternion = this.angle;
 
-
-
         console.log(`shot group ${this.faction == 0 ? Constants.COLLISION_GROUP_PLAYER_SHOT : Constants.COLLISION_GROUP_ENEMY_SHOT}`)
 
         const rotMat = new Matrix();
@@ -54,6 +56,31 @@ export class EnergyBolt extends Actor {
         }
 
         this.mesh!.physicsImpostor!.registerOnPhysicsCollide(this.mesh!.physicsImpostor!, collider => null);
+
+        if (EnergyBolt.faction0Material === null){
+            const mat = new StandardMaterial("", scene);
+            mat.emissiveColor = new Color3(0.7, 0.7, 1);
+            mat.specularColor = new Color3(0,0,0);
+            mat.diffuseColor = new Color3(0,0,0);
+            EnergyBolt.faction0Material = mat;
+        }
+
+        if (EnergyBolt.faction1Material === null){
+            const mat = new StandardMaterial("", scene);
+            mat.emissiveColor = new Color3(1, 0.0, 1);
+            mat.specularColor = new Color3(0,0,0);
+            mat.diffuseColor = new Color3(0,0,0);
+            EnergyBolt.faction1Material = mat;
+        }
+
+        if (this.isGlowing()){
+            if (this.faction == 0) this.mesh!.material = EnergyBolt.faction0Material;
+            if (this.faction == 1) this.mesh!.material = EnergyBolt.faction1Material;
+        }
+    }
+
+    isGlowing(){
+        return true;
     }
 
     exitingView() {

@@ -2,7 +2,7 @@ import {Actor} from "../am/Actor";
 import {Scene} from "@babylonjs/core/scene";
 import {AbstractMesh} from "@babylonjs/core/Meshes/abstractMesh";
 import {MeshBuilder} from "@babylonjs/core/Meshes/meshBuilder";
-import {InstancedMesh, Mesh, StandardMaterial} from "@babylonjs/core/index";
+import {Color3, InstancedMesh, Mesh, StandardMaterial} from "@babylonjs/core/index";
 import {Matrix, Quaternion, Vector2, Vector3} from "@babylonjs/core/Maths/math.vector";
 import {Asteroid} from "./Asteroid";
 
@@ -50,7 +50,9 @@ export class DustParticles extends Actor {
         this.mesh.billboardMode = Mesh.BILLBOARDMODE_ALL;
 
         const mat = new StandardMaterial("", scene);
-        mat.emissiveTexture = Asteroid.texture;
+        mat.emissiveColor = new Color3(0.5, 0.5, 0.5);
+        mat.specularColor = new Color3(0,0,0);
+        mat.diffuseColor = new Color3(0,0,0);
 
         this.mesh.material = mat;
 

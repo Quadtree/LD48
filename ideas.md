@@ -60,10 +60,10 @@ Perhaps make the cloud more of a background and less of fog. That way it doesn't
 * Final player ship model
 * Final asteroid model
 * Improved background stars
+* Better particles flying around
+* Better shot graphics
 
 ## TODO
-* Better particles flying around
 * Particle effects
-* Better shot graphics
 * Sound
 * Music

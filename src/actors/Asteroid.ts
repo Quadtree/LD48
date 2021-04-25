@@ -47,7 +47,7 @@ export class Asteroid extends Actor implements Damagable, Spawnable {
 
         this.mesh!.getChildMeshes(true)[0].material = mat;
 
-        this.mesh!.physicsImpostor = new PhysicsImpostor(this.mesh!, PhysicsImpostor.SphereImpostor, {mass: 100, group: Constants.COLLISION_GROUP_ENEMY, mask: Constants.COLLISION_GROUP_ENEMY | Constants.COLLISION_GROUP_ENEMY_SHOT | Constants.COLLISION_GROUP_PLAYER_SHOT | Constants.COLLISION_GROUP_PLAYER} as any);
+        this.mesh!.physicsImpostor = new PhysicsImpostor(this.mesh!, PhysicsImpostor.ConvexHullImpostor, {mass: 100, group: Constants.COLLISION_GROUP_ENEMY, mask: Constants.COLLISION_GROUP_ENEMY | Constants.COLLISION_GROUP_ENEMY_SHOT | Constants.COLLISION_GROUP_PLAYER_SHOT | Constants.COLLISION_GROUP_PLAYER} as any);
 
         console.log(`radius=${this.mesh!.physicsImpostor!.getRadius()}`);
 

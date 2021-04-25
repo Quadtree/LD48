@@ -78,4 +78,8 @@ export class Missile extends EnergyBolt {
         this.mesh!.rotationQuaternion!.toRotationMatrix(Util.mat);
         this.mesh!.physicsImpostor!.setLinearVelocity(Vector3.TransformCoordinates(new Vector3(0,0,50), Util.mat));
     }
+
+    isGlowing(){
+        return false;
+    }
 }
