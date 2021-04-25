@@ -14,6 +14,7 @@ import {Objective} from "./actors/Objective";
 import {HUD} from "./actors/HUD";
 import {Beacon} from "./actors/Beacon";
 import {SquidBoss} from "./actors/SquidBoss";
+import {ScienceShip} from "./actors/ScienceShip";
 
 export class LD48 implements Game {
     private actorManager = new ActorManager()
@@ -44,6 +45,7 @@ export class LD48 implements Game {
             Asteroid.preload(gameManager.scene),
             SquidThing.preload(gameManager.scene),
             SquidBoss.preload(gameManager.scene),
+            ScienceShip.preload(gameManager.scene),
         ]);
 
         const playerShip = new PlayerShip();
@@ -53,6 +55,7 @@ export class LD48 implements Game {
         this.actorManager.add(new DustParticles());
         this.actorManager.add(new Objective());
         this.actorManager.add(new HUD());
+        this.actorManager.add(new ScienceShip());
         this.actorManager.add(new Beacon(new Vector3(0,200,400)));
 
         //this.actorManager.add(new Beacon(new Vector3(0,0,-1900), "Start", true));

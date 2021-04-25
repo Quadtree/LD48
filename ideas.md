@@ -49,9 +49,9 @@ Perhaps make the cloud more of a background and less of fog. That way it doesn't
 * Zone 3: More squid enemies, and a DOT
 * Markers on offscreen enemies
 * Some kind of radar
+* Zone 4: Objective & boss
 
 ## TODO
-* Zone 4: Objective & boss
 * Missiles
 * Title screen
 * Victory screen

@@ -12,6 +12,7 @@ import {Util} from "../util/Util";
 import {Damagable} from "./Damagable";
 import {installations} from "firebase";
 import {HUD} from "./HUD";
+import {SquidThing} from "./SquidThing";
 
 export class PlayerShip extends Ship implements Damagable {
     private cam:TargetCamera|null = null;
@@ -62,6 +63,15 @@ export class PlayerShip extends Ship implements Damagable {
             if (ed.type == KeyboardEventTypes.KEYDOWN && ed.event.key == "2" && Util.CHEATS_ENABLED) cheatToPos(800);
             if (ed.type == KeyboardEventTypes.KEYDOWN && ed.event.key == "3" && Util.CHEATS_ENABLED) cheatToPos(400);
             if (ed.type == KeyboardEventTypes.KEYDOWN && ed.event.key == "4" && Util.CHEATS_ENABLED) cheatToPos(100);
+
+            if (ed.type == KeyboardEventTypes.KEYDOWN && ed.event.key == "i" && Util.CHEATS_ENABLED) this.hp = 9999999;
+            if (ed.type == KeyboardEventTypes.KEYDOWN && ed.event.key == "p" && Util.CHEATS_ENABLED){
+                for (const a of this.actorManager!.actors){
+                    if (a instanceof SquidThing){
+                        a.hp = -10000;
+                    }
+                }
+            }
         });
 
         this.actorManager!.scene!.onPointerObservable.add((pi, es) => {
@@ -133,7 +143,7 @@ export class PlayerShip extends Ship implements Damagable {
 
         thrust.scaleInPlace(1 / (1 + this.actorManager!.actors.filter(it => (it as any).isUsingEyeBeam).length * 1.4));
 
-        HUD.debugData!.text = `${thrust.length()}`;
+        //HUD.debugData!.text = `${thrust.length()}`;
 
         this.model!.physicsImpostor!.setLinearVelocity(Vector3.TransformCoordinates(thrust, mat));
         this.model!.physicsImpostor!.setAngularVelocity(new Vector3(0,0,0));
