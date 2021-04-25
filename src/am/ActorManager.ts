@@ -69,11 +69,11 @@ export class ActorManager
     }
 
     public add(actor:Actor){
-        if (this.getActorById(actor.netID) != null){
-            throw new Error('Cannot add an actor with the same netID');
-        }
+        //if (this.getActorById(actor.netID) != null){
+            //throw new Error('Cannot add an actor with the same netID');
+        //}
 
-        console.log(`adding actor with id ${actor.netID}`);
+        //console.log(`adding actor with id ${actor.netID}`);
 
         this.actorAddQueue.push(actor);
     }
