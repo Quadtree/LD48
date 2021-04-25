@@ -6,7 +6,7 @@ import {LD48} from "../LD48";
 import {TargetCamera} from "@babylonjs/core/Cameras/targetCamera";
 import {KeyboardEventTypes} from "@babylonjs/core/Events/keyboardEvents";
 import {PointerEventTypes} from "@babylonjs/core/Events/pointerEvents";
-import {Color3, Plane, Ray, Sound} from "@babylonjs/core";
+import {Color3, Color4, ParticleSystem, Plane, Ray, Sound} from "@babylonjs/core";
 import {EnergyBolt} from "./EnergyBolt";
 import {Util} from "../util/Util";
 import {Damagable} from "./Damagable";
@@ -17,21 +17,73 @@ import {Missile} from "./Missile";
 import {Explosion} from "./Explosion";
 import {AbstractMesh} from "@babylonjs/core/Meshes/abstractMesh";
 import {MeshBuilder} from "@babylonjs/core/Meshes/meshBuilder";
+import {Texture} from "@babylonjs/core/Materials/Textures/texture";
+
+class EngineTrail {
+    system:ParticleSystem;
+
+    constructor(private scene:Scene, private playerShip:PlayerShip, private offset:Vector3) {
+        console.log("TRAIL!");
+
+        this.system = new ParticleSystem("", 200, scene);
+
+        //if (!Explosion.texture) Explosion.texture =
+
+        this.system.particleTexture = new Texture("assets/solid.png", scene);
+        this.system.minLifeTime = 0.7
+        this.system.maxLifeTime = 0.8
+        this.system.minSize = 0.4
+        this.system.maxSize = 0.5
+        this.system.color1 = new Color4(1,.71,0,1);
+        this.system.color2 = new Color4(.5,.5,.5,1);
+        this.system.colorDead = new Color4(.5,.5,.5,0);
+        //this.system.manualEmitCount = 20
+        this.system.emitRate = 0
+
+        this.system.direction1 = new Vector3(.2,.2,.2).scale(0.0)
+        this.system.direction2 = this.system.direction1.scale(-1)
+
+        this.system.addVelocityGradient(0, 1)
+        this.system.addVelocityGradient(0.1, 1)
+        this.system.addVelocityGradient(0.2, .1)
+        this.system.addVelocityGradient(1, 0)
+
+        this.system.blendMode = ParticleSystem.BLENDMODE_STANDARD
+
+        this.system.start()
+
+        this.update(0);
+    }
+
+    update(delta:number){
+        this.playerShip.model!.rotationQuaternion!.toRotationMatrix(Util.mat);
+
+        this.system.emitter = this.playerShip.model!.position.add(Vector3.TransformCoordinates(this.offset, Util.mat));
+
+        this.system.emitRate = (this.playerShip.forwardKeyDown || this.playerShip.leftKeyDown || this.playerShip.rightKeyDown) ? 40 : 0;
+    }
+
+    dispose(){
+        this.system.dispose();
+    }
+}
 
 export class PlayerShip extends Ship implements Damagable {
     private cam:TargetCamera|null = null;
 
     private static readonly turnSpeed = 2;
 
-    private forwardKeyDown = false;
-    private leftKeyDown = false;
-    private rightKeyDown = false;
+    forwardKeyDown = false;
+    leftKeyDown = false;
+    rightKeyDown = false;
 
     private firing = false;
 
     private cannonCharge = 0;
 
     private yesSeriously:Quaternion = new Quaternion();
+
+    commandedThrustFactor = 0
 
     getMaxHP(){
         return 20 - 2 * LD48.s!.difficulty
@@ -43,6 +95,8 @@ export class PlayerShip extends Ship implements Damagable {
     radiationDamage = false;
 
     actualThrust = new Vector3();
+
+    engineFlames:EngineTrail[] = [];
 
     static takeDamageSound:Sound|null = null;
     static destroyedSound:Sound|null = null;
@@ -116,6 +170,9 @@ export class PlayerShip extends Ship implements Damagable {
         this.model!.position = this.startPos;
 
         this.targetingSphere = MeshBuilder.CreateIcoSphere("", {radius: 100});
+
+        this.engineFlames.push(new EngineTrail(scene, this, new Vector3(-0.7,0,-2)));
+        this.engineFlames.push(new EngineTrail(scene, this, new Vector3(.7,0,-2)));
     }
 
     private fireCannons(delta: number){
@@ -238,6 +295,8 @@ export class PlayerShip extends Ship implements Damagable {
         }
 
         if (this.hp > this.getMaxHP()) this.hp = this.getMaxHP();
+
+        for (const engineTrail of this.engineFlames) engineTrail.update(delta);
     }
 
     killedByDamage = false
@@ -279,5 +338,8 @@ export class PlayerShip extends Ship implements Damagable {
         }
 
         this.targetingSphere!.dispose();
+
+        for (const a of this.engineFlames) a.dispose();
+        this.engineFlames = [];
     }
 }
