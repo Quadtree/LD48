@@ -78,7 +78,7 @@ export class PlayerShip extends Ship implements Damagable {
 
         this.actorManager!.scene!.onPointerObservable.add((pi, es) => {
             if (pi.type == PointerEventTypes.POINTERDOWN && pi.event.buttons == 1) this.firing = true;
-            if (pi.type == PointerEventTypes.POINTERUP && pi.event.buttons == 1) this.firing = false;
+            if (pi.type == PointerEventTypes.POINTERUP && pi.event.buttons == 0) this.firing = false;
 
             if (pi.type == PointerEventTypes.POINTERDOWN && pi.event.buttons == 2) this.fireMissile();
         });
@@ -117,7 +117,7 @@ export class PlayerShip extends Ship implements Damagable {
     private fireMissile(){
         this.model!.rotationQuaternion!.toRotationMatrix(Util.mat);
 
-        this.actorManager!.add(new Missile(this.model!.position.add(Vector3.TransformCoordinates(new Vector3(0, 0, 5), Util.mat)), this.model!.rotationQuaternion!, 0, 180));
+        this.actorManager!.add(new Missile(this.model!.position.add(Vector3.TransformCoordinates(new Vector3(0, 0, 5), Util.mat)), this.model!.rotationQuaternion!.clone(), 0, 180));
     }
 
     update(delta: number) {
