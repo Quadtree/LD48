@@ -15,6 +15,8 @@ export class TitleScreen extends Actor {
 
     helpText:TextBlock = new TextBlock();
 
+    authorText:TextBlock = new TextBlock();
+
     alive = true;
 
     createDifficultyButton(name:string, y:number, difficulty:number){
@@ -81,6 +83,12 @@ export class TitleScreen extends Actor {
         this.helpText.widthInPixels = 500;
         this.helpText.topInPixels = -100;
         this.helpText.color = "#BBBBBB";
+
+        this.texture.addControl(this.authorText);
+        const globalViewport = this.texture._getGlobalViewport();
+        this.authorText.topInPixels = globalViewport.height / 2 - 40;
+        this.authorText.text = "Made by Quadtree for Ludum Dare 48";
+        this.authorText.color = "#FFFFFF";
 
         this.createDifficultyButton("Easy", 0, 0);
         this.createDifficultyButton("Medium", 40, 1);

@@ -31,9 +31,9 @@ export class Objective extends Actor {
 
             const dist = playerShip.model!.position.length();
 
-            if (dist > 1900) {
+            if (dist > 1870) {
                 // pass
-            } else if (dist > 1300){
+            } else if (dist > 1450){
                 this.actorManager!.scene!.fogMode = Scene.FOGMODE_LINEAR;
                 this.actorManager!.scene!.fogColor.set(0.2, 0.2, 0.2);
                 zone = 1;

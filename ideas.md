@@ -54,9 +54,9 @@ Perhaps make the cloud more of a background and less of fog. That way it doesn't
 * Missiles
 * Final HUD displaying HP and missiles
 * Notification that you're taking "radiation damage" in the red zone
+* Title screen
 
 ## TODO
-* Title screen
 * Victory screen
 
 * Checkpoints that restore HP and missiles
