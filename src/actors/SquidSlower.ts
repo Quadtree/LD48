@@ -72,6 +72,6 @@ export class SquidSlower extends SquidThing {
     }
 
     protected getTurboSpeed(){
-        return 35;
+        return 50;
     }
 }
