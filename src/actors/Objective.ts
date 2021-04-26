@@ -238,6 +238,10 @@ export class Objective extends Actor {
                 Objective.bossBGM.play();
                 Objective.currentlyPlayingBGM = 2;
             }
+
+            if (desiredPlayingBGM == -1){
+                Objective.currentlyPlayingBGM = -1;
+            }
         }
     }
 }
