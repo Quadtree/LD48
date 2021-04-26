@@ -20,7 +20,7 @@ export class SquidBoss extends SquidThing {
     constructor(pos:Vector3) {
         super(pos);
 
-        this.hp = 25 + 10 * LD48.s!.difficulty;
+        this.hp = Math.min(25 + 10 * LD48.s!.difficulty, 60);
     }
 
     protected getModelTemplate(){
@@ -28,7 +28,7 @@ export class SquidBoss extends SquidThing {
     }
 
     getAttackCooldown(): number {
-        return Math.max(0.6 - (LD48.s!.difficulty * 0.1), 0.08) * 1.1 + (LD48.s!.difficulty == 0 ? 1 : 0);
+        return Math.max(0.6 - (LD48.s!.difficulty * 0.1), 0.15) * 1.1 + (LD48.s!.difficulty == 0 ? 1 : 0);
     }
 
     protected getBaseSpeed(){
