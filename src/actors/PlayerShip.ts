@@ -171,6 +171,7 @@ export class PlayerShip extends Ship implements Damagable {
         });
 
         this.model!.position = this.startPos;
+        this.positionCamera(0, 0, 0);
 
         this.targetingSphere = MeshBuilder.CreateIcoSphere("", {radius: 100});
 
@@ -216,6 +217,20 @@ export class PlayerShip extends Ship implements Damagable {
         }
     }
 
+    positionCamera(yaw:number, pitch:number, delta:number):Matrix{
+        const qt = this.model!.rotationQuaternion!;
+        const mat = new Matrix();
+        qt?.toRotationMatrix(mat);
+
+        const transformed = Vector3.TransformCoordinates(new Vector3(0 + (yaw * 4 * (delta == 0 ? 0 : 1)), 3 + (-pitch * (delta == 0 ? 0 : 1)), -20), mat);
+        const camTargetPos = this.model!.position!.add(transformed);
+
+        this.cam!.position.copyFrom(camTargetPos)//this.oldCamPoses[this.oldCamPoses.length - 1][1].add(this.model!.position));
+        this.cam!.rotationQuaternion = this.model!.rotationQuaternion! //this.oldCamPoses[this.oldCamPoses.length - 1][2].clone()
+
+        return mat;
+    }
+
     update(delta: number) {
         super.update(delta);
 
@@ -232,17 +247,9 @@ export class PlayerShip extends Ship implements Damagable {
 
         //console.log(yaw * delta * PlayerShip.turnSpeed);
 
-        const qt = this.model!.rotationQuaternion!;
-        const mat = new Matrix();
-        qt?.toRotationMatrix(mat);
-
         //console.log(mat);
 
-        const transformed = Vector3.TransformCoordinates(new Vector3(0 + (yaw * 4 * (delta == 0 ? 0 : 1)), 3 + (-pitch * (delta == 0 ? 0 : 1)), -20), mat);
-        const camTargetPos = this.model!.position!.add(transformed);
-
-        this.cam!.position.copyFrom(camTargetPos)//this.oldCamPoses[this.oldCamPoses.length - 1][1].add(this.model!.position));
-        this.cam!.rotationQuaternion = this.model!.rotationQuaternion! //this.oldCamPoses[this.oldCamPoses.length - 1][2].clone()
+        const mat = this.positionCamera(yaw, pitch, delta);
 
         const thrust = new Vector3();
         if (this.forwardKeyDown) thrust.addInPlace(Vector3.Forward(false).scale(40));
