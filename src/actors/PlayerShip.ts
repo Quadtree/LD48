@@ -115,6 +115,9 @@ export class PlayerShip extends Ship implements Damagable {
 
     targetingSphere:AbstractMesh|null = null;
 
+    keyboardCallback:any;
+    mouseCallback:any;
+
     enteringView(scene: Scene) {
         super.enteringView(scene);
 
@@ -126,7 +129,7 @@ export class PlayerShip extends Ship implements Damagable {
 
         console.log(`camera position ${this.cam!.position}`)
 
-        this.actorManager!.scene!.onKeyboardObservable.add((ed, es) => {
+        this.keyboardCallback = (ed:any, es:any) => {
             //console.log(ed.event.key);
 
             if (ed.type == KeyboardEventTypes.KEYDOWN && (ed.event.key == "w" || ed.event.key == "ArrowUp")) { this.forwardKeyDown = true; }
@@ -161,14 +164,17 @@ export class PlayerShip extends Ship implements Damagable {
                     }
                 }
             }
-        });
+        };
 
-        this.actorManager!.scene!.onPointerObservable.add((pi, es) => {
+        this.mouseCallback = (pi:any, es:any) => {
             if (pi.type == PointerEventTypes.POINTERDOWN && pi.event.buttons == 1) this.firing = true;
             if (pi.type == PointerEventTypes.POINTERUP && pi.event.buttons == 0) this.firing = false;
 
             if (pi.type == PointerEventTypes.POINTERDOWN && pi.event.buttons == 2) this.fireMissile();
-        });
+        };
+
+        this.actorManager!.scene!.onKeyboardObservable.add(this.keyboardCallback);
+        this.actorManager!.scene!.onPointerObservable.add(this.mouseCallback);
 
         this.model!.position = this.startPos;
         this.positionCamera(0, 0, 0);
@@ -351,5 +357,8 @@ export class PlayerShip extends Ship implements Damagable {
 
         for (const a of this.engineFlames) a.dispose();
         this.engineFlames = [];
+
+        this.actorManager!.scene!.onKeyboardObservable.removeCallback(this.keyboardCallback);
+        this.actorManager!.scene!.onPointerObservable.removeCallback(this.mouseCallback);
     }
 }
