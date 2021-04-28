@@ -46,4 +46,8 @@ export class SquidBoss extends SquidThing {
     protected getShotOffset(){
         return 20;
     }
+
+    despawn() {
+        return false;
+    }
 }
